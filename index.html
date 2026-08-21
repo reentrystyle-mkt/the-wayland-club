@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wayland Club — C4NN4BIS medicinal, legal y con acompañamiento real</title>
+<meta name="description" content="The Wayland Club es una ONG habilitada por el Ministerio de Salud de Argentina, operando dentro del marco REPROCANN. Acceso a C4NN4BIS medicinal con acompañamiento real.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap');
+
+:root{
+  --color-bg: #080c0a;
+  --color-surface: #0f1a13;
+  --color-surface-2: #162112;
+  --color-accent: #c8a96e;
+  --color-accent-2: #4a6741;
+  --color-text: #e8e4dc;
+  --color-text-muted: #8a9187;
+  --color-border: #1e2b1c;
+
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+
+  --fs-hero: clamp(3.5rem, 8vw, 7rem);
+  --fs-display: clamp(2rem, 4vw, 3.5rem);
+  --fs-h2: clamp(1.5rem, 3vw, 2.2rem);
+  --fs-body: 1rem;
+  --fs-small: 0.85rem;
+  --fs-mono: 0.8rem;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  background:var(--color-bg);
+  color:var(--color-text);
+  font-family:var(--font-body);
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+img{ max-width:100%; display:block; }
+
+a{ color:inherit; text-decoration:none; }
+
+.container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 clamp(1.25rem, 4vw, 3rem);
+}
+
+section{ position:relative; }
+
+/* ---------- scroll progress bar ---------- */
+#scroll-progress{
+  position:fixed;
+  top:0; left:0;
+  height:2px;
+  width:0%;
+  background:var(--color-accent);
+  z-index:1000;
+  transition:width 0.1s linear;
+}
+
+/* ---------- reveal on scroll ---------- */
+.reveal{
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.is-visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:900;
+  padding:1.25rem 0;
+  background:transparent;
+  transition:background 0.4s ease, padding 0.4s ease, border-color 0.4s ease;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:rgba(15,26,19,0.92);
+  backdrop-filter:blur(10px);
+  padding:0.85rem 0;
+  border-bottom:1px solid var(--color-border);
+}
+.nav .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.nav-logo{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.4rem;
+  letter-spacing:0.04em;
+  color:var(--color-text);
+  display:flex;
+  align-items:center;
+}
+.nav-logo span{ color:var(--color-accent); }
+.nav-logo img{
+  height:52px;
+  width:auto;
+}
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:2.25rem;
+  list-style:none;
+}
+.nav-links a{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+  transition:color 0.3s ease;
+  position:relative;
+}
+.nav-links a:hover{ color:var(--color-text); }
+.nav-cta{
+  display:inline-block;
+  padding:0.6rem 1.4rem;
+  background:var(--color-accent);
+  color:var(--color-bg);
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  letter-spacing:0.05em;
+  border-radius:2px;
+  transition:opacity 0.3s ease, transform 0.3s ease;
+}
+.nav-cta:hover{ opacity:0.85; transform:translateY(-1px); }
+
+.nav-toggle{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:0.5rem;
+  z-index:950;
+}
+.nav-toggle span{
+  width:22px;
+  height:1.5px;
+  background:var(--color-text);
+  transition:transform 0.3s ease, opacity 0.3s ease;
+}
+.nav-toggle.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2){ opacity:0; }
+.nav-toggle.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu{
+  position:fixed;
+  inset:0;
+  background:var(--color-surface);
+  z-index:890;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2rem;
+  transform:translateY(-100%);
+  transition:transform 0.5s cubic-bezier(.65,0,.35,1);
+}
+.mobile-menu.open{ transform:translateY(0); }
+.mobile-menu a{
+  font-family:var(--font-display);
+  font-size:1.8rem;
+  color:var(--color-text);
+}
+.mobile-menu .nav-cta{ margin-top:1rem; }
+
+/* ---------- hero ---------- */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+  padding:8rem 1.5rem 4rem;
+}
+#particles{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+}
+.hero-content{
+  position:relative;
+  z-index:1;
+  max-width:900px;
+}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:var(--fs-mono);
+  color:var(--color-accent);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-bottom:1.75rem;
+  display:inline-block;
+}
+.hero h1{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:var(--fs-hero);
+  line-height:1.05;
+  letter-spacing:-0.01em;
+  margin-bottom:1.75rem;
+}
+.hero h1 .word{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(24px);
+  animation:wordIn 0.7s ease forwards;
+}
+@keyframes wordIn{
+  to{ opacity:1; transform:translateY(0); }
+}
+.hero h1 .accent-word{ color:var(--color-accent); font-style:italic; }
+.hero-sub{
+  font-size:1.1rem;
+  font-weight:300;
+  color:var(--color-text-muted);
+  max-width:620px;
+  margin:0 auto 2.5rem;
+}
+.hero-ctas{
+  display:flex;
+  gap:1rem;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.btn{
+  position:relative;
+  display:inline-block;
+  padding:1rem 2rem;
+  font-family:var(--font-body);
+  font-size:0.9rem;
+  font-weight:500;
+  letter-spacing:0.02em;
+  border-radius:2px;
+  overflow:hidden;
+  z-index:1;
+  cursor:pointer;
+  transition:color 0.4s ease, border-color 0.4s ease;
+}
+.btn::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  transform:translateY(101%);
+  transition:transform 0.45s cubic-bezier(.65,0,.35,1);
+}
+.btn:hover::before{ transform:translateY(0); }
+
+.btn-primary{
+  background:var(--color-accent);
+  color:var(--color-bg);
+  border:1px solid var(--color-accent);
+}
+.btn-primary::before{ background:#e6c98a; }
+
+.btn-secondary{
+  background:transparent;
+  color:var(--color-text);
+  border:1px solid var(--color-border);
+}
+.btn-secondary::before{ background:var(--color-surface-2); }
+.btn-secondary:hover{ border-color:var(--color-accent); }
+
+.btn-dark{
+  background:var(--color-bg);
+  color:var(--color-accent);
+  border:1px solid var(--color-bg);
+}
+.btn-dark::before{ background:#141c11; }
+
+.scroll-indicator{
+  position:absolute;
+  bottom:2.5rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:1;
+  width:1px;
+  height:60px;
+  background:linear-gradient(to bottom, transparent, var(--color-accent) 40%, transparent);
+  overflow:hidden;
+}
+.scroll-indicator::after{
+  content:'';
+  position:absolute;
+  top:-60px;
+  left:0;
+  width:1px;
+  height:60px;
+  background:var(--color-accent);
+  animation:scrollPulse 2.2s ease-in-out infinite;
+}
+@keyframes scrollPulse{
+  0%{ top:-60px; }
+  100%{ top:60px; }
+}
+
+/* ---------- section headers ---------- */
+.section-pad{ padding:7rem 0; }
+.eyebrow-mono{
+  font-family:var(--font-mono);
+  font-size:var(--fs-mono);
+  color:var(--color-accent);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  display:block;
+  margin-bottom:1rem;
+}
+h2{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:var(--fs-h2);
+  line-height:1.2;
+}
+
+/* ---------- quienes somos ---------- */
+.about{ background:var(--color-bg); }
+.about-grid{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:4rem;
+  align-items:start;
+}
+.about-text p{
+  font-size:1.15rem;
+  font-weight:300;
+  color:var(--color-text);
+  margin-bottom:1.5rem;
+  max-width:520px;
+}
+.about-icons{
+  margin-top:2.5rem;
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+}
+.about-icon-item{
+  display:flex;
+  align-items:flex-start;
+  gap:0.9rem;
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+}
+.about-icon-item .hex{
+  color:var(--color-accent);
+  font-size:1rem;
+  line-height:1.4;
+}
+.stats{
+  display:flex;
+  flex-direction:column;
+  gap:2rem;
+  border-left:1px solid var(--color-border);
+  padding-left:2rem;
+}
+.stat-item .stat-num{
+  font-family:var(--font-mono);
+  font-size:2.2rem;
+  color:var(--color-accent);
+  display:block;
+}
+.stat-item .stat-label{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+  margin-top:0.3rem;
+}
+
+/* ---------- proceso ---------- */
+.process{ background:var(--color-surface); }
+.process-header{ text-align:center; margin-bottom:5rem; }
+.process-header h2{ margin-top:0.5rem; }
+
+.steps{
+  position:relative;
+  max-width:900px;
+  margin:0 auto;
+}
+.steps-line{
+  position:absolute;
+  left:50%;
+  top:0;
+  bottom:0;
+  width:1px;
+  transform:translateX(-50%);
+  z-index:0;
+}
+.steps-line svg{ width:1px; height:100%; overflow:visible; }
+.steps-line path{
+  stroke:var(--color-accent);
+  stroke-width:1;
+  fill:none;
+  stroke-dasharray:1;
+  stroke-dashoffset:1;
+  vector-effect:non-scaling-stroke;
+  transition:stroke-dashoffset 1.4s ease;
+}
+.steps-line.is-visible path{ stroke-dashoffset:0; }
+
+.step{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 60px 1fr;
+  align-items:center;
+  margin-bottom:3.5rem;
+  z-index:1;
+}
+.step:last-child{ margin-bottom:0; }
+.step-num{
+  grid-column:2;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:var(--color-bg);
+  border:1px solid var(--color-accent);
+  color:var(--color-accent);
+  font-family:var(--font-mono);
+  font-size:0.85rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  justify-self:center;
+}
+.step-card{
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:4px;
+  padding:1.75rem 2rem;
+  transition:border-color 0.35s ease, transform 0.35s ease;
+}
+.step-card:hover{
+  border-color:var(--color-accent);
+  transform:translateY(-4px);
+}
+.step-card h3{
+  font-family:var(--font-display);
+  font-size:1.4rem;
+  font-weight:600;
+  color:var(--color-accent);
+  margin-bottom:0.5rem;
+}
+.step-card p{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+}
+.step:nth-child(odd) .step-card{ grid-column:1; }
+.step:nth-child(even) .step-card{ grid-column:3; }
+
+/* ---------- beneficios ---------- */
+.benefits{ background:var(--color-bg); }
+.benefits-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  margin-top:3rem;
+}
+.benefit-card{
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:4px;
+  padding:2.25rem;
+  transition:border-color 0.35s ease, transform 0.35s ease;
+}
+.benefit-card:hover{
+  border-color:var(--color-accent);
+  transform:translateY(-4px);
+}
+.benefit-icon{ font-size:1.8rem; margin-bottom:1rem; display:block; }
+.benefit-card h3{
+  font-family:var(--font-display);
+  font-size:1.3rem;
+  font-weight:600;
+  margin-bottom:0.5rem;
+}
+.benefit-card p{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+}
+
+/* ---------- reprocann ---------- */
+.reprocann{
+  background:var(--color-surface);
+  border-left:3px solid var(--color-accent);
+}
+.reprocann-inner{ max-width:720px; }
+.reprocann p{
+  font-size:1.05rem;
+  color:var(--color-text);
+  margin:1.25rem 0;
+  font-weight:300;
+}
+.reprocann .btn{ margin-top:1.5rem; }
+
+/* ---------- catalogo ---------- */
+.catalog{ background:var(--color-bg); text-align:center; }
+.catalog-header{ margin-bottom:1rem; }
+.catalog-note{
+  max-width:560px;
+  margin:2.5rem auto 3.5rem;
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+}
+.catalog-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:1.5rem;
+  text-align:left;
+}
+.strain-card{
+  position:relative;
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:4px;
+  padding:2rem 1.75rem;
+  transition:border-color 0.35s ease, transform 0.35s ease;
+  overflow:hidden;
+}
+.strain-card:hover{
+  border-color:var(--color-accent);
+  transform:translateY(-4px);
+}
+.strain-emoji{ font-size:1.8rem; margin-bottom:1rem; display:block; }
+.strain-card h3{
+  font-family:var(--font-display);
+  font-size:1.3rem;
+  font-weight:600;
+  margin-bottom:0.3rem;
+}
+.strain-type{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+  margin-bottom:0.25rem;
+}
+.strain-thc{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  color:var(--color-accent);
+}
+.strain-lock{
+  position:absolute;
+  top:1.5rem;
+  right:1.5rem;
+  font-size:1.1rem;
+  opacity:0.6;
+}
+.strain-status{
+  display:inline-block;
+  margin-top:1rem;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.08em;
+  color:var(--color-text-muted);
+  border:1px solid var(--color-border);
+  padding:0.3rem 0.7rem;
+  border-radius:2px;
+}
+
+.formats-title{
+  font-family:var(--font-mono);
+  font-size:var(--fs-mono);
+  color:var(--color-text-muted);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin:3.5rem 0 1.5rem;
+  display:block;
+}
+.formats-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:1.25rem;
+}
+.format-card{
+  background:var(--color-surface);
+  border:1px solid var(--color-border);
+  border-radius:4px;
+  padding:1.5rem;
+  text-align:center;
+  transition:border-color 0.35s ease;
+}
+.format-card:hover{ border-color:var(--color-accent); }
+.format-card .format-emoji{ font-size:1.4rem; display:block; margin-bottom:0.6rem; }
+.format-card p{ font-size:var(--fs-small); color:var(--color-text-muted); }
+
+/* ---------- cta final ---------- */
+.cta-final{
+  background:var(--color-accent);
+  color:var(--color-bg);
+  text-align:center;
+  padding:6rem 0;
+}
+.cta-final h2{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:var(--fs-display);
+  color:var(--color-bg);
+  max-width:800px;
+  margin:0 auto 1.25rem;
+}
+.cta-final p{
+  font-size:1.05rem;
+  color:rgba(8,12,10,0.75);
+  margin-bottom:2.25rem;
+}
+
+/* ---------- footer ---------- */
+footer{
+  background:var(--color-bg);
+  padding:4rem 0 2.5rem;
+  text-align:center;
+  border-top:1px solid var(--color-border);
+}
+.footer-logo{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.5rem;
+  color:var(--color-text);
+  margin-bottom:0.75rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.footer-logo span{ color:var(--color-accent); }
+.footer-logo img{
+  height:130px;
+  width:auto;
+}
+.footer-meta{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+  margin-bottom:0.3rem;
+}
+.footer-nav{
+  display:flex;
+  justify-content:center;
+  gap:1.75rem;
+  flex-wrap:wrap;
+  list-style:none;
+  margin:2rem 0;
+}
+.footer-nav a{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+  transition:color 0.3s ease;
+}
+.footer-nav a:hover{ color:var(--color-accent); }
+.footer-legal{
+  max-width:640px;
+  margin:1.5rem auto 0;
+  font-size:0.75rem;
+  color:var(--color-text-muted);
+  line-height:1.7;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:1024px){
+  .catalog-grid{ grid-template-columns:repeat(2, 1fr); }
+  .formats-grid{ grid-template-columns:repeat(3, 1fr); }
+}
+
+@media (max-width:768px){
+  .nav-links, .nav-cta{ display:none; }
+  .nav-toggle{ display:flex; }
+
+  .hero{ padding-top:7rem; }
+  .hero-ctas{ flex-direction:column; align-items:stretch; }
+  .hero-ctas .btn{ text-align:center; }
+
+  .about-grid{ grid-template-columns:1fr; gap:3rem; }
+  .stats{ border-left:none; padding-left:0; border-top:1px solid var(--color-border); padding-top:2rem; }
+
+  .steps-line{ left:22px; }
+  .step{ grid-template-columns:44px 1fr; }
+  .step-num{ grid-column:1; }
+  .step:nth-child(odd) .step-card,
+  .step:nth-child(even) .step-card{ grid-column:2; }
+
+  .benefits-grid{ grid-template-columns:1fr; }
+  .catalog-grid{ grid-template-columns:1fr; }
+  .formats-grid{ grid-template-columns:1fr; }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+    scroll-behavior:auto !important;
+  }
+  .reveal{ opacity:1; transform:none; }
+  .hero h1 .word{ opacity:1; transform:none; }
+}
+</style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="container">
+    <a href="#" class="nav-logo"><img src="assets/wayland-logo.png" alt="The Wayland Club"></a>
+    <ul class="nav-links">
+      <li><a href="#top">Inicio</a></li>
+      <li><a href="#proceso">Cómo funciona</a></li>
+      <li><a href="#reprocann">C4NN4BIS</a></li>
+      <li><a href="#catalogo">Catálogo</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="#proceso" class="nav-cta">Asociarse</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#top">Inicio</a>
+  <a href="#proceso">Cómo funciona</a>
+  <a href="#reprocann">C4NN4BIS</a>
+  <a href="#catalogo">Catálogo</a>
+  <a href="#contacto">Contacto</a>
+  <a href="#proceso" class="btn btn-primary nav-cta">Asociarse</a>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <span class="eyebrow">ONG · MINISTERIO DE SALUD · REPROCANN</span>
+    <h1 id="heroTitle"></h1>
+    <p class="hero-sub">
+      The Wayland Club es una ONG habilitada para dispensar C4NN4BIS medicinal
+      dentro del marco de REPROCANN. Sin local físico. Con acompañamiento real.
+    </p>
+    <div class="hero-ctas">
+      <a href="#proceso" class="btn btn-primary">Quiero asociarme</a>
+      <a href="#reprocann" class="btn btn-secondary">¿Qué es REPROCANN?</a>
+    </div>
+  </div>
+  <div class="scroll-indicator"></div>
+</section>
+
+<!-- ============ QUIENES SOMOS ============ -->
+<section class="about section-pad">
+  <div class="container about-grid">
+    <div class="about-text reveal">
+      <span class="eyebrow-mono">Quiénes somos</span>
+      <h2 style="margin-bottom:1.5rem;">Una comunidad, no una tienda</h2>
+      <p>The Wayland Club no es una tienda. Es una comunidad de pacientes
+      acompañados por profesionales dentro del único marco legal vigente en Argentina.</p>
+
+      <div class="about-icons">
+        <div class="about-icon-item"><span class="hex">⬡</span><span>ONG habilitada por el Ministerio de Salud</span></div>
+        <div class="about-icon-item"><span class="hex">⬡</span><span>Operamos dentro del marco REPROCANN</span></div>
+        <div class="about-icon-item"><span class="hex">⬡</span><span>Dispensamos a todo el país — retiro o domicilio</span></div>
+      </div>
+    </div>
+    <div class="stats reveal">
+      <div class="stat-item">
+        <span class="stat-num">ONG</span>
+        <span class="stat-label">Habilitada por Ministerio de Salud</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">REPROCANN</span>
+        <span class="stat-label">Marco legal vigente</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">24hs</span>
+        <span class="stat-label">Coordinación de envío</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="process section-pad" id="proceso">
+  <div class="container">
+    <div class="process-header reveal">
+      <span class="eyebrow-mono">Proceso</span>
+      <h2>El proceso, paso a paso</h2>
+    </div>
+
+    <div class="steps">
+      <div class="steps-line" id="stepsLine">
+        <svg preserveAspectRatio="none" viewBox="0 0 1 1">
+          <path d="M0.5,0 L0.5,1" pathLength="1"></path>
+        </svg>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-card">
+          <h3>01 · Consultanos</h3>
+          <p>Escribinos. La primera pregunta es simple: ¿tenés REPROCANN?</p>
+        </div>
+        <div class="step-num">01</div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-card">
+          <h3>02 · Sin REPROCANN</h3>
+          <p>Te derivamos con nuestro equipo médico para gestionarlo dentro del marco legal.</p>
+        </div>
+        <div class="step-num">02</div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-card">
+          <h3>02 · Con REPROCANN</h3>
+          <p>Sumás tres documentos: credencial REPROCANN + consentimiento médico + acuerdo ONG/paciente.</p>
+        </div>
+        <div class="step-num">03</div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-card">
+          <h3>03 · Sin costo de adhesión</h3>
+          <p>Sin membresía. Sin costo de asociación. Solo la documentación que requiere REPROCANN.</p>
+        </div>
+        <div class="step-num">04</div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-card">
+          <h3>04 · Accedés al catálogo</h3>
+          <p>Hacé tu pedido. Al día siguiente coordinamos envío a domicilio o retiro acordado.</p>
+        </div>
+        <div class="step-num">05</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BENEFICIOS ============ -->
+<section class="benefits section-pad">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow-mono">Beneficios</span>
+      <h2>Por qué The Wayland Club</h2>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card reveal">
+        <span class="benefit-icon">🌿</span>
+        <h3>Sin costo</h3>
+        <p>Sin membresía ni adhesión. Solo tu documentación.</p>
+      </div>
+      <div class="benefit-card reveal">
+        <span class="benefit-icon">📦</span>
+        <h3>Envío al día siguiente</h3>
+        <p>Coordinamos al día siguiente de tu pedido. A domicilio o retiro.</p>
+      </div>
+      <div class="benefit-card reveal">
+        <span class="benefit-icon">🔒</span>
+        <h3>100% legal</h3>
+        <p>Operamos exclusivamente dentro del marco REPROCANN.</p>
+      </div>
+      <div class="benefit-card reveal">
+        <span class="benefit-icon">💬</span>
+        <h3>Acompañamiento real</h3>
+        <p>Desde el primer mensaje hasta cada dispensa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REPROCANN ============ -->
+<section class="reprocann section-pad" id="reprocann">
+  <div class="container">
+    <div class="reprocann-inner reveal">
+      <span class="eyebrow-mono">Marco legal</span>
+      <h2>¿Qué es REPROCANN?</h2>
+      <p>REPROCANN es el Registro del Programa de C4NN4BIS del Ministerio de Salud
+      de la Nación Argentina. Es el registro que habilita legalmente a una persona
+      a acceder al C4NN4BIS medicinal en el país.</p>
+      <p>Sin REPROCANN no hay acceso legal. Con REPROCANN, The Wayland Club
+      está para acompañarte en cada paso que sigue.</p>
+      <a href="#contacto" class="btn btn-primary">Escribinos para saber más</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATALOGO ============ -->
+<section class="catalog section-pad" id="catalogo">
+  <div class="container">
+    <div class="catalog-header reveal">
+      <span class="eyebrow-mono">DISPONIBLE PARA SOCIOS · REPROCANN REQUERIDO</span>
+      <h2>Nuestro catálogo</h2>
+    </div>
+    <p class="catalog-note reveal">
+      El catálogo completo está disponible para socios del Club con REPROCANN vigente.
+      Asociate para acceder cuando esté habilitado.
+    </p>
+
+    <!-- ACTIVAR: catálogo cuando esté listo -->
+    <div class="catalog-grid">
+      <div class="strain-card reveal">
+        <span class="strain-lock">🔒</span>
+        <span class="strain-emoji">⛽</span>
+        <h3>Petroleum</h3>
+        <p class="strain-type">Híbrida índica</p>
+        <p class="strain-thc">24–30% THC</p>
+        <span class="strain-status">Próximamente</span>
+      </div>
+      <div class="strain-card reveal">
+        <span class="strain-lock">🔒</span>
+        <span class="strain-emoji">🫐</span>
+        <h3>Moby</h3>
+        <p class="strain-type">Híbrida sativa</p>
+        <p class="strain-thc">22–28% THC</p>
+        <span class="strain-status">Próximamente</span>
+      </div>
+      <div class="strain-card reveal">
+        <span class="strain-lock">🔒</span>
+        <span class="strain-emoji">🍬</span>
+        <h3>Runtz</h3>
+        <p class="strain-type">Híbrida equilibrada</p>
+        <p class="strain-thc">24–30% THC</p>
+        <span class="strain-status">Próximamente</span>
+      </div>
+      <div class="strain-card reveal">
+        <span class="strain-lock">🔒</span>
+        <span class="strain-emoji">🍋</span>
+        <h3>Spritz</h3>
+        <p class="strain-type">Híbrida sativa ligera</p>
+        <p class="strain-thc">22–27% THC</p>
+        <span class="strain-status">Próximamente</span>
+      </div>
+      <div class="strain-card reveal">
+        <span class="strain-lock">🔒</span>
+        <span class="strain-emoji">🍒</span>
+        <h3>Black Cherry</h3>
+        <p class="strain-type">Híbrida índica</p>
+        <p class="strain-thc">20–27% THC</p>
+        <span class="strain-status">Próximamente</span>
+      </div>
+      <div class="strain-card reveal">
+        <span class="strain-lock">🔒</span>
+        <span class="strain-emoji">🍰</span>
+        <h3>Cake Crasher</h3>
+        <p class="strain-type">Híbrida equilibrada</p>
+        <p class="strain-thc">25–30% THC</p>
+        <span class="strain-status">Próximamente</span>
+      </div>
+    </div>
+
+    <span class="formats-title reveal">Formatos</span>
+    <div class="formats-grid">
+      <div class="format-card reveal">
+        <span class="format-emoji">🛢️</span>
+        <p>Cartuchos de THC + Salsa de terpenos</p>
+      </div>
+      <div class="format-card reveal">
+        <span class="format-emoji">💎</span>
+        <p>Cristales en salsa de terpenos</p>
+      </div>
+      <div class="format-card reveal">
+        <span class="format-emoji">🔬</span>
+        <p>Cristales de THC</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section class="cta-final" id="contacto">
+  <div class="container reveal">
+    <h2>¿Querés acceder al C4NN4BIS medicinal de forma legal?</h2>
+    <p>Sin turnos. Sin esperas. Te respondemos a la brevedad.</p>
+    <!-- REEMPLAZAR: número WhatsApp -->
+    <a href="https://wa.me/XXXXXXXXXX" class="btn btn-dark" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="footer-logo"><img src="assets/wayland-logo.png" alt="The Wayland Club"></div>
+    <p class="footer-meta">ONG habilitada por el Ministerio de Salud de Argentina</p>
+    <p class="footer-meta">Marco legal REPROCANN</p>
+    <ul class="footer-nav">
+      <li><a href="#top">Inicio</a></li>
+      <li><a href="#proceso">Cómo funciona</a></li>
+      <li><a href="#reprocann">C4NN4BIS</a></li>
+      <li><a href="#catalogo">Catálogo</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <p class="footer-legal">
+      El acceso al catálogo está disponible exclusivamente para pacientes con
+      REPROCANN vigente. El uso de C4NN4BIS medicinal debe realizarse dentro
+      del marco legal correspondiente.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- scroll progress bar ---------- */
+  var progressBar = document.getElementById('scroll-progress');
+  function updateProgress(){
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  /* ---------- nav background on scroll ---------- */
+  var nav = document.getElementById('nav');
+  function updateNav(){
+    if(window.scrollY > 40){ nav.classList.add('scrolled'); }
+    else{ nav.classList.remove('scrolled'); }
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  /* ---------- mobile menu ---------- */
+  var navToggle = document.getElementById('navToggle');
+  var mobileMenu = document.getElementById('mobileMenu');
+  navToggle.addEventListener('click', function(){
+    navToggle.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      navToggle.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+
+  /* ---------- reveal on scroll ---------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  var stepsLine = document.getElementById('stepsLine');
+
+  if('IntersectionObserver' in window && !reduceMotion){
+    var revealObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    revealEls.forEach(function(el){ revealObserver.observe(el); });
+
+    var lineObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          stepsLine.classList.add('is-visible');
+          lineObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    if(stepsLine) lineObserver.observe(stepsLine);
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+    if(stepsLine) stepsLine.classList.add('is-visible');
+  }
+
+  /* ---------- hero headline word-by-word entrance ---------- */
+  var heroTitle = document.getElementById('heroTitle');
+  var lines = [
+    { text: 'C4NN4BIS medicinal.', accent: true },
+    { text: 'Legal, responsable' },
+    { text: 'y con acompañamiento real.' }
+  ];
+  var delay = 0;
+  lines.forEach(function(line, lineIdx){
+    var lineEl = document.createElement('div');
+    var words = line.text.split(' ');
+    words.forEach(function(word, i){
+      var span = document.createElement('span');
+      span.className = 'word' + (line.accent ? ' accent-word' : '');
+      span.textContent = word + (i < words.length - 1 ? ' ' : '');
+      if(!reduceMotion){
+        span.style.animationDelay = delay + 's';
+      } else {
+        span.style.opacity = '1';
+      }
+      lineEl.appendChild(span);
+      delay += 0.08;
+    });
+    heroTitle.appendChild(lineEl);
+  });
+
+  /* ---------- canvas particles ---------- */
+  var canvas = document.getElementById('particles');
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var PARTICLE_COUNT = 60;
+  var heroSection = document.querySelector('.hero');
+  var w, h;
+
+  function resizeCanvas(){
+    w = canvas.width = heroSection.offsetWidth;
+    h = canvas.height = heroSection.offsetHeight;
+  }
+
+  function makeParticle(){
+    return {
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 2 + 0.6,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: -Math.random() * 0.12 - 0.03,
+      alpha: Math.random() * 0.5 + 0.3
+    };
+  }
+
+  function initParticles(){
+    particles = [];
+    for(var i = 0; i < PARTICLE_COUNT; i++){
+      particles.push(makeParticle());
+    }
+  }
+
+  function drawParticles(){
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(function(p){
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.y < -10){ p.y = h + 10; p.x = Math.random() * w; }
+      if(p.x < -10) p.x = w + 10;
+      if(p.x > w + 10) p.x = -10;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(200,169,110,' + (p.alpha * 0.15) + ')';
+      ctx.fill();
+    });
+    requestAnimationFrame(drawParticles);
+  }
+
+  resizeCanvas();
+  initParticles();
+  window.addEventListener('resize', function(){
+    resizeCanvas();
+  });
+
+  if(!reduceMotion){
+    requestAnimationFrame(drawParticles);
+  } else {
+    drawParticlesStatic();
+  }
+  function drawParticlesStatic(){
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(function(p){
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(200,169,110,' + (p.alpha * 0.15) + ')';
+      ctx.fill();
+    });
+  }
+
+})();
+</script>
+</body>
+</html>
