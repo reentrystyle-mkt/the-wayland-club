@@ -3,8 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Wayland Club — C4NN4BIS medicinal, legal y con acompañamiento real</title>
-<meta name="description" content="The Wayland Club es una ONG habilitada por el Ministerio de Salud de Argentina, operando dentro del marco REPROCANN. Acceso a C4NN4BIS medicinal con acompañamiento real.">
+<title>The Wayland Club — Cannabis medicinal, legal y con acompañamiento real</title>
+<meta name="description" content="The Wayland Club es una ONG habilitada por el Ministerio de Salud de Argentina, operando dentro del marco REPROCANN. Acceso a cannabis medicinal con acompañamiento real.">
+<meta property="og:title" content="The Wayland Club — Cannabis medicinal, legal y con acompañamiento real">
+<meta property="og:description" content="ONG habilitada por el Ministerio de Salud de Argentina, dentro del marco REPROCANN. Acceso a cannabis medicinal con acompañamiento real.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
@@ -35,6 +41,24 @@
   --radius-md: 18px;
   --radius-pill: 999px;
 }
+
+/* Light sections: page moves from a dark hero into airy white/off-white
+   sections. Redefining the same tokens keeps every component (cards, chips,
+   headings) automatically adapting without a second set of classes. */
+.light-section{
+  --color-bg: #ffffff;
+  --color-surface: #f5f4ef;
+  --color-surface-2: #ffffff;
+  --color-text: #16231b;
+  --color-text-muted: #5c6a5a;
+  --color-border: #e4e1d6;
+  --color-accent: #a9803f;
+  background:var(--color-bg);
+  color:var(--color-text);
+}
+.light-section .btn-primary{ color:#fff9ef; }
+.light-section .step-card,
+.light-section .benefit-card{ box-shadow:0 1px 2px rgba(20,30,20,0.04); }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
 
@@ -127,11 +151,11 @@ section{ position:relative; }
   flex-shrink:0;
 }
 .nav-logo img{
-  height:46px;
+  height:68px;
   width:auto;
   transition:height 0.4s ease;
 }
-.nav.scrolled .nav-logo img{ height:38px; }
+.nav.scrolled .nav-logo img{ height:52px; }
 
 .nav-pill{
   display:flex;
@@ -458,27 +482,27 @@ h2{
   border-radius:var(--radius-lg);
   overflow:hidden;
   aspect-ratio:4/3;
-  background:
-    radial-gradient(ellipse 70% 60% at 25% 20%, rgba(200,169,110,0.22), transparent 60%),
-    radial-gradient(ellipse 60% 60% at 80% 90%, rgba(74,103,65,0.5), transparent 65%),
-    linear-gradient(150deg, var(--color-surface-2), var(--color-bg) 80%);
-  border:1px solid var(--color-border);
+  background:var(--color-surface);
+  border:1.5px dashed var(--color-border);
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.about-visual .play-circle{
-  width:76px; height:76px;
-  border-radius:50%;
-  background:rgba(232,228,220,0.92);
-  color:var(--color-bg);
+.about-visual .placeholder-content{
   display:flex;
+  flex-direction:column;
   align-items:center;
-  justify-content:center;
-  transition:transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  gap:0.75rem;
+  color:var(--color-text-muted);
+  text-align:center;
 }
-.about-visual:hover .play-circle{ transform:scale(1.12); }
-.about-visual .play-circle svg{ width:24px; height:24px; margin-left:3px; }
+.about-visual .placeholder-content svg{ width:32px; height:32px; opacity:0.6; }
+.about-visual .placeholder-content span{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
 
 .about-text h2{ margin-bottom:1.25rem; }
 .about-text p{
@@ -539,15 +563,16 @@ h2{
   justify-content:space-between;
 }
 .benefit-icon{
-  font-size:1.3rem;
   width:40px; height:40px;
   border-radius:50%;
   background:rgba(200,169,110,0.1);
   border:1px solid rgba(200,169,110,0.25);
+  color:var(--color-accent);
   display:flex;
   align-items:center;
   justify-content:center;
 }
+.benefit-icon svg{ width:19px; height:19px; }
 .benefit-arrow{
   width:34px; height:34px;
   border-radius:50%;
@@ -674,6 +699,34 @@ h2{
 }
 .reprocann-card .btn{ margin-top:1.5rem; }
 
+/* ---------- respaldo institucional ---------- */
+.backing{ background:var(--color-bg); }
+.backing-header{ text-align:center; margin-bottom:3rem; }
+.backing-header h2{ margin-top:0.5rem; }
+.backing-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:1.5rem;
+}
+.backing-card{
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-md);
+  padding:2rem 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:140px;
+  transition:border-color 0.35s ease, transform 0.35s ease;
+}
+.backing-card:hover{ border-color:var(--color-accent); transform:translateY(-4px); }
+.backing-card img{
+  max-height:90px;
+  width:auto;
+  max-width:100%;
+  object-fit:contain;
+}
+
 /* ---------- catalogo teaser ---------- */
 .catalog-teaser{ background:var(--color-bg); }
 .catalog-card{
@@ -772,6 +825,10 @@ footer{
 /* ---------- responsive ---------- */
 @media (max-width:1024px){
   .benefits-grid{ grid-template-columns:repeat(2, 1fr); }
+}
+
+@media (max-width:640px){
+  .backing-grid{ grid-template-columns:1fr; }
 }
 
 @media (max-width:768px){
@@ -883,11 +940,11 @@ footer{
 </section>
 
 <!-- ============ QUIENES SOMOS ============ -->
-<section class="about section-pad">
+<section class="about light-section section-pad">
   <div class="container about-grid">
     <div class="about-text reveal">
       <span class="eyebrow-mono">Quiénes somos</span>
-      <h2>Una comunidad, no una tienda</h2>
+      <h2>Un club, no una tienda</h2>
       <p>The Wayland Club no es una tienda. Es una comunidad de pacientes
       acompañados por profesionales dentro del único marco legal vigente en Argentina.</p>
 
@@ -897,16 +954,18 @@ footer{
         <span class="chip"><span class="dot"></span>Envíos a todo el país</span>
       </div>
     </div>
+    <!-- CARGAR: foto real del equipo o del espacio de trabajo -->
     <div class="about-visual reveal">
-      <div class="play-circle">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <div class="placeholder-content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5.5-5-6.5 6-2-2-4 4"/></svg>
+        <span>Foto próximamente</span>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ BENEFICIOS ============ -->
-<section class="benefits section-pad">
+<section class="benefits light-section section-pad">
   <div class="container">
     <div class="reveal">
       <span class="eyebrow-mono">Beneficios</span>
@@ -915,27 +974,27 @@ footer{
     <div class="benefits-grid">
       <div class="benefit-card reveal">
         <div class="benefit-top">
-          <span class="benefit-icon">🌿</span>
+          <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M9 12l2 2 4-4"/></svg></span>
           <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </div>
         <div>
-          <h3>Sin costo</h3>
-          <p>Sin membresía ni adhesión. Solo tu documentación.</p>
+          <h3>Membresía sin costo</h3>
+          <p>Hay membresía para ser parte del Club, pero no tiene costo: solo presentás tu documentación.</p>
         </div>
       </div>
       <div class="benefit-card reveal">
         <div class="benefit-top">
-          <span class="benefit-icon">📦</span>
+          <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>
           <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </div>
         <div>
-          <h3>Envío al día siguiente</h3>
+          <h3>Envío en 24hs</h3>
           <p>Coordinamos al día siguiente de tu pedido. A domicilio o retiro.</p>
         </div>
       </div>
       <div class="benefit-card reveal">
         <div class="benefit-top">
-          <span class="benefit-icon">🔒</span>
+          <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
           <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </div>
         <div>
@@ -945,7 +1004,7 @@ footer{
       </div>
       <div class="benefit-card reveal">
         <div class="benefit-top">
-          <span class="benefit-icon">💬</span>
+          <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
           <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </div>
         <div>
@@ -958,7 +1017,7 @@ footer{
 </section>
 
 <!-- ============ COMO FUNCIONA ============ -->
-<section class="process section-pad" id="proceso">
+<section class="process light-section section-pad" id="proceso">
   <div class="container">
     <div class="process-header reveal">
       <span class="eyebrow-mono">Proceso</span>
@@ -998,8 +1057,8 @@ footer{
 
       <div class="step reveal">
         <div class="step-card">
-          <h3>03 · Sin costo de adhesión</h3>
-          <p>Sin membresía. Sin costo de asociación. Solo la documentación que requiere REPROCANN.</p>
+          <h3>03 · Membresía sin costo</h3>
+          <p>Hay membresía para ser parte del Club, pero es sin costo: no pagás adhesión ni mensualidad, solo presentás la documentación que requiere REPROCANN.</p>
         </div>
         <div class="step-num">04</div>
       </div>
@@ -1016,7 +1075,7 @@ footer{
 </section>
 
 <!-- ============ REPROCANN ============ -->
-<section class="reprocann section-pad" id="reprocann">
+<section class="reprocann light-section section-pad" id="reprocann">
   <div class="container">
     <span class="eyebrow-mono reveal">Marco legal</span>
     <div class="reprocann-card reveal">
@@ -1031,8 +1090,29 @@ footer{
   </div>
 </section>
 
+<!-- ============ RESPALDO INSTITUCIONAL ============ -->
+<section class="backing light-section section-pad">
+  <div class="container">
+    <div class="backing-header reveal">
+      <span class="eyebrow-mono">Respaldo institucional</span>
+      <h2>Todo dentro del marco legal</h2>
+    </div>
+    <div class="backing-grid">
+      <div class="backing-card reveal">
+        <img src="assets/badge-reprocann.png" alt="REPROCANN — Registro del Programa Cannabis, Ministerio de Salud de Argentina">
+      </div>
+      <div class="backing-card reveal">
+        <img src="assets/badge-organicos.png" alt="Orgánicos de Argentina S.A. — Cannabis y Cáñamo">
+      </div>
+      <div class="backing-card reveal">
+        <img src="assets/badge-inase.jpg" alt="INASE — Instituto Nacional de Semillas">
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ CATALOGO (teaser informativo) ============ -->
-<section class="catalog-teaser section-pad" id="catalogo">
+<section class="catalog-teaser light-section section-pad" id="catalogo">
   <div class="container">
     <div class="catalog-card reveal">
       <span class="eyebrow-mono">Próximamente</span>
@@ -1117,7 +1197,6 @@ footer{
     var y = window.scrollY;
     if(y < window.innerHeight){
       particlesCanvas.style.transform = 'translateY(' + (y * 0.15) + 'px)';
-      heroContent.style.opacity = String(Math.max(1 - y / 420, 0));
     }
   }
 
