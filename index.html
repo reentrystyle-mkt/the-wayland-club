@@ -98,7 +98,7 @@ section{ position:relative; }
   top:0; left:0;
   height:2px;
   width:0%;
-  background:var(--color-accent);
+  background:var(--color-accent-strong);
   z-index:1000;
   transition:width 0.1s linear;
 }
@@ -180,7 +180,7 @@ section{ position:relative; }
   color:var(--color-text);
   white-space:nowrap;
 }
-.nav-logo-word span{ color:var(--color-accent); }
+.nav-logo-word span{ color:var(--color-accent-strong); }
 
 .nav-pill{
   position:relative;
@@ -338,7 +338,7 @@ section{ position:relative; }
 .eyebrow{
   font-family:var(--font-mono);
   font-size:var(--fs-mono);
-  color:var(--color-accent);
+  color:var(--color-accent-strong);
   letter-spacing:0.15em;
   text-transform:uppercase;
   margin-bottom:1.5rem;
@@ -346,15 +346,15 @@ section{ position:relative; }
   align-items:center;
   gap:0.5rem;
   padding:0.5rem 1rem;
-  background:rgba(21,85,116,0.14);
-  border:1px solid rgba(21,85,116,0.4);
+  background:rgba(235,38,159,0.12);
+  border:1px solid rgba(235,38,159,0.4);
   border-radius:var(--radius-pill);
 }
 .eyebrow::before{
   content:'';
   width:6px; height:6px;
   border-radius:50%;
-  background:var(--color-accent);
+  background:var(--color-accent-strong);
 }
 .hero h1{
   font-family:var(--font-display);
@@ -374,12 +374,10 @@ section{ position:relative; }
 @keyframes wordIn{
   to{ opacity:1; transform:translateY(0); }
 }
-.hero h1 .accent-word{ color:var(--color-accent); }
+.hero h1 .accent-word{ color:var(--color-accent-strong); }
 .hero-sub{
-  font-family:var(--font-serif);
-  font-style:italic;
-  font-size:1.2rem;
-  font-weight:400;
+  font-size:1.05rem;
+  font-weight:300;
   color:var(--color-text-muted);
   max-width:460px;
   margin-bottom:2.5rem;
@@ -720,10 +718,10 @@ h2{
   max-width:760px;
 }
 .reprocann-card p{
-  font-family:var(--font-serif);
-  font-size:1.15rem;
+  font-size:1.05rem;
   color:var(--color-text-muted);
   margin:1.25rem 0;
+  font-weight:300;
 }
 .reprocann-card .btn{ margin-top:1.5rem; }
 
@@ -978,7 +976,6 @@ footer{
 <section class="about light-section section-pad">
   <div class="container about-grid">
     <div class="about-text reveal">
-      <span class="eyebrow-mono">Quiénes somos</span>
       <h2>Un club, no una tienda</h2>
       <p>The Wayland Club no es una tienda. Es una comunidad de pacientes
       acompañados por profesionales dentro del único marco legal vigente en Argentina.</p>
@@ -999,7 +996,6 @@ footer{
 <section class="benefits light-section section-pad">
   <div class="container">
     <div class="reveal">
-      <span class="eyebrow-mono">Beneficios</span>
       <h2>Por qué The Wayland Club</h2>
     </div>
     <div class="benefits-grid">
@@ -1047,7 +1043,6 @@ footer{
 <section class="process light-section section-pad" id="proceso">
   <div class="container">
     <div class="process-header reveal">
-      <span class="eyebrow-mono">Proceso</span>
       <h2>El proceso, paso a paso</h2>
     </div>
 
@@ -1104,7 +1099,6 @@ footer{
 <!-- ============ REPROCANN ============ -->
 <section class="reprocann light-section section-pad" id="reprocann">
   <div class="container">
-    <span class="eyebrow-mono reveal">Marco legal</span>
     <div class="reprocann-card reveal">
       <h2>¿Qué es REPROCANN?</h2>
       <p>REPROCANN es el Registro del Programa de C4NN4BIS del Ministerio de Salud
@@ -1121,7 +1115,6 @@ footer{
 <section class="backing light-section section-pad">
   <div class="container">
     <div class="backing-header reveal">
-      <span class="eyebrow-mono">Respaldo institucional</span>
       <h2>Todo dentro del marco legal</h2>
     </div>
     <div class="backing-grid">
@@ -1142,7 +1135,6 @@ footer{
 <section class="catalog-teaser light-section section-pad" id="catalogo">
   <div class="container">
     <div class="catalog-card reveal">
-      <span class="eyebrow-mono">Próximamente</span>
       <h2>Nuestro catálogo</h2>
       <p>
         Estamos preparando el catálogo completo para socios del Club con REPROCANN vigente.
