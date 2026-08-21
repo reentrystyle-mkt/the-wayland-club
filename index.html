@@ -118,9 +118,10 @@ section{ position:relative; }
 .benefits-grid .reveal:nth-child(2){ transition-delay:0.08s; }
 .benefits-grid .reveal:nth-child(3){ transition-delay:0.16s; }
 .benefits-grid .reveal:nth-child(4){ transition-delay:0.24s; }
-.backing-grid .reveal:nth-child(1){ transition-delay:0s; }
-.backing-grid .reveal:nth-child(2){ transition-delay:0.1s; }
-.backing-grid .reveal:nth-child(3){ transition-delay:0.2s; }
+.backing-track .reveal:nth-child(1){ transition-delay:0s; }
+.backing-track .reveal:nth-child(2){ transition-delay:0.08s; }
+.backing-track .reveal:nth-child(3){ transition-delay:0.16s; }
+.backing-track .reveal:nth-child(4){ transition-delay:0.24s; }
 
 /* ---------- icon buttons ---------- */
 .icon-btn{
@@ -319,7 +320,7 @@ section{ position:relative; }
   position:absolute;
   top:50%;
   right:clamp(1rem, 5vw, 5rem);
-  width:clamp(200px, 22vw, 340px);
+  width:clamp(180px, 19vw, 300px);
   z-index:1;
   pointer-events:none;
   filter:drop-shadow(0 40px 70px rgba(0,0,0,0.55));
@@ -363,15 +364,9 @@ section{ position:relative; }
   align-items:center;
   gap:0.5rem;
   padding:0.5rem 1rem;
-  background:rgba(235,38,159,0.12);
-  border:1px solid rgba(235,38,159,0.4);
+  background:#ffffff;
+  border:1px solid var(--color-accent-strong);
   border-radius:var(--radius-pill);
-}
-.eyebrow::before{
-  content:'';
-  width:6px; height:6px;
-  border-radius:50%;
-  background:var(--color-accent-strong);
 }
 .hero h1{
   font-family:var(--font-display);
@@ -749,9 +744,10 @@ h2{
 .backing-header h2{ margin-top:0.5rem; }
 .backing-grid{
   display:grid;
-  grid-template-columns:repeat(3, 1fr);
+  grid-template-columns:repeat(4, 1fr);
   gap:1.5rem;
 }
+.backing-track{ display:contents; }
 .backing-card{
   background:var(--color-surface-2);
   border:1px solid var(--color-border);
@@ -765,7 +761,7 @@ h2{
 }
 .backing-card:hover{ border-color:var(--color-accent); transform:translateY(-4px); }
 .backing-card img{
-  max-height:64px;
+  max-height:60px;
   width:auto;
   max-width:100%;
   object-fit:contain;
@@ -871,8 +867,24 @@ footer{
   .benefits-grid{ grid-template-columns:repeat(2, 1fr); }
 }
 
-@media (max-width:640px){
-  .backing-grid{ grid-template-columns:1fr; }
+@media (max-width:1024px){
+  .backing-grid{ grid-template-columns:repeat(2, 1fr); }
+}
+
+@media (max-width:768px){
+  .backing-grid{
+    display:block;
+    overflow:hidden;
+    border-radius:var(--radius-md);
+  }
+  .backing-track{
+    display:flex;
+    width:100%;
+  }
+  .backing-card{
+    flex:0 0 100%;
+    min-height:160px;
+  }
 }
 
 @media (max-width:768px){
@@ -1003,7 +1015,7 @@ footer{
       <div class="chip-row">
         <span class="chip"><span class="dot"></span>ONG habilitada por el Ministerio de Salud</span>
         <span class="chip"><span class="dot"></span>Marco REPROCANN</span>
-        <span class="chip"><span class="dot"></span>Envíos a todo el país</span>
+        <span class="chip"><span class="dot"></span>Envíos dentro de Buenos Aires</span>
       </div>
     </div>
     <div class="about-visual reveal">
@@ -1034,7 +1046,7 @@ footer{
         </div>
         <div>
           <h3>Envío en 24hs</h3>
-          <p>Coordinamos al día siguiente de tu pedido. A domicilio o retiro.</p>
+          <p>Coordinamos para el día siguiente de tu pedido, a domicilio o a retiro.</p>
         </div>
       </div>
       <div class="benefit-card reveal">
@@ -1051,8 +1063,8 @@ footer{
           <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
         </div>
         <div>
-          <h3>Acompañamiento real</h3>
-          <p>Desde el primer mensaje hasta cada dispensa.</p>
+          <h3>Acompañamiento</h3>
+          <p>Desde el primer mensaje hasta cada dispensa: seguís siendo parte del Club.</p>
         </div>
       </div>
     </div>
@@ -1084,7 +1096,7 @@ footer{
       <div class="step reveal">
         <div class="step-card">
           <h3>02 · Sin REPROCANN</h3>
-          <p>Te derivamos con nuestro equipo médico para gestionarlo dentro del marco legal.</p>
+          <p>Te derivamos con nuestro equipo médico para evaluar tu patología o tratamiento, y gestionar tu REPROCANN siempre dentro del marco legal.</p>
         </div>
         <div class="step-num">02</div>
       </div>
@@ -1094,7 +1106,7 @@ footer{
           <h3>02 · Con REPROCANN</h3>
           <p>Sumás tres documentos: credencial REPROCANN + consentimiento médico + acuerdo ONG/paciente.</p>
         </div>
-        <div class="step-num">03</div>
+        <div class="step-num">02</div>
       </div>
 
       <div class="step reveal">
@@ -1102,15 +1114,15 @@ footer{
           <h3>03 · Membresía sin costo</h3>
           <p>Hay membresía para ser parte del Club, pero es sin costo: no pagás adhesión ni mensualidad, solo presentás la documentación que requiere REPROCANN.</p>
         </div>
-        <div class="step-num">04</div>
+        <div class="step-num">03</div>
       </div>
 
       <div class="step reveal">
         <div class="step-card">
           <h3>04 · Accedés al catálogo</h3>
-          <p>Hacé tu pedido. Al día siguiente coordinamos envío a domicilio o retiro acordado.</p>
+          <p>Hacé tu pedido. Coordinamos para el día siguiente, a domicilio o a retiro. Envío en 24 horas dentro de Buenos Aires.</p>
         </div>
-        <div class="step-num">05</div>
+        <div class="step-num">04</div>
       </div>
     </div>
   </div>
@@ -1137,15 +1149,20 @@ footer{
     <div class="backing-header reveal">
       <h2>Todo dentro del marco legal</h2>
     </div>
-    <div class="backing-grid">
-      <div class="backing-card reveal">
-        <img src="assets/badge-reprocann.png" alt="REPROCANN — Registro del Programa Cannabis, Ministerio de Salud de Argentina">
-      </div>
-      <div class="backing-card reveal">
-        <img src="assets/badge-organicos.png" alt="Orgánicos de Argentina S.A. — Cannabis y Cáñamo">
-      </div>
-      <div class="backing-card reveal">
-        <img src="assets/badge-inase.jpg" alt="INASE — Instituto Nacional de Semillas">
+    <div class="backing-grid" id="backingGrid">
+      <div class="backing-track" id="backingTrack">
+        <div class="backing-card reveal">
+          <img src="assets/badge-reprocann.jpg" alt="REPROCANN — Registro del Programa Cannabis">
+        </div>
+        <div class="backing-card reveal">
+          <img src="assets/badge-organicos.jpg" alt="Orgánicos de Argentina S.A. — Cannabis y Cáñamo">
+        </div>
+        <div class="backing-card reveal">
+          <img src="assets/badge-ministerio.jpg" alt="Ministerio de Salud — Presidencia de la Nación">
+        </div>
+        <div class="backing-card reveal">
+          <img src="assets/badge-inase.jpg" alt="INASE — Instituto Nacional de Semillas">
+        </div>
       </div>
     </div>
   </div>
@@ -1388,6 +1405,51 @@ footer{
     navPill.addEventListener('mouseleave', function(){ moveIndicatorTo(activeLink); });
   }
   window.addEventListener('resize', function(){ moveIndicatorTo(activeLink, true); });
+
+  /* ---------- backing logos: auto-rotating carousel on mobile ---------- */
+  (function(){
+    var grid = document.getElementById('backingGrid');
+    var track = document.getElementById('backingTrack');
+    if(!grid || !track) return;
+
+    var cloned = false;
+    var idx = 0;
+    var timer = null;
+
+    function isMobile(){ return window.matchMedia('(max-width: 768px)').matches; }
+
+    function start(){
+      if(!isMobile() || timer || reduceMotion) return;
+      if(!cloned){
+        track.appendChild(track.children[0].cloneNode(true));
+        cloned = true;
+      }
+      timer = setInterval(function(){
+        idx++;
+        track.style.transition = 'transform 0.6s cubic-bezier(.65,0,.35,1)';
+        track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+        if(idx === track.children.length - 1){
+          setTimeout(function(){
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)';
+            idx = 0;
+          }, 640);
+        }
+      }, 2800);
+    }
+
+    function stop(){
+      if(timer){ clearInterval(timer); timer = null; }
+      track.style.transition = '';
+      track.style.transform = '';
+      idx = 0;
+    }
+
+    if(isMobile()){ start(); }
+    window.addEventListener('resize', function(){
+      if(isMobile()){ start(); } else { stop(); }
+    });
+  })();
 
   /* ---------- reveal on scroll ---------- */
   var revealEls = document.querySelectorAll('.reveal');

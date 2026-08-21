@@ -89,9 +89,13 @@ como favicon y, recortado, como ícono de marca en el nav junto al wordmark
 - Favicon recortado del isologo: `assets/favicon-32.png`,
   `assets/favicon-512.png`, `assets/apple-touch-icon.png`.
 - Logos de respaldo institucional provistos por el cliente:
-  `assets/badge-reprocann.png` (REPROCANN + Ministerio de Salud),
-  `assets/badge-organicos.png` (Orgánicos de Argentina S.A.),
-  `assets/badge-inase.jpg` (INASE).
+  `assets/badge-reprocann.jpg` (REPROCANN), `assets/badge-organicos.jpg`
+  (Orgánicos de Argentina S.A.), `assets/badge-ministerio.jpg` (Ministerio de
+  Salud, logo propio y separado de REPROCANN), `assets/badge-inase.jpg`
+  (INASE). Orden fijo en la sección "Todo dentro del marco legal": REPROCANN,
+  Orgánicos, Ministerio, INASE — en mobile rotan solos en un carrusel.
+- Envíos: solo dentro de Buenos Aires (NO "todo el país" — corregido
+  2026-08-21, era un error del contenido anterior).
 - Contacto real: WhatsApp `https://wa.link/3i3nep`, Instagram
   `@the.waylandclub`.
 - Foto real de planta cultivada por el cliente en "Quiénes somos"
