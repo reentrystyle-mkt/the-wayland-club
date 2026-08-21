@@ -56,9 +56,10 @@ manualmente por WhatsApp a quien lo pide.
   compra/venta ni de uso recreativo.
 - "MADE Waffle Soft" (tipografía primaria del brand book oficial) es gratis
   solo para uso personal — no está licenciada para uso comercial. El sitio
-  usa "Baloo 2" (Google Fonts, gratis, espíritu rounded/bold similar) hasta
-  que el cliente compre la licencia comercial; si la compran, reemplazar
-  `--font-display` y cargar el archivo propio.
+  usa "Montserrat" (Google Fonts, gratis, recta/geométrica — el cliente
+  probó primero "Baloo 2" rounded y pidió algo más recto) hasta que el
+  cliente compre la licencia comercial de Waffle Soft; si la compran,
+  reemplazar `--font-display` y cargar el archivo propio.
 
 ## Brand Commitments
 
@@ -74,9 +75,10 @@ acento deliberada (no las 6 en igual peso):
 - **Mustard `#bbb54e`** — textura chica: partículas del hero, detalles de
   gradiente. Oliva `#404416` — tinte profundo en gradientes, no protagonista.
 
-Tipografía: "Baloo 2" (display/headlines, ver nota de licencia arriba) +
-"Arapey" italic (texto secundario editorial: bajada del hero, párrafo de
-REPROCANN) + DM Sans (cuerpo general) + DM Mono (labels/datos). Logo con
+Tipografía: "Montserrat" (display/headlines, ver nota de licencia arriba) +
+DM Sans (cuerpo general, incluida la bajada del hero y el párrafo de
+REPROCANN — Arapey italic se probó ahí y se revirtió por pedido del
+cliente) + DM Mono (labels/datos). Logo con
 isotipo "W" (bicolor magenta/teal) provisto por el cliente — usado también
 como favicon y, recortado, como ícono de marca en el nav junto al wordmark
 "The Wayland Club".

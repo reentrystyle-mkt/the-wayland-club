@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Arapey:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Arapey:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap');
 
 :root{
   /* Official brand palette: black/white base, teal as the structural/trust
@@ -32,7 +32,7 @@
   --color-text-muted: #9aa8a6;
   --color-border: #1c2a2e;
 
-  --font-display: 'Baloo 2', sans-serif;
+  --font-display: 'Montserrat', sans-serif;
   --font-serif: 'Arapey', serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
@@ -323,12 +323,29 @@ section{ position:relative; }
   z-index:1;
   pointer-events:none;
   filter:drop-shadow(0 40px 70px rgba(0,0,0,0.55));
-  transform:translateY(-50%);
+  transform:translateY(calc(-50% + var(--cg-lift, 0px))) rotate(var(--cg-rotate, 0deg));
   will-change:transform;
 }
-.hero-cogollo img{ width:100%; height:auto; }
+.hero-cogollo-bob{
+  animation:cogolloBob 7s ease-in-out infinite;
+}
+@keyframes cogolloBob{
+  0%, 100%{ transform:translateY(0) rotate(-1.5deg); }
+  50%{ transform:translateY(-16px) rotate(1.5deg); }
+}
+.hero-cogollo img{ width:100%; height:auto; display:block; }
 @media (max-width:1024px){
-  .hero-cogollo{ display:none; }
+  .hero-cogollo{
+    top:48%;
+    left:50%;
+    right:auto;
+    width:64vw;
+    max-width:300px;
+    opacity:0.24;
+    filter:drop-shadow(0 30px 50px rgba(0,0,0,0.5));
+    transform:translate(-50%, calc(-50% + var(--cg-lift, 0px))) rotate(var(--cg-rotate, 0deg));
+  }
+  .hero-cogollo-bob{ animation:none; }
 }
 .hero-content{
   position:relative;
@@ -404,12 +421,13 @@ section{ position:relative; }
   width:44px; height:44px;
   border-radius:50%;
   background:var(--color-accent);
-  color:var(--color-bg);
+  color:#ffffff;
   display:flex;
   align-items:center;
   justify-content:center;
   font-family:var(--font-mono);
-  font-size:0.7rem;
+  font-size:0.75rem;
+  font-weight:500;
   flex-shrink:0;
   text-align:center;
   line-height:1.1;
@@ -747,7 +765,7 @@ h2{
 }
 .backing-card:hover{ border-color:var(--color-accent); transform:translateY(-4px); }
 .backing-card img{
-  max-height:90px;
+  max-height:64px;
   width:auto;
   max-width:100%;
   object-fit:contain;
@@ -946,7 +964,9 @@ footer{
 <section class="hero" id="top">
   <canvas id="particles"></canvas>
   <div class="hero-cogollo" id="heroCogollo">
-    <img src="assets/cogollo-hero.png" alt="" aria-hidden="true">
+    <div class="hero-cogollo-bob">
+      <img src="assets/cogollo-hero.png" alt="" aria-hidden="true">
+    </div>
   </div>
   <div class="container hero-content">
     <span class="eyebrow">ONG · MINISTERIO DE SALUD · REPROCANN</span>
@@ -958,7 +978,7 @@ footer{
 
     <div class="hero-bottom">
       <div class="hero-card reveal">
-        <div class="hero-card-icon">ONG<br>REP.</div>
+        <div class="hero-card-icon">ONG</div>
         <p><strong>Habilitados y en regla</strong>Operamos 100% dentro del marco legal REPROCANN</p>
       </div>
       <div class="hero-cta-group reveal">
@@ -1265,9 +1285,17 @@ footer{
     if(y < window.innerHeight){
       particlesCanvas.style.transform = 'translateY(' + (y * 0.15) + 'px)';
       if(heroCogollo){
+        var isMobile = window.innerWidth <= 1024;
         var rotate = Math.min(y * 0.06, 22);
-        var lift = y * 0.22;
-        heroCogollo.style.transform = 'translateY(calc(-50% - ' + lift + 'px)) rotate(' + rotate + 'deg)';
+        heroCogollo.style.setProperty('--cg-rotate', rotate + 'deg');
+        if(isMobile){
+          /* background detail: falls away and fades as you swipe down */
+          heroCogollo.style.setProperty('--cg-lift', (y * 0.5) + 'px');
+          heroCogollo.style.opacity = String(Math.max(0.24 * (1 - y / 260), 0));
+        } else {
+          /* floats gently upward, opposite the page scroll */
+          heroCogollo.style.setProperty('--cg-lift', (-(y * 0.22)) + 'px');
+        }
       }
     }
   }
