@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap');
 
 :root{
   --color-bg: #080c0a;
@@ -20,16 +20,20 @@
   --color-text-muted: #8a9187;
   --color-border: #1e2b1c;
 
-  --font-display: 'Cormorant Garamond', serif;
+  --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
 
-  --fs-hero: clamp(3.5rem, 8vw, 7rem);
+  --fs-hero: clamp(3rem, 7.5vw, 6.4rem);
   --fs-display: clamp(2rem, 4vw, 3.5rem);
-  --fs-h2: clamp(1.5rem, 3vw, 2.2rem);
+  --fs-h2: clamp(1.6rem, 3vw, 2.4rem);
   --fs-body: 1rem;
   --fs-small: 0.85rem;
   --fs-mono: 0.8rem;
+
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-pill: 999px;
 }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
@@ -46,6 +50,7 @@ body{
 }
 
 img{ max-width:100%; display:block; }
+svg{ display:block; }
 
 a{ color:inherit; text-decoration:none; }
 
@@ -79,79 +84,113 @@ section{ position:relative; }
   transform:translateY(0);
 }
 
+/* ---------- icon buttons ---------- */
+.icon-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  color:var(--color-text);
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.3s ease, border-color 0.3s ease;
+  flex-shrink:0;
+}
+.icon-btn svg{ width:17px; height:17px; }
+.icon-btn:hover{
+  background:var(--color-accent);
+  border-color:var(--color-accent);
+  color:var(--color-bg);
+  transform:scale(1.1) rotate(-8deg);
+}
+
 /* ---------- nav ---------- */
 .nav{
   position:fixed;
   top:0; left:0; right:0;
   z-index:900;
-  padding:1.25rem 0;
-  background:transparent;
-  transition:background 0.4s ease, padding 0.4s ease, border-color 0.4s ease;
-  border-bottom:1px solid transparent;
+  padding:1.1rem 0;
+  transition:padding 0.4s ease;
 }
-.nav.scrolled{
-  background:rgba(15,26,19,0.92);
-  backdrop-filter:blur(10px);
-  padding:0.85rem 0;
-  border-bottom:1px solid var(--color-border);
-}
+.nav.scrolled{ padding:0.7rem 0; }
 .nav .container{
   display:flex;
   align-items:center;
   justify-content:space-between;
+  gap:1rem;
 }
 .nav-logo{
-  font-family:var(--font-display);
-  font-weight:700;
-  font-size:1.4rem;
-  letter-spacing:0.04em;
-  color:var(--color-text);
   display:flex;
   align-items:center;
+  flex-shrink:0;
 }
-.nav-logo span{ color:var(--color-accent); }
 .nav-logo img{
-  height:52px;
+  height:46px;
   width:auto;
+  transition:height 0.4s ease;
 }
-.nav-links{
+.nav.scrolled .nav-logo img{ height:38px; }
+
+.nav-pill{
   display:flex;
   align-items:center;
-  gap:2.25rem;
-  list-style:none;
+  gap:0.25rem;
+  background:rgba(15,26,19,0.75);
+  border:1px solid var(--color-border);
+  backdrop-filter:blur(14px);
+  border-radius:var(--radius-pill);
+  padding:0.35rem;
 }
-.nav-links a{
+.nav-pill a{
   font-size:var(--fs-small);
   color:var(--color-text-muted);
-  transition:color 0.3s ease;
-  position:relative;
+  padding:0.55rem 1.1rem;
+  border-radius:var(--radius-pill);
+  transition:color 0.3s ease, background 0.3s ease;
+  white-space:nowrap;
 }
-.nav-links a:hover{ color:var(--color-text); }
+.nav-pill a:hover{ color:var(--color-text); background:rgba(232,228,220,0.06); }
+.nav-pill a.active{ color:var(--color-bg); background:var(--color-text); }
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  flex-shrink:0;
+}
 .nav-cta{
   display:inline-block;
-  padding:0.6rem 1.4rem;
+  padding:0.65rem 1.4rem;
   background:var(--color-accent);
   color:var(--color-bg);
-  font-family:var(--font-mono);
-  font-size:0.75rem;
-  letter-spacing:0.05em;
-  border-radius:2px;
-  transition:opacity 0.3s ease, transform 0.3s ease;
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:0.85rem;
+  border-radius:var(--radius-pill);
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
 }
-.nav-cta:hover{ opacity:0.85; transform:translateY(-1px); }
+.nav-cta:hover{ transform:scale(1.05) translateY(-2px); box-shadow:0 10px 24px -8px rgba(200,169,110,0.5); }
 
 .nav-toggle{
   display:none;
   flex-direction:column;
   gap:5px;
-  background:none;
-  border:none;
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:50%;
+  width:44px;
+  height:44px;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
-  padding:0.5rem;
+  padding:0;
   z-index:950;
+  flex-shrink:0;
 }
 .nav-toggle span{
-  width:22px;
+  width:18px;
   height:1.5px;
   background:var(--color-text);
   transition:transform 0.3s ease, opacity 0.3s ease;
@@ -169,40 +208,54 @@ section{ position:relative; }
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:2rem;
+  gap:1.75rem;
   transform:translateY(-100%);
   transition:transform 0.5s cubic-bezier(.65,0,.35,1);
 }
 .mobile-menu.open{ transform:translateY(0); }
 .mobile-menu a{
   font-family:var(--font-display);
-  font-size:1.8rem;
+  font-weight:600;
+  font-size:1.7rem;
   color:var(--color-text);
 }
-.mobile-menu .nav-cta{ margin-top:1rem; }
+.mobile-menu .mobile-social{
+  display:flex;
+  gap:0.75rem;
+  margin-top:0.5rem;
+}
+.mobile-menu .nav-cta{ margin-top:0.75rem; }
 
 /* ---------- hero ---------- */
 .hero{
   min-height:100vh;
   display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
+  align-items:flex-end;
   position:relative;
-  padding:8rem 1.5rem 4rem;
+  padding:9rem 0 6.5rem;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 45% at 18% 12%, rgba(74,103,65,0.35), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 85% 20%, rgba(200,169,110,0.14), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(22,33,18,0.9), transparent 70%);
+  z-index:0;
 }
 #particles{
   position:absolute;
   inset:0;
   width:100%;
   height:100%;
-  z-index:0;
+  z-index:1;
 }
 .hero-content{
   position:relative;
-  z-index:1;
-  max-width:900px;
+  z-index:2;
+  width:100%;
 }
 .eyebrow{
   font-family:var(--font-mono);
@@ -210,16 +263,29 @@ section{ position:relative; }
   color:var(--color-accent);
   letter-spacing:0.15em;
   text-transform:uppercase;
-  margin-bottom:1.75rem;
-  display:inline-block;
+  margin-bottom:1.5rem;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.5rem 1rem;
+  background:rgba(200,169,110,0.08);
+  border:1px solid rgba(200,169,110,0.25);
+  border-radius:var(--radius-pill);
+}
+.eyebrow::before{
+  content:'';
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--color-accent);
 }
 .hero h1{
   font-family:var(--font-display);
-  font-weight:800;
+  font-weight:700;
   font-size:var(--fs-hero);
-  line-height:1.05;
-  letter-spacing:-0.01em;
+  line-height:1.0;
+  letter-spacing:-0.02em;
   margin-bottom:1.75rem;
+  max-width:14ch;
 }
 .hero h1 .word{
   display:inline-block;
@@ -230,34 +296,80 @@ section{ position:relative; }
 @keyframes wordIn{
   to{ opacity:1; transform:translateY(0); }
 }
-.hero h1 .accent-word{ color:var(--color-accent); font-style:italic; }
+.hero h1 .accent-word{ color:var(--color-accent); }
 .hero-sub{
-  font-size:1.1rem;
+  font-size:1.05rem;
   font-weight:300;
   color:var(--color-text-muted);
-  max-width:620px;
-  margin:0 auto 2.5rem;
+  max-width:460px;
+  margin-bottom:2.5rem;
 }
-.hero-ctas{
+.hero-bottom{
   display:flex;
-  gap:1rem;
-  justify-content:center;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:1.5rem;
   flex-wrap:wrap;
+}
+.hero-card{
+  background:rgba(15,26,19,0.65);
+  border:1px solid var(--color-border);
+  backdrop-filter:blur(14px);
+  border-radius:var(--radius-md);
+  padding:1.1rem 1.3rem;
+  display:flex;
+  align-items:center;
+  gap:0.9rem;
+  max-width:340px;
+}
+.hero-card .hero-card-icon{
+  width:44px; height:44px;
+  border-radius:50%;
+  background:var(--color-accent);
+  color:var(--color-bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  flex-shrink:0;
+  text-align:center;
+  line-height:1.1;
+}
+.hero-card p{
+  font-size:0.78rem;
+  color:var(--color-text-muted);
+}
+.hero-card strong{
+  display:block;
+  color:var(--color-text);
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:0.85rem;
+  margin-bottom:0.15rem;
+}
+
+.hero-cta-group{
+  display:flex;
+  align-items:center;
+  gap:1rem;
 }
 
 .btn{
   position:relative;
-  display:inline-block;
-  padding:1rem 2rem;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:1rem 1.9rem;
   font-family:var(--font-body);
   font-size:0.9rem;
-  font-weight:500;
-  letter-spacing:0.02em;
-  border-radius:2px;
+  font-weight:600;
+  letter-spacing:0.01em;
+  border-radius:var(--radius-pill);
   overflow:hidden;
   z-index:1;
   cursor:pointer;
-  transition:color 0.4s ease, border-color 0.4s ease;
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), border-color 0.4s ease, box-shadow 0.35s ease;
 }
 .btn::before{
   content:'';
@@ -268,6 +380,8 @@ section{ position:relative; }
   transition:transform 0.45s cubic-bezier(.65,0,.35,1);
 }
 .btn:hover::before{ transform:translateY(0); }
+.btn:hover{ transform:scale(1.04) translateY(-3px); }
+.btn:active{ transform:scale(0.98) translateY(-1px); }
 
 .btn-primary{
   background:var(--color-accent);
@@ -275,6 +389,7 @@ section{ position:relative; }
   border:1px solid var(--color-accent);
 }
 .btn-primary::before{ background:#e6c98a; }
+.btn-primary:hover{ box-shadow:0 14px 28px -10px rgba(200,169,110,0.55); }
 
 .btn-secondary{
   background:transparent;
@@ -290,35 +405,29 @@ section{ position:relative; }
   border:1px solid var(--color-bg);
 }
 .btn-dark::before{ background:#141c11; }
+.btn-dark:hover{ box-shadow:0 14px 28px -10px rgba(8,12,10,0.55); }
 
 .scroll-indicator{
   position:absolute;
-  bottom:2.5rem;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:1;
-  width:1px;
-  height:60px;
-  background:linear-gradient(to bottom, transparent, var(--color-accent) 40%, transparent);
-  overflow:hidden;
+  bottom:2.2rem;
+  right:clamp(1.25rem, 4vw, 3rem);
+  z-index:2;
+  width:48px; height:48px;
+  border-radius:50%;
+  border:1px solid var(--color-border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--color-accent);
+  animation:bob 2.4s ease-in-out infinite;
 }
-.scroll-indicator::after{
-  content:'';
-  position:absolute;
-  top:-60px;
-  left:0;
-  width:1px;
-  height:60px;
-  background:var(--color-accent);
-  animation:scrollPulse 2.2s ease-in-out infinite;
-}
-@keyframes scrollPulse{
-  0%{ top:-60px; }
-  100%{ top:60px; }
+@keyframes bob{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(8px); }
 }
 
 /* ---------- section headers ---------- */
-.section-pad{ padding:7rem 0; }
+.section-pad{ padding:6.5rem 0; }
 .eyebrow-mono{
   font-family:var(--font-mono);
   font-size:var(--fs-mono);
@@ -332,63 +441,143 @@ h2{
   font-family:var(--font-display);
   font-weight:700;
   font-size:var(--fs-h2);
-  line-height:1.2;
+  line-height:1.15;
+  letter-spacing:-0.01em;
 }
 
 /* ---------- quienes somos ---------- */
 .about{ background:var(--color-bg); }
 .about-grid{
   display:grid;
-  grid-template-columns:1.4fr 1fr;
-  gap:4rem;
-  align-items:start;
+  grid-template-columns:1fr 1.1fr;
+  gap:3rem;
+  align-items:center;
 }
+.about-visual{
+  position:relative;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  aspect-ratio:4/3;
+  background:
+    radial-gradient(ellipse 70% 60% at 25% 20%, rgba(200,169,110,0.22), transparent 60%),
+    radial-gradient(ellipse 60% 60% at 80% 90%, rgba(74,103,65,0.5), transparent 65%),
+    linear-gradient(150deg, var(--color-surface-2), var(--color-bg) 80%);
+  border:1px solid var(--color-border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.about-visual .play-circle{
+  width:76px; height:76px;
+  border-radius:50%;
+  background:rgba(232,228,220,0.92);
+  color:var(--color-bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+.about-visual:hover .play-circle{ transform:scale(1.12); }
+.about-visual .play-circle svg{ width:24px; height:24px; margin-left:3px; }
+
+.about-text h2{ margin-bottom:1.25rem; }
 .about-text p{
-  font-size:1.15rem;
+  font-size:1.1rem;
   font-weight:300;
-  color:var(--color-text);
-  margin-bottom:1.5rem;
+  color:var(--color-text-muted);
+  margin-bottom:2rem;
   max-width:520px;
 }
-.about-icons{
-  margin-top:2.5rem;
+.chip-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.65rem;
+}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:0.45rem;
+  font-size:var(--fs-small);
+  color:var(--color-text);
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  padding:0.6rem 1.1rem;
+  border-radius:var(--radius-pill);
+  transition:border-color 0.3s ease, transform 0.3s ease;
+}
+.chip:hover{ border-color:var(--color-accent); transform:translateY(-2px); }
+.chip .dot{ width:6px; height:6px; border-radius:50%; background:var(--color-accent); }
+
+/* ---------- beneficios ---------- */
+.benefits{ background:var(--color-surface); }
+.benefits-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:1.25rem;
+  margin-top:3rem;
+}
+.benefit-card{
+  position:relative;
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  padding:1.75rem 1.5rem 1.5rem;
+  min-height:220px;
   display:flex;
   flex-direction:column;
-  gap:1.25rem;
+  justify-content:space-between;
+  transition:border-color 0.35s ease, transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s ease;
 }
-.about-icon-item{
+.benefit-card:hover{
+  border-color:var(--color-accent);
+  transform:translateY(-8px);
+  box-shadow:0 20px 40px -20px rgba(0,0,0,0.6);
+}
+.benefit-top{
   display:flex;
   align-items:flex-start;
-  gap:0.9rem;
-  font-size:var(--fs-small);
-  color:var(--color-text-muted);
+  justify-content:space-between;
 }
-.about-icon-item .hex{
-  color:var(--color-accent);
-  font-size:1rem;
-  line-height:1.4;
-}
-.stats{
+.benefit-icon{
+  font-size:1.3rem;
+  width:40px; height:40px;
+  border-radius:50%;
+  background:rgba(200,169,110,0.1);
+  border:1px solid rgba(200,169,110,0.25);
   display:flex;
-  flex-direction:column;
-  gap:2rem;
-  border-left:1px solid var(--color-border);
-  padding-left:2rem;
+  align-items:center;
+  justify-content:center;
 }
-.stat-item .stat-num{
-  font-family:var(--font-mono);
-  font-size:2.2rem;
-  color:var(--color-accent);
-  display:block;
-}
-.stat-item .stat-label{
-  font-size:var(--fs-small);
+.benefit-arrow{
+  width:34px; height:34px;
+  border-radius:50%;
+  background:var(--color-bg);
+  border:1px solid var(--color-border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   color:var(--color-text-muted);
-  margin-top:0.3rem;
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.3s ease, color 0.3s ease;
+}
+.benefit-arrow svg{ width:14px; height:14px; }
+.benefit-card:hover .benefit-arrow{
+  background:var(--color-accent);
+  color:var(--color-bg);
+  transform:rotate(45deg);
+}
+.benefit-card h3{
+  font-family:var(--font-display);
+  font-size:1.15rem;
+  font-weight:600;
+  margin:1.25rem 0 0.5rem;
+}
+.benefit-card p{
+  font-size:0.82rem;
+  color:var(--color-text-muted);
 }
 
 /* ---------- proceso ---------- */
-.process{ background:var(--color-surface); }
+.process{ background:var(--color-bg); }
 .process-header{ text-align:center; margin-bottom:5rem; }
 .process-header h2{ margin-top:0.5rem; }
 
@@ -423,7 +612,7 @@ h2{
   display:grid;
   grid-template-columns:1fr 60px 1fr;
   align-items:center;
-  margin-bottom:3.5rem;
+  margin-bottom:2rem;
   z-index:1;
 }
 .step:last-child{ margin-bottom:0; }
@@ -445,17 +634,17 @@ h2{
 .step-card{
   background:var(--color-surface-2);
   border:1px solid var(--color-border);
-  border-radius:4px;
-  padding:1.75rem 2rem;
-  transition:border-color 0.35s ease, transform 0.35s ease;
+  border-radius:var(--radius-md);
+  padding:1.6rem 1.9rem;
+  transition:border-color 0.35s ease, transform 0.4s cubic-bezier(.22,1,.36,1);
 }
 .step-card:hover{
   border-color:var(--color-accent);
-  transform:translateY(-4px);
+  transform:translateY(-6px);
 }
 .step-card h3{
   font-family:var(--font-display);
-  font-size:1.4rem;
+  font-size:1.15rem;
   font-weight:600;
   color:var(--color-accent);
   margin-bottom:0.5rem;
@@ -467,140 +656,46 @@ h2{
 .step:nth-child(odd) .step-card{ grid-column:1; }
 .step:nth-child(even) .step-card{ grid-column:3; }
 
-/* ---------- beneficios ---------- */
-.benefits{ background:var(--color-bg); }
-.benefits-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1.5rem;
-  margin-top:3rem;
-}
-.benefit-card{
+/* ---------- reprocann ---------- */
+.reprocann{ background:var(--color-surface); }
+.reprocann-card{
   background:var(--color-surface-2);
   border:1px solid var(--color-border);
-  border-radius:4px;
-  padding:2.25rem;
-  transition:border-color 0.35s ease, transform 0.35s ease;
-}
-.benefit-card:hover{
-  border-color:var(--color-accent);
-  transform:translateY(-4px);
-}
-.benefit-icon{ font-size:1.8rem; margin-bottom:1rem; display:block; }
-.benefit-card h3{
-  font-family:var(--font-display);
-  font-size:1.3rem;
-  font-weight:600;
-  margin-bottom:0.5rem;
-}
-.benefit-card p{
-  font-size:var(--fs-small);
-  color:var(--color-text-muted);
-}
-
-/* ---------- reprocann ---------- */
-.reprocann{
-  background:var(--color-surface);
   border-left:3px solid var(--color-accent);
+  border-radius:var(--radius-lg);
+  padding:clamp(2rem, 5vw, 3.5rem);
+  max-width:760px;
 }
-.reprocann-inner{ max-width:720px; }
-.reprocann p{
+.reprocann-card p{
   font-size:1.05rem;
-  color:var(--color-text);
+  color:var(--color-text-muted);
   margin:1.25rem 0;
   font-weight:300;
 }
-.reprocann .btn{ margin-top:1.5rem; }
+.reprocann-card .btn{ margin-top:1.5rem; }
 
-/* ---------- catalogo ---------- */
-.catalog{ background:var(--color-bg); text-align:center; }
-.catalog-header{ margin-bottom:1rem; }
-.catalog-note{
-  max-width:560px;
-  margin:2.5rem auto 3.5rem;
-  font-size:var(--fs-small);
-  color:var(--color-text-muted);
-}
-.catalog-grid{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:1.5rem;
-  text-align:left;
-}
-.strain-card{
+/* ---------- catalogo teaser ---------- */
+.catalog-teaser{ background:var(--color-bg); }
+.catalog-card{
   position:relative;
-  background:var(--color-surface-2);
+  border-radius:var(--radius-lg);
   border:1px solid var(--color-border);
-  border-radius:4px;
-  padding:2rem 1.75rem;
-  transition:border-color 0.35s ease, transform 0.35s ease;
+  background:
+    radial-gradient(ellipse 60% 80% at 85% 20%, rgba(200,169,110,0.16), transparent 60%),
+    radial-gradient(ellipse 60% 60% at 10% 100%, rgba(74,103,65,0.4), transparent 65%),
+    var(--color-surface);
+  padding:clamp(2.5rem, 6vw, 4.5rem);
+  text-align:center;
   overflow:hidden;
 }
-.strain-card:hover{
-  border-color:var(--color-accent);
-  transform:translateY(-4px);
-}
-.strain-emoji{ font-size:1.8rem; margin-bottom:1rem; display:block; }
-.strain-card h3{
-  font-family:var(--font-display);
-  font-size:1.3rem;
-  font-weight:600;
-  margin-bottom:0.3rem;
-}
-.strain-type{
-  font-size:var(--fs-small);
+.catalog-card .eyebrow-mono{ text-align:center; }
+.catalog-card h2{ max-width:640px; margin:0 auto 1rem; }
+.catalog-card p{
+  max-width:520px;
+  margin:0 auto 2.25rem;
   color:var(--color-text-muted);
-  margin-bottom:0.25rem;
+  font-size:1rem;
 }
-.strain-thc{
-  font-family:var(--font-mono);
-  font-size:0.75rem;
-  color:var(--color-accent);
-}
-.strain-lock{
-  position:absolute;
-  top:1.5rem;
-  right:1.5rem;
-  font-size:1.1rem;
-  opacity:0.6;
-}
-.strain-status{
-  display:inline-block;
-  margin-top:1rem;
-  font-family:var(--font-mono);
-  font-size:0.7rem;
-  letter-spacing:0.08em;
-  color:var(--color-text-muted);
-  border:1px solid var(--color-border);
-  padding:0.3rem 0.7rem;
-  border-radius:2px;
-}
-
-.formats-title{
-  font-family:var(--font-mono);
-  font-size:var(--fs-mono);
-  color:var(--color-text-muted);
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  margin:3.5rem 0 1.5rem;
-  display:block;
-}
-.formats-grid{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:1.25rem;
-}
-.format-card{
-  background:var(--color-surface);
-  border:1px solid var(--color-border);
-  border-radius:4px;
-  padding:1.5rem;
-  text-align:center;
-  transition:border-color 0.35s ease;
-}
-.format-card:hover{ border-color:var(--color-accent); }
-.format-card .format-emoji{ font-size:1.4rem; display:block; margin-bottom:0.6rem; }
-.format-card p{ font-size:var(--fs-small); color:var(--color-text-muted); }
 
 /* ---------- cta final ---------- */
 .cta-final{
@@ -611,7 +706,7 @@ h2{
 }
 .cta-final h2{
   font-family:var(--font-display);
-  font-weight:800;
+  font-weight:700;
   font-size:var(--fs-display);
   color:var(--color-bg);
   max-width:800px;
@@ -622,6 +717,7 @@ h2{
   color:rgba(8,12,10,0.75);
   margin-bottom:2.25rem;
 }
+.cta-final .btn-dark:hover{ box-shadow:0 14px 28px -10px rgba(8,12,10,0.4); }
 
 /* ---------- footer ---------- */
 footer{
@@ -631,19 +727,20 @@ footer{
   border-top:1px solid var(--color-border);
 }
 .footer-logo{
-  font-family:var(--font-display);
-  font-weight:700;
-  font-size:1.5rem;
-  color:var(--color-text);
-  margin-bottom:0.75rem;
   display:flex;
   align-items:center;
   justify-content:center;
+  margin-bottom:0.5rem;
 }
-.footer-logo span{ color:var(--color-accent); }
 .footer-logo img{
-  height:130px;
+  height:110px;
   width:auto;
+}
+.footer-social{
+  display:flex;
+  justify-content:center;
+  gap:0.75rem;
+  margin:1.5rem 0;
 }
 .footer-meta{
   font-size:var(--fs-small);
@@ -674,20 +771,21 @@ footer{
 
 /* ---------- responsive ---------- */
 @media (max-width:1024px){
-  .catalog-grid{ grid-template-columns:repeat(2, 1fr); }
-  .formats-grid{ grid-template-columns:repeat(3, 1fr); }
+  .benefits-grid{ grid-template-columns:repeat(2, 1fr); }
 }
 
 @media (max-width:768px){
-  .nav-links, .nav-cta{ display:none; }
+  .nav-pill, .nav-cta{ display:none; }
   .nav-toggle{ display:flex; }
 
-  .hero{ padding-top:7rem; }
-  .hero-ctas{ flex-direction:column; align-items:stretch; }
-  .hero-ctas .btn{ text-align:center; }
+  .hero{ align-items:center; padding-top:8rem; text-align:left; }
+  .hero h1{ max-width:none; }
+  .hero-bottom{ flex-direction:column; align-items:stretch; }
+  .hero-card{ max-width:none; }
+  .scroll-indicator{ display:none; }
 
-  .about-grid{ grid-template-columns:1fr; gap:3rem; }
-  .stats{ border-left:none; padding-left:0; border-top:1px solid var(--color-border); padding-top:2rem; }
+  .about-grid{ grid-template-columns:1fr; gap:2.5rem; }
+  .about-visual{ order:-1; }
 
   .steps-line{ left:22px; }
   .step{ grid-template-columns:44px 1fr; }
@@ -696,8 +794,6 @@ footer{
   .step:nth-child(even) .step-card{ grid-column:2; }
 
   .benefits-grid{ grid-template-columns:1fr; }
-  .catalog-grid{ grid-template-columns:1fr; }
-  .formats-grid{ grid-template-columns:1fr; }
 }
 
 /* ---------- reduced motion ---------- */
@@ -720,18 +816,25 @@ footer{
 <!-- ============ NAV ============ -->
 <nav class="nav" id="nav">
   <div class="container">
-    <a href="#" class="nav-logo"><img src="assets/wayland-logo.png" alt="The Wayland Club"></a>
-    <ul class="nav-links">
-      <li><a href="#top">Inicio</a></li>
-      <li><a href="#proceso">Cómo funciona</a></li>
-      <li><a href="#reprocann">C4NN4BIS</a></li>
-      <li><a href="#catalogo">Catálogo</a></li>
-      <li><a href="#contacto">Contacto</a></li>
-    </ul>
-    <a href="#proceso" class="nav-cta">Asociarse</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
-      <span></span><span></span><span></span>
-    </button>
+    <a href="#top" class="nav-logo"><img src="assets/wayland-logo.png" alt="The Wayland Club"></a>
+
+    <div class="nav-pill">
+      <a href="#top" class="active">Inicio</a>
+      <a href="#proceso">Cómo funciona</a>
+      <a href="#reprocann">C4NN4BIS</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+      <a href="https://wa.link/3i3nep" class="nav-cta" target="_blank" rel="noopener">Asociarse</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -741,25 +844,42 @@ footer{
   <a href="#reprocann">C4NN4BIS</a>
   <a href="#catalogo">Catálogo</a>
   <a href="#contacto">Contacto</a>
-  <a href="#proceso" class="btn btn-primary nav-cta">Asociarse</a>
+  <div class="mobile-social">
+    <a href="https://wa.link/3i3nep" class="icon-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.45 9.96-9.95S17.54 2 12.04 2zm5.83 14.24c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.78-.37h.56c.18 0 .42-.02.65.5.25.58.85 2.02.92 2.16.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2 1.11.99 2.05 1.3 2.35 1.45.3.15.47.12.65-.07.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.13.07.75-.18 1.45z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+    </a>
+  </div>
+  <a href="https://wa.link/3i3nep" class="btn btn-primary nav-cta" target="_blank" rel="noopener">Asociarse</a>
 </div>
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
   <canvas id="particles"></canvas>
-  <div class="hero-content">
+  <div class="container hero-content">
     <span class="eyebrow">ONG · MINISTERIO DE SALUD · REPROCANN</span>
     <h1 id="heroTitle"></h1>
     <p class="hero-sub">
       The Wayland Club es una ONG habilitada para dispensar C4NN4BIS medicinal
       dentro del marco de REPROCANN. Sin local físico. Con acompañamiento real.
     </p>
-    <div class="hero-ctas">
-      <a href="#proceso" class="btn btn-primary">Quiero asociarme</a>
-      <a href="#reprocann" class="btn btn-secondary">¿Qué es REPROCANN?</a>
+
+    <div class="hero-bottom">
+      <div class="hero-card reveal">
+        <div class="hero-card-icon">ONG<br>REP.</div>
+        <p><strong>Habilitados y en regla</strong>Operamos 100% dentro del marco legal REPROCANN</p>
+      </div>
+      <div class="hero-cta-group reveal">
+        <a href="https://wa.link/3i3nep" class="btn btn-primary" target="_blank" rel="noopener">Quiero asociarme</a>
+        <a href="#reprocann" class="btn btn-secondary">¿Qué es REPROCANN?</a>
+      </div>
     </div>
   </div>
-  <div class="scroll-indicator"></div>
+  <a href="#proceso" class="scroll-indicator" aria-label="Scroll hacia abajo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+  </a>
 </section>
 
 <!-- ============ QUIENES SOMOS ============ -->
@@ -767,28 +887,71 @@ footer{
   <div class="container about-grid">
     <div class="about-text reveal">
       <span class="eyebrow-mono">Quiénes somos</span>
-      <h2 style="margin-bottom:1.5rem;">Una comunidad, no una tienda</h2>
+      <h2>Una comunidad, no una tienda</h2>
       <p>The Wayland Club no es una tienda. Es una comunidad de pacientes
       acompañados por profesionales dentro del único marco legal vigente en Argentina.</p>
 
-      <div class="about-icons">
-        <div class="about-icon-item"><span class="hex">⬡</span><span>ONG habilitada por el Ministerio de Salud</span></div>
-        <div class="about-icon-item"><span class="hex">⬡</span><span>Operamos dentro del marco REPROCANN</span></div>
-        <div class="about-icon-item"><span class="hex">⬡</span><span>Dispensamos a todo el país — retiro o domicilio</span></div>
+      <div class="chip-row">
+        <span class="chip"><span class="dot"></span>ONG habilitada por el Ministerio de Salud</span>
+        <span class="chip"><span class="dot"></span>Marco REPROCANN</span>
+        <span class="chip"><span class="dot"></span>Envíos a todo el país</span>
       </div>
     </div>
-    <div class="stats reveal">
-      <div class="stat-item">
-        <span class="stat-num">ONG</span>
-        <span class="stat-label">Habilitada por Ministerio de Salud</span>
+    <div class="about-visual reveal">
+      <div class="play-circle">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </div>
-      <div class="stat-item">
-        <span class="stat-num">REPROCANN</span>
-        <span class="stat-label">Marco legal vigente</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BENEFICIOS ============ -->
+<section class="benefits section-pad">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow-mono">Beneficios</span>
+      <h2>Por qué The Wayland Club</h2>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card reveal">
+        <div class="benefit-top">
+          <span class="benefit-icon">🌿</span>
+          <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+        </div>
+        <div>
+          <h3>Sin costo</h3>
+          <p>Sin membresía ni adhesión. Solo tu documentación.</p>
+        </div>
       </div>
-      <div class="stat-item">
-        <span class="stat-num">24hs</span>
-        <span class="stat-label">Coordinación de envío</span>
+      <div class="benefit-card reveal">
+        <div class="benefit-top">
+          <span class="benefit-icon">📦</span>
+          <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+        </div>
+        <div>
+          <h3>Envío al día siguiente</h3>
+          <p>Coordinamos al día siguiente de tu pedido. A domicilio o retiro.</p>
+        </div>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="benefit-top">
+          <span class="benefit-icon">🔒</span>
+          <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+        </div>
+        <div>
+          <h3>100% legal</h3>
+          <p>Operamos exclusivamente dentro del marco REPROCANN.</p>
+        </div>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="benefit-top">
+          <span class="benefit-icon">💬</span>
+          <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+        </div>
+        <div>
+          <h3>Acompañamiento real</h3>
+          <p>Desde el primer mensaje hasta cada dispensa.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -852,132 +1015,33 @@ footer{
   </div>
 </section>
 
-<!-- ============ BENEFICIOS ============ -->
-<section class="benefits section-pad">
-  <div class="container">
-    <div class="reveal">
-      <span class="eyebrow-mono">Beneficios</span>
-      <h2>Por qué The Wayland Club</h2>
-    </div>
-    <div class="benefits-grid">
-      <div class="benefit-card reveal">
-        <span class="benefit-icon">🌿</span>
-        <h3>Sin costo</h3>
-        <p>Sin membresía ni adhesión. Solo tu documentación.</p>
-      </div>
-      <div class="benefit-card reveal">
-        <span class="benefit-icon">📦</span>
-        <h3>Envío al día siguiente</h3>
-        <p>Coordinamos al día siguiente de tu pedido. A domicilio o retiro.</p>
-      </div>
-      <div class="benefit-card reveal">
-        <span class="benefit-icon">🔒</span>
-        <h3>100% legal</h3>
-        <p>Operamos exclusivamente dentro del marco REPROCANN.</p>
-      </div>
-      <div class="benefit-card reveal">
-        <span class="benefit-icon">💬</span>
-        <h3>Acompañamiento real</h3>
-        <p>Desde el primer mensaje hasta cada dispensa.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ REPROCANN ============ -->
 <section class="reprocann section-pad" id="reprocann">
   <div class="container">
-    <div class="reprocann-inner reveal">
-      <span class="eyebrow-mono">Marco legal</span>
+    <span class="eyebrow-mono reveal">Marco legal</span>
+    <div class="reprocann-card reveal">
       <h2>¿Qué es REPROCANN?</h2>
       <p>REPROCANN es el Registro del Programa de C4NN4BIS del Ministerio de Salud
       de la Nación Argentina. Es el registro que habilita legalmente a una persona
       a acceder al C4NN4BIS medicinal en el país.</p>
       <p>Sin REPROCANN no hay acceso legal. Con REPROCANN, The Wayland Club
       está para acompañarte en cada paso que sigue.</p>
-      <a href="#contacto" class="btn btn-primary">Escribinos para saber más</a>
+      <a href="https://wa.link/3i3nep" class="btn btn-primary" target="_blank" rel="noopener">Escribinos para saber más</a>
     </div>
   </div>
 </section>
 
-<!-- ============ CATALOGO ============ -->
-<section class="catalog section-pad" id="catalogo">
+<!-- ============ CATALOGO (teaser informativo) ============ -->
+<section class="catalog-teaser section-pad" id="catalogo">
   <div class="container">
-    <div class="catalog-header reveal">
-      <span class="eyebrow-mono">DISPONIBLE PARA SOCIOS · REPROCANN REQUERIDO</span>
+    <div class="catalog-card reveal">
+      <span class="eyebrow-mono">Próximamente</span>
       <h2>Nuestro catálogo</h2>
-    </div>
-    <p class="catalog-note reveal">
-      El catálogo completo está disponible para socios del Club con REPROCANN vigente.
-      Asociate para acceder cuando esté habilitado.
-    </p>
-
-    <!-- ACTIVAR: catálogo cuando esté listo -->
-    <div class="catalog-grid">
-      <div class="strain-card reveal">
-        <span class="strain-lock">🔒</span>
-        <span class="strain-emoji">⛽</span>
-        <h3>Petroleum</h3>
-        <p class="strain-type">Híbrida índica</p>
-        <p class="strain-thc">24–30% THC</p>
-        <span class="strain-status">Próximamente</span>
-      </div>
-      <div class="strain-card reveal">
-        <span class="strain-lock">🔒</span>
-        <span class="strain-emoji">🫐</span>
-        <h3>Moby</h3>
-        <p class="strain-type">Híbrida sativa</p>
-        <p class="strain-thc">22–28% THC</p>
-        <span class="strain-status">Próximamente</span>
-      </div>
-      <div class="strain-card reveal">
-        <span class="strain-lock">🔒</span>
-        <span class="strain-emoji">🍬</span>
-        <h3>Runtz</h3>
-        <p class="strain-type">Híbrida equilibrada</p>
-        <p class="strain-thc">24–30% THC</p>
-        <span class="strain-status">Próximamente</span>
-      </div>
-      <div class="strain-card reveal">
-        <span class="strain-lock">🔒</span>
-        <span class="strain-emoji">🍋</span>
-        <h3>Spritz</h3>
-        <p class="strain-type">Híbrida sativa ligera</p>
-        <p class="strain-thc">22–27% THC</p>
-        <span class="strain-status">Próximamente</span>
-      </div>
-      <div class="strain-card reveal">
-        <span class="strain-lock">🔒</span>
-        <span class="strain-emoji">🍒</span>
-        <h3>Black Cherry</h3>
-        <p class="strain-type">Híbrida índica</p>
-        <p class="strain-thc">20–27% THC</p>
-        <span class="strain-status">Próximamente</span>
-      </div>
-      <div class="strain-card reveal">
-        <span class="strain-lock">🔒</span>
-        <span class="strain-emoji">🍰</span>
-        <h3>Cake Crasher</h3>
-        <p class="strain-type">Híbrida equilibrada</p>
-        <p class="strain-thc">25–30% THC</p>
-        <span class="strain-status">Próximamente</span>
-      </div>
-    </div>
-
-    <span class="formats-title reveal">Formatos</span>
-    <div class="formats-grid">
-      <div class="format-card reveal">
-        <span class="format-emoji">🛢️</span>
-        <p>Cartuchos de THC + Salsa de terpenos</p>
-      </div>
-      <div class="format-card reveal">
-        <span class="format-emoji">💎</span>
-        <p>Cristales en salsa de terpenos</p>
-      </div>
-      <div class="format-card reveal">
-        <span class="format-emoji">🔬</span>
-        <p>Cristales de THC</p>
-      </div>
+      <p>
+        Estamos preparando el catálogo completo para socios del Club con REPROCANN vigente.
+        Mientras tanto, escribinos por WhatsApp y te lo compartimos directamente.
+      </p>
+      <a href="https://wa.link/3i3nep" class="btn btn-primary" target="_blank" rel="noopener">Pedí nuestro catálogo</a>
     </div>
   </div>
 </section>
@@ -987,8 +1051,7 @@ footer{
   <div class="container reveal">
     <h2>¿Querés acceder al C4NN4BIS medicinal de forma legal?</h2>
     <p>Sin turnos. Sin esperas. Te respondemos a la brevedad.</p>
-    <!-- REEMPLAZAR: número WhatsApp -->
-    <a href="https://wa.me/XXXXXXXXXX" class="btn btn-dark" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+    <a href="https://wa.link/3i3nep" class="btn btn-dark" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
   </div>
 </section>
 
@@ -998,6 +1061,16 @@ footer{
     <div class="footer-logo"><img src="assets/wayland-logo.png" alt="The Wayland Club"></div>
     <p class="footer-meta">ONG habilitada por el Ministerio de Salud de Argentina</p>
     <p class="footer-meta">Marco legal REPROCANN</p>
+
+    <div class="footer-social">
+      <a href="https://wa.link/3i3nep" class="icon-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.45 9.96-9.95S17.54 2 12.04 2zm5.83 14.24c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.78-.37h.56c.18 0 .42-.02.65.5.25.58.85 2.02.92 2.16.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2 1.11.99 2.05 1.3 2.35 1.45.3.15.47.12.65-.07.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.13.07.75-.18 1.45z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+    </div>
+
     <ul class="footer-nav">
       <li><a href="#top">Inicio</a></li>
       <li><a href="#proceso">Cómo funciona</a></li>
@@ -1027,8 +1100,6 @@ footer{
     var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
     progressBar.style.width = pct + '%';
   }
-  window.addEventListener('scroll', updateProgress, { passive: true });
-  updateProgress();
 
   /* ---------- nav background on scroll ---------- */
   var nav = document.getElementById('nav');
@@ -1036,7 +1107,34 @@ footer{
     if(window.scrollY > 40){ nav.classList.add('scrolled'); }
     else{ nav.classList.remove('scrolled'); }
   }
-  window.addEventListener('scroll', updateNav, { passive: true });
+
+  /* ---------- hero parallax on scroll ---------- */
+  var heroSection = document.querySelector('.hero');
+  var particlesCanvas = document.getElementById('particles');
+  var heroContent = document.querySelector('.hero-content');
+  function updateParallax(){
+    if(reduceMotion) return;
+    var y = window.scrollY;
+    if(y < window.innerHeight){
+      particlesCanvas.style.transform = 'translateY(' + (y * 0.15) + 'px)';
+      heroContent.style.opacity = String(Math.max(1 - y / 420, 0));
+    }
+  }
+
+  var ticking = false;
+  function onScroll(){
+    if(!ticking){
+      window.requestAnimationFrame(function(){
+        updateProgress();
+        updateNav();
+        updateParallax();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateProgress();
   updateNav();
 
   /* ---------- mobile menu ---------- */
@@ -1052,6 +1150,25 @@ footer{
       mobileMenu.classList.remove('open');
     });
   });
+
+  /* ---------- active nav pill on scroll ---------- */
+  var navLinks = document.querySelectorAll('.nav-pill a');
+  var sections = ['top','proceso','reprocann','catalogo','contacto']
+    .map(function(id){ return document.getElementById(id); })
+    .filter(Boolean);
+
+  function updateActiveNav(){
+    var pos = window.scrollY + window.innerHeight * 0.3;
+    var current = sections[0];
+    sections.forEach(function(sec){
+      if(sec.offsetTop <= pos) current = sec;
+    });
+    navLinks.forEach(function(link){
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current.id);
+    });
+  }
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
 
   /* ---------- reveal on scroll ---------- */
   var revealEls = document.querySelectorAll('.reveal');
@@ -1085,35 +1202,52 @@ footer{
   /* ---------- hero headline word-by-word entrance ---------- */
   var heroTitle = document.getElementById('heroTitle');
   var lines = [
-    { text: 'C4NN4BIS medicinal.', accent: true },
-    { text: 'Legal, responsable' },
-    { text: 'y con acompañamiento real.' }
+    { text: 'C4NN4BIS', accent: true },
+    { text: 'medicinal, legal' },
+    { text: 'y acompañado.' }
   ];
   var delay = 0;
-  lines.forEach(function(line, lineIdx){
+  lines.forEach(function(line){
     var lineEl = document.createElement('div');
     var words = line.text.split(' ');
     words.forEach(function(word, i){
       var span = document.createElement('span');
       span.className = 'word' + (line.accent ? ' accent-word' : '');
-      span.textContent = word + (i < words.length - 1 ? ' ' : '');
+      span.textContent = word;
       if(!reduceMotion){
         span.style.animationDelay = delay + 's';
       } else {
         span.style.opacity = '1';
       }
       lineEl.appendChild(span);
+      if(i < words.length - 1){ lineEl.appendChild(document.createTextNode(' ')); }
       delay += 0.08;
     });
     heroTitle.appendChild(lineEl);
   });
+
+  /* ---------- magnetic button hover ---------- */
+  if(!reduceMotion && window.matchMedia('(hover: hover)').matches){
+    document.querySelectorAll('.btn, .icon-btn, .nav-cta').forEach(function(btn){
+      var isIcon = btn.classList.contains('icon-btn');
+      btn.addEventListener('mousemove', function(e){
+        var r = btn.getBoundingClientRect();
+        var x = (e.clientX - r.left - r.width / 2) * 0.25;
+        var y = (e.clientY - r.top - r.height / 2) * 0.25;
+        var extra = isIcon ? 'scale(1.1) rotate(-8deg)' : 'scale(1.04) translateY(-3px)';
+        btn.style.transform = 'translate(' + x + 'px,' + y + 'px) ' + extra;
+      });
+      btn.addEventListener('mouseleave', function(){
+        btn.style.transform = '';
+      });
+    });
+  }
 
   /* ---------- canvas particles ---------- */
   var canvas = document.getElementById('particles');
   var ctx = canvas.getContext('2d');
   var particles = [];
   var PARTICLE_COUNT = 60;
-  var heroSection = document.querySelector('.hero');
   var w, h;
 
   function resizeCanvas(){
@@ -1150,7 +1284,7 @@ footer{
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(200,169,110,' + (p.alpha * 0.15) + ')';
+      ctx.fillStyle = 'rgba(200,169,110,' + (p.alpha * 0.18) + ')';
       ctx.fill();
     });
     requestAnimationFrame(drawParticles);
@@ -1165,14 +1299,11 @@ footer{
   if(!reduceMotion){
     requestAnimationFrame(drawParticles);
   } else {
-    drawParticlesStatic();
-  }
-  function drawParticlesStatic(){
     ctx.clearRect(0, 0, w, h);
     particles.forEach(function(p){
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(200,169,110,' + (p.alpha * 0.15) + ')';
+      ctx.fillStyle = 'rgba(200,169,110,' + (p.alpha * 0.18) + ')';
       ctx.fill();
     });
   }
