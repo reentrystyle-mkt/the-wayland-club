@@ -100,13 +100,21 @@ section{ position:relative; }
 /* ---------- reveal on scroll ---------- */
 .reveal{
   opacity:0;
-  transform:translateY(30px);
-  transition:opacity 0.8s ease, transform 0.8s ease;
+  transform:translateY(28px);
+  transition:opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
 }
 .reveal.is-visible{
   opacity:1;
   transform:translateY(0);
 }
+/* staggered children: grids animate in as a cascade, not all at once */
+.benefits-grid .reveal:nth-child(1){ transition-delay:0s; }
+.benefits-grid .reveal:nth-child(2){ transition-delay:0.08s; }
+.benefits-grid .reveal:nth-child(3){ transition-delay:0.16s; }
+.benefits-grid .reveal:nth-child(4){ transition-delay:0.24s; }
+.backing-grid .reveal:nth-child(1){ transition-delay:0s; }
+.backing-grid .reveal:nth-child(2){ transition-delay:0.1s; }
+.backing-grid .reveal:nth-child(3){ transition-delay:0.2s; }
 
 /* ---------- icon buttons ---------- */
 .icon-btn{
@@ -158,6 +166,7 @@ section{ position:relative; }
 .nav.scrolled .nav-logo img{ height:52px; }
 
 .nav-pill{
+  position:relative;
   display:flex;
   align-items:center;
   gap:0.25rem;
@@ -167,16 +176,29 @@ section{ position:relative; }
   border-radius:var(--radius-pill);
   padding:0.35rem;
 }
+.nav-pill-indicator{
+  position:absolute;
+  top:0.35rem;
+  left:0;
+  height:calc(100% - 0.7rem);
+  border-radius:var(--radius-pill);
+  background:var(--color-text);
+  z-index:0;
+  pointer-events:none;
+  opacity:0;
+}
 .nav-pill a{
+  position:relative;
+  z-index:1;
   font-size:var(--fs-small);
   color:var(--color-text-muted);
   padding:0.55rem 1.1rem;
   border-radius:var(--radius-pill);
-  transition:color 0.3s ease, background 0.3s ease;
+  transition:color 0.3s ease;
   white-space:nowrap;
 }
-.nav-pill a:hover{ color:var(--color-text); background:rgba(232,228,220,0.06); }
-.nav-pill a.active{ color:var(--color-bg); background:var(--color-text); }
+.nav-pill a:hover{ color:var(--color-text); }
+.nav-pill a.active{ color:var(--color-bg); }
 
 .nav-right{
   display:flex;
@@ -314,8 +336,8 @@ section{ position:relative; }
 .hero h1 .word{
   display:inline-block;
   opacity:0;
-  transform:translateY(24px);
-  animation:wordIn 0.7s ease forwards;
+  transform:translateY(28px);
+  animation:wordIn 0.85s cubic-bezier(.16,1,.3,1) forwards;
 }
 @keyframes wordIn{
   to{ opacity:1; transform:translateY(0); }
@@ -875,7 +897,8 @@ footer{
   <div class="container">
     <a href="#top" class="nav-logo"><img src="assets/wayland-logo.png" alt="The Wayland Club"></a>
 
-    <div class="nav-pill">
+    <div class="nav-pill" id="navPill">
+      <span class="nav-pill-indicator" id="navPillIndicator"></span>
       <a href="#top" class="active">Inicio</a>
       <a href="#proceso">Cómo funciona</a>
       <a href="#reprocann">C4NN4BIS</a>
@@ -1172,6 +1195,53 @@ footer{
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- spring physics (Framer-Motion-style easing, no framework) ----------
+     Semi-implicit Euler integration of a damped spring. Same mental model as
+     Framer Motion's `type: spring` — stiffness/damping/mass instead of duration. */
+  function createSpring(opts){
+    opts = opts || {};
+    var stiffness = opts.stiffness || 220;
+    var damping = opts.damping || 24;
+    var mass = opts.mass || 1;
+    var precision = opts.precision || 0.01;
+    var onUpdate = opts.onUpdate || function(){};
+    var onComplete = opts.onComplete || function(){};
+    var value = opts.from || 0;
+    var target = value;
+    var velocity = 0;
+    var raf = null;
+
+    function step(){
+      var force = -stiffness * (value - target);
+      var dampingForce = -damping * velocity;
+      var accel = (force + dampingForce) / mass;
+      velocity += accel * (1 / 60);
+      value += velocity * (1 / 60);
+      onUpdate(value);
+      if(Math.abs(target - value) < precision && Math.abs(velocity) < precision){
+        value = target;
+        onUpdate(value);
+        raf = null;
+        onComplete();
+        return;
+      }
+      raf = requestAnimationFrame(step);
+    }
+
+    return {
+      set: function(t){
+        target = t;
+        if(!raf){ raf = requestAnimationFrame(step); }
+      },
+      jump: function(v){
+        value = v; target = v; velocity = 0;
+        if(raf){ cancelAnimationFrame(raf); raf = null; }
+        onUpdate(value);
+      },
+      get: function(){ return value; }
+    };
+  }
+
   /* ---------- scroll progress bar ---------- */
   var progressBar = document.getElementById('scroll-progress');
   function updateProgress(){
@@ -1230,12 +1300,40 @@ footer{
     });
   });
 
-  /* ---------- active nav pill on scroll ---------- */
+  /* ---------- active nav pill on scroll, with a spring-driven sliding indicator ---------- */
+  var navPill = document.getElementById('navPill');
+  var navPillIndicator = document.getElementById('navPillIndicator');
   var navLinks = document.querySelectorAll('.nav-pill a');
   var sections = ['top','proceso','reprocann','catalogo','contacto']
     .map(function(id){ return document.getElementById(id); })
     .filter(Boolean);
 
+  var indicatorX = createSpring({
+    stiffness: 340, damping: 30,
+    onUpdate: function(v){ navPillIndicator.style.transform = 'translateX(' + v + 'px)'; }
+  });
+  var indicatorW = createSpring({
+    stiffness: 340, damping: 30,
+    onUpdate: function(v){ navPillIndicator.style.width = v + 'px'; }
+  });
+
+  function moveIndicatorTo(link, instant){
+    if(!link) return;
+    var pillRect = navPill.getBoundingClientRect();
+    var linkRect = link.getBoundingClientRect();
+    var x = linkRect.left - pillRect.left;
+    var w = linkRect.width;
+    navPillIndicator.style.opacity = '1';
+    if(instant || reduceMotion){
+      indicatorX.jump(x);
+      indicatorW.jump(w);
+    } else {
+      indicatorX.set(x);
+      indicatorW.set(w);
+    }
+  }
+
+  var activeLink = null;
   function updateActiveNav(){
     var pos = window.scrollY + window.innerHeight * 0.3;
     var current = sections[0];
@@ -1243,11 +1341,23 @@ footer{
       if(sec.offsetTop <= pos) current = sec;
     });
     navLinks.forEach(function(link){
-      link.classList.toggle('active', link.getAttribute('href') === '#' + current.id);
+      var isActive = link.getAttribute('href') === '#' + current.id;
+      link.classList.toggle('active', isActive);
+      if(isActive) activeLink = link;
     });
+    moveIndicatorTo(activeLink);
   }
   window.addEventListener('scroll', updateActiveNav, { passive: true });
   updateActiveNav();
+  moveIndicatorTo(activeLink, true);
+
+  if(window.matchMedia('(hover: hover)').matches){
+    navLinks.forEach(function(link){
+      link.addEventListener('mouseenter', function(){ moveIndicatorTo(link); });
+    });
+    navPill.addEventListener('mouseleave', function(){ moveIndicatorTo(activeLink); });
+  }
+  window.addEventListener('resize', function(){ moveIndicatorTo(activeLink, true); });
 
   /* ---------- reveal on scroll ---------- */
   var revealEls = document.querySelectorAll('.reveal');
@@ -1305,19 +1415,33 @@ footer{
     heroTitle.appendChild(lineEl);
   });
 
-  /* ---------- magnetic button hover ---------- */
+  /* ---------- magnetic button hover, spring-driven ---------- */
   if(!reduceMotion && window.matchMedia('(hover: hover)').matches){
     document.querySelectorAll('.btn, .icon-btn, .nav-cta').forEach(function(btn){
       var isIcon = btn.classList.contains('icon-btn');
+      var restExtra = isIcon ? 'scale(1)' : 'scale(1)';
+      var hoverExtra = isIcon ? 'scale(1.1) rotate(-8deg)' : 'scale(1.04) translateY(-3px)';
+      var scaleT = 0;
+
+      function render(){
+        var extra = scaleT > 0.5 ? hoverExtra : restExtra;
+        btn.style.transform = 'translate(' + sx.get() + 'px,' + sy.get() + 'px) ' + extra;
+      }
+      var sx = createSpring({ stiffness: 260, damping: 20, onUpdate: render });
+      var sy = createSpring({ stiffness: 260, damping: 20, onUpdate: render });
+
       btn.addEventListener('mousemove', function(e){
         var r = btn.getBoundingClientRect();
-        var x = (e.clientX - r.left - r.width / 2) * 0.25;
-        var y = (e.clientY - r.top - r.height / 2) * 0.25;
-        var extra = isIcon ? 'scale(1.1) rotate(-8deg)' : 'scale(1.04) translateY(-3px)';
-        btn.style.transform = 'translate(' + x + 'px,' + y + 'px) ' + extra;
+        scaleT = 1;
+        sx.set((e.clientX - r.left - r.width / 2) * 0.3);
+        sy.set((e.clientY - r.top - r.height / 2) * 0.3);
+        render();
       });
       btn.addEventListener('mouseleave', function(){
-        btn.style.transform = '';
+        scaleT = 0;
+        sx.set(0);
+        sy.set(0);
+        render();
       });
     });
   }
