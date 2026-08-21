@@ -722,13 +722,18 @@ h2{
 
 /* ---------- reprocann ---------- */
 .reprocann{ background:var(--color-surface); }
+.reprocann-grid{
+  display:grid;
+  grid-template-columns:1.15fr 0.85fr;
+  gap:2rem;
+  align-items:center;
+}
 .reprocann-card{
   background:var(--color-surface-2);
   border:1px solid var(--color-border);
   border-left:3px solid var(--color-accent);
   border-radius:var(--radius-lg);
   padding:clamp(2rem, 5vw, 3.5rem);
-  max-width:760px;
 }
 .reprocann-card p{
   font-size:1.05rem;
@@ -737,6 +742,21 @@ h2{
   font-weight:300;
 }
 .reprocann-card .btn{ margin-top:1.5rem; }
+.reprocann-visual{
+  background:#ffffff;
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  padding:1.75rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.reprocann-visual img{
+  width:100%;
+  max-width:300px;
+  height:auto;
+  display:block;
+}
 
 /* ---------- respaldo institucional ---------- */
 .backing{ background:var(--color-bg); }
@@ -926,6 +946,10 @@ footer{
 
   .about-grid{ grid-template-columns:1fr; gap:2.5rem; }
   .about-visual{ order:-1; }
+
+  .reprocann-grid{ grid-template-columns:1fr; gap:2rem; }
+  .reprocann-visual{ order:-1; }
+  .reprocann-visual img{ max-width:240px; }
 
   .steps-line{ left:22px; }
   .step{ grid-template-columns:44px 1fr; }
@@ -1157,7 +1181,7 @@ footer{
 
 <!-- ============ REPROCANN ============ -->
 <section class="reprocann light-section section-pad" id="reprocann">
-  <div class="container">
+  <div class="container reprocann-grid">
     <div class="reprocann-card reveal">
       <h2>¿Qué es REPROCANN?</h2>
       <p>REPROCANN es el Registro del Programa de C4NN4BIS del Ministerio de Salud
@@ -1166,6 +1190,9 @@ footer{
       <p>Sin REPROCANN no hay acceso legal. Con REPROCANN, The Wayland Club
       está para acompañarte en cada paso que sigue.</p>
       <a href="https://wa.link/3i3nep" class="btn btn-primary" target="_blank" rel="noopener">Escribinos para saber más</a>
+    </div>
+    <div class="reprocann-visual reveal">
+      <img src="assets/reprocann-card.jpg" alt="Credencial REPROCANN de ejemplo, emitida por el Ministerio de Salud de Argentina">
     </div>
   </div>
 </section>
