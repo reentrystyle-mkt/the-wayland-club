@@ -14,19 +14,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Arapey:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap');
 
 :root{
-  --color-bg: #080c0a;
-  --color-surface: #0f1a13;
-  --color-surface-2: #162112;
-  --color-accent: #c8a96e;
-  --color-accent-2: #4a6741;
-  --color-text: #e8e4dc;
-  --color-text-muted: #8a9187;
-  --color-border: #1e2b1c;
+  /* Official brand palette: black/white base, teal as the structural/trust
+     accent, magenta reserved for action moments, olive+mustard as small
+     textural highlights tying back to the plant without the cliché
+     "cannabis green". See PRODUCT.md for the critique behind this hierarchy. */
+  --color-bg: #000000;
+  --color-surface: #0d1518;
+  --color-surface-2: #131f23;
+  --color-accent: #155574;        /* teal — structural/trust */
+  --color-accent-strong: #eb269f; /* magenta — action/CTA, used sparingly */
+  --color-accent-soft: #bbb54e;   /* mustard — small texture */
+  --color-accent-deep: #404416;   /* olive — deep texture/tint */
+  --color-text: #ffffff;
+  --color-text-muted: #9aa8a6;
+  --color-border: #1c2a2e;
 
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-display: 'Baloo 2', sans-serif;
+  --font-serif: 'Arapey', serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
 
@@ -47,18 +54,17 @@
    headings) automatically adapting without a second set of classes. */
 .light-section{
   --color-bg: #ffffff;
-  --color-surface: #f5f4ef;
+  --color-surface: #f2f5f5;
   --color-surface-2: #ffffff;
-  --color-text: #16231b;
-  --color-text-muted: #5c6a5a;
-  --color-border: #e4e1d6;
-  --color-accent: #a9803f;
+  --color-text: #0d0d0d;
+  --color-text-muted: #55605f;
+  --color-border: #e1e6e6;
   background:var(--color-bg);
   color:var(--color-text);
 }
-.light-section .btn-primary{ color:#fff9ef; }
+.light-section .btn-primary{ color:#ffffff; }
 .light-section .step-card,
-.light-section .benefit-card{ box-shadow:0 1px 2px rgba(20,30,20,0.04); }
+.light-section .benefit-card{ box-shadow:0 1px 2px rgba(13,13,13,0.04); }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
 
@@ -181,7 +187,7 @@ section{ position:relative; }
   display:flex;
   align-items:center;
   gap:0.25rem;
-  background:rgba(15,26,19,0.75);
+  background:rgba(13,21,24,0.75);
   border:1px solid var(--color-border);
   backdrop-filter:blur(14px);
   border-radius:var(--radius-pill);
@@ -220,15 +226,15 @@ section{ position:relative; }
 .nav-cta{
   display:inline-block;
   padding:0.65rem 1.4rem;
-  background:var(--color-accent);
-  color:var(--color-bg);
+  background:var(--color-accent-strong);
+  color:#ffffff;
   font-family:var(--font-body);
   font-weight:600;
   font-size:0.85rem;
   border-radius:var(--radius-pill);
   transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
 }
-.nav-cta:hover{ transform:scale(1.05) translateY(-2px); box-shadow:0 10px 24px -8px rgba(200,169,110,0.5); }
+.nav-cta:hover{ transform:scale(1.05) translateY(-2px); box-shadow:0 10px 24px -8px rgba(235,38,159,0.5); }
 
 .nav-toggle{
   display:none;
@@ -297,9 +303,9 @@ section{ position:relative; }
   position:absolute;
   inset:0;
   background:
-    radial-gradient(ellipse 60% 45% at 18% 12%, rgba(74,103,65,0.35), transparent 60%),
-    radial-gradient(ellipse 55% 40% at 85% 20%, rgba(200,169,110,0.14), transparent 60%),
-    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(22,33,18,0.9), transparent 70%);
+    radial-gradient(ellipse 60% 45% at 18% 12%, rgba(21,85,116,0.4), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 85% 20%, rgba(187,181,78,0.12), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(5,10,12,0.9), transparent 70%);
   z-index:0;
 }
 #particles{
@@ -340,8 +346,8 @@ section{ position:relative; }
   align-items:center;
   gap:0.5rem;
   padding:0.5rem 1rem;
-  background:rgba(200,169,110,0.08);
-  border:1px solid rgba(200,169,110,0.25);
+  background:rgba(21,85,116,0.14);
+  border:1px solid rgba(21,85,116,0.4);
   border-radius:var(--radius-pill);
 }
 .eyebrow::before{
@@ -370,8 +376,10 @@ section{ position:relative; }
 }
 .hero h1 .accent-word{ color:var(--color-accent); }
 .hero-sub{
-  font-size:1.05rem;
-  font-weight:300;
+  font-family:var(--font-serif);
+  font-style:italic;
+  font-size:1.2rem;
+  font-weight:400;
   color:var(--color-text-muted);
   max-width:460px;
   margin-bottom:2.5rem;
@@ -384,7 +392,7 @@ section{ position:relative; }
   flex-wrap:wrap;
 }
 .hero-card{
-  background:rgba(15,26,19,0.65);
+  background:rgba(13,21,24,0.65);
   border:1px solid var(--color-border);
   backdrop-filter:blur(14px);
   border-radius:var(--radius-md);
@@ -456,12 +464,12 @@ section{ position:relative; }
 .btn:active{ transform:scale(0.98) translateY(-1px); }
 
 .btn-primary{
-  background:var(--color-accent);
-  color:var(--color-bg);
-  border:1px solid var(--color-accent);
+  background:var(--color-accent-strong);
+  color:#ffffff;
+  border:1px solid var(--color-accent-strong);
 }
-.btn-primary::before{ background:#e6c98a; }
-.btn-primary:hover{ box-shadow:0 14px 28px -10px rgba(200,169,110,0.55); }
+.btn-primary::before{ background:#ff4fb8; }
+.btn-primary:hover{ box-shadow:0 14px 28px -10px rgba(235,38,159,0.55); }
 
 .btn-secondary{
   background:transparent;
@@ -473,11 +481,11 @@ section{ position:relative; }
 
 .btn-dark{
   background:var(--color-bg);
-  color:var(--color-accent);
+  color:var(--color-text);
   border:1px solid var(--color-bg);
 }
-.btn-dark::before{ background:#141c11; }
-.btn-dark:hover{ box-shadow:0 14px 28px -10px rgba(8,12,10,0.55); }
+.btn-dark::before{ background:#151515; }
+.btn-dark:hover{ box-shadow:0 14px 28px -10px rgba(0,0,0,0.55); }
 
 .scroll-indicator{
   position:absolute;
@@ -602,8 +610,8 @@ h2{
 .benefit-icon{
   width:40px; height:40px;
   border-radius:50%;
-  background:rgba(200,169,110,0.1);
-  border:1px solid rgba(200,169,110,0.25);
+  background:rgba(21,85,116,0.12);
+  border:1px solid rgba(21,85,116,0.3);
   color:var(--color-accent);
   display:flex;
   align-items:center;
@@ -712,10 +720,10 @@ h2{
   max-width:760px;
 }
 .reprocann-card p{
-  font-size:1.05rem;
+  font-family:var(--font-serif);
+  font-size:1.15rem;
   color:var(--color-text-muted);
   margin:1.25rem 0;
-  font-weight:300;
 }
 .reprocann-card .btn{ margin-top:1.5rem; }
 
@@ -754,8 +762,8 @@ h2{
   border-radius:var(--radius-lg);
   border:1px solid var(--color-border);
   background:
-    radial-gradient(ellipse 60% 80% at 85% 20%, rgba(200,169,110,0.16), transparent 60%),
-    radial-gradient(ellipse 60% 60% at 10% 100%, rgba(74,103,65,0.4), transparent 65%),
+    radial-gradient(ellipse 60% 80% at 85% 20%, rgba(21,85,116,0.2), transparent 60%),
+    radial-gradient(ellipse 60% 60% at 10% 100%, rgba(187,181,78,0.16), transparent 65%),
     var(--color-surface);
   padding:clamp(2.5rem, 6vw, 4.5rem);
   text-align:center;
@@ -772,8 +780,8 @@ h2{
 
 /* ---------- cta final ---------- */
 .cta-final{
-  background:var(--color-accent);
-  color:var(--color-bg);
+  background:var(--color-accent-strong);
+  color:#ffffff;
   text-align:center;
   padding:6rem 0;
 }
@@ -781,16 +789,16 @@ h2{
   font-family:var(--font-display);
   font-weight:700;
   font-size:var(--fs-display);
-  color:var(--color-bg);
+  color:#ffffff;
   max-width:800px;
   margin:0 auto 1.25rem;
 }
 .cta-final p{
   font-size:1.05rem;
-  color:rgba(8,12,10,0.75);
+  color:rgba(255,255,255,0.8);
   margin-bottom:2.25rem;
 }
-.cta-final .btn-dark:hover{ box-shadow:0 14px 28px -10px rgba(8,12,10,0.4); }
+.cta-final .btn-dark:hover{ box-shadow:0 14px 28px -10px rgba(0,0,0,0.4); }
 
 /* ---------- footer ---------- */
 footer{
@@ -1489,7 +1497,7 @@ footer{
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(200,169,110,' + (p.alpha * 0.18) + ')';
+      ctx.fillStyle = 'rgba(187,181,78,' + (p.alpha * 0.18) + ')';
       ctx.fill();
     });
     requestAnimationFrame(drawParticles);
@@ -1508,7 +1516,7 @@ footer{
     particles.forEach(function(p){
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(200,169,110,' + (p.alpha * 0.18) + ')';
+      ctx.fillStyle = 'rgba(187,181,78,' + (p.alpha * 0.18) + ')';
       ctx.fill();
     });
   }

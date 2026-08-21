@@ -54,16 +54,32 @@ manualmente por WhatsApp a quien lo pide.
   a WhatsApp.
 - Lenguaje siempre de "acceder", "asociarse", "dispensar" — nunca lenguaje de
   compra/venta ni de uso recreativo.
-- La foto de "Quiénes somos" es un placeholder marcado en el código
-  (`CARGAR: foto real`) hasta que el cliente entregue una imagen real.
+- "MADE Waffle Soft" (tipografía primaria del brand book oficial) es gratis
+  solo para uso personal — no está licenciada para uso comercial. El sitio
+  usa "Baloo 2" (Google Fonts, gratis, espíritu rounded/bold similar) hasta
+  que el cliente compre la licencia comercial; si la compran, reemplazar
+  `--font-display` y cargar el archivo propio.
 
 ## Brand Commitments
 
-Nombre: The Wayland Club. Paleta dorado/ámbar (`--color-accent`) sobre verde
-muy oscuro casi negro en el hero, y secciones más claras (blanco/off-white)
-en el resto del sitio. Tipografía: Space Grotesk (display) + DM Sans (texto)
-+ DM Mono (labels/datos). Logo con isotipo "W" (bicolor magenta/verde azulado)
-provisto por el cliente — usado también como favicon.
+Nombre: The Wayland Club. Paleta oficial del brand book del cliente
+(2026-08-21): negro `#000000` / blanco `#ffffff` como base, con jerarquía de
+acento deliberada (no las 6 en igual peso):
+- **Teal `#155574`** — acento estructural/institucional: bordes, íconos,
+  eyebrow, indicador de nav, links. Reemplaza el dorado que yo había
+  propuesto en la primera iteración.
+- **Magenta `#eb269f`** — acento de acción, usado con moderación: fondo de
+  botones primarios, CTA del nav, el bloque CTA final. Nunca como fondo de
+  sección completa fuera de esos momentos puntuales.
+- **Mustard `#bbb54e`** — textura chica: partículas del hero, detalles de
+  gradiente. Oliva `#404416` — tinte profundo en gradientes, no protagonista.
+
+Tipografía: "Baloo 2" (display/headlines, ver nota de licencia arriba) +
+"Arapey" italic (texto secundario editorial: bajada del hero, párrafo de
+REPROCANN) + DM Sans (cuerpo general) + DM Mono (labels/datos). Logo con
+isotipo "W" (bicolor magenta/teal) provisto por el cliente — usado también
+como favicon y, recortado, como ícono de marca en el nav junto al wordmark
+"The Wayland Club".
 
 ## Evidence on Hand
 
@@ -76,7 +92,10 @@ provisto por el cliente — usado también como favicon.
   `assets/badge-inase.jpg` (INASE).
 - Contacto real: WhatsApp `https://wa.link/3i3nep`, Instagram
   `@the.waylandclub`.
-- No hay fotografía propia del equipo/espacio todavía (placeholder activo).
+- Foto real de planta cultivada por el cliente en "Quiénes somos"
+  (`assets/about-photo.jpg`) y una foto de cogollo suelto (variedad Black
+  Cherry) usada como elemento animado en el hero (`assets/cogollo-hero.png`,
+  fondo removido, rota/flota con el scroll).
 - No hay catálogo de variedades/formatos confirmado todavía (teaser activo).
 
 ## Product Principles
