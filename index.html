@@ -156,14 +156,25 @@ section{ position:relative; }
 .nav-logo{
   display:flex;
   align-items:center;
+  gap:0.65rem;
   flex-shrink:0;
 }
 .nav-logo img{
-  height:68px;
+  height:40px;
   width:auto;
   transition:height 0.4s ease;
+  display:block;
 }
-.nav.scrolled .nav-logo img{ height:52px; }
+.nav.scrolled .nav-logo img{ height:34px; }
+.nav-logo-word{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.15rem;
+  letter-spacing:-0.01em;
+  color:var(--color-text);
+  white-space:nowrap;
+}
+.nav-logo-word span{ color:var(--color-accent); }
 
 .nav-pill{
   position:relative;
@@ -297,6 +308,21 @@ section{ position:relative; }
   width:100%;
   height:100%;
   z-index:1;
+}
+.hero-cogollo{
+  position:absolute;
+  top:50%;
+  right:clamp(1rem, 5vw, 5rem);
+  width:clamp(200px, 22vw, 340px);
+  z-index:1;
+  pointer-events:none;
+  filter:drop-shadow(0 40px 70px rgba(0,0,0,0.55));
+  transform:translateY(-50%);
+  will-change:transform;
+}
+.hero-cogollo img{ width:100%; height:auto; }
+@media (max-width:1024px){
+  .hero-cogollo{ display:none; }
 }
 .hero-content{
   position:relative;
@@ -505,25 +531,15 @@ h2{
   overflow:hidden;
   aspect-ratio:4/3;
   background:var(--color-surface);
-  border:1.5px dashed var(--color-border);
+  border:1px solid var(--color-border);
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.about-visual .placeholder-content{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:0.75rem;
-  color:var(--color-text-muted);
-  text-align:center;
-}
-.about-visual .placeholder-content svg{ width:32px; height:32px; opacity:0.6; }
-.about-visual .placeholder-content span{
-  font-family:var(--font-mono);
-  font-size:0.72rem;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
+.about-visual img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .about-text h2{ margin-bottom:1.25rem; }
@@ -582,7 +598,6 @@ h2{
 .benefit-top{
   display:flex;
   align-items:flex-start;
-  justify-content:space-between;
 }
 .benefit-icon{
   width:40px; height:40px;
@@ -595,23 +610,6 @@ h2{
   justify-content:center;
 }
 .benefit-icon svg{ width:19px; height:19px; }
-.benefit-arrow{
-  width:34px; height:34px;
-  border-radius:50%;
-  background:var(--color-bg);
-  border:1px solid var(--color-border);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--color-text-muted);
-  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.3s ease, color 0.3s ease;
-}
-.benefit-arrow svg{ width:14px; height:14px; }
-.benefit-card:hover .benefit-arrow{
-  background:var(--color-accent);
-  color:var(--color-bg);
-  transform:rotate(45deg);
-}
 .benefit-card h3{
   font-family:var(--font-display);
   font-size:1.15rem;
@@ -895,7 +893,10 @@ footer{
 <!-- ============ NAV ============ -->
 <nav class="nav" id="nav">
   <div class="container">
-    <a href="#top" class="nav-logo"><img src="assets/wayland-logo.png" alt="The Wayland Club"></a>
+    <a href="#top" class="nav-logo">
+      <img src="assets/favicon-512.png" alt="">
+      <span class="nav-logo-word">The <span>Wayland</span> Club</span>
+    </a>
 
     <div class="nav-pill" id="navPill">
       <span class="nav-pill-indicator" id="navPillIndicator"></span>
@@ -938,6 +939,9 @@ footer{
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
   <canvas id="particles"></canvas>
+  <div class="hero-cogollo" id="heroCogollo">
+    <img src="assets/cogollo-hero.png" alt="" aria-hidden="true">
+  </div>
   <div class="container hero-content">
     <span class="eyebrow">ONG · MINISTERIO DE SALUD · REPROCANN</span>
     <h1 id="heroTitle"></h1>
@@ -977,12 +981,8 @@ footer{
         <span class="chip"><span class="dot"></span>Envíos a todo el país</span>
       </div>
     </div>
-    <!-- CARGAR: foto real del equipo o del espacio de trabajo -->
     <div class="about-visual reveal">
-      <div class="placeholder-content">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5.5-5-6.5 6-2-2-4 4"/></svg>
-        <span>Foto próximamente</span>
-      </div>
+      <img src="assets/about-photo.jpg" alt="Planta de C4NN4BIS medicinal cultivada por The Wayland Club">
     </div>
   </div>
 </section>
@@ -997,8 +997,7 @@ footer{
     <div class="benefits-grid">
       <div class="benefit-card reveal">
         <div class="benefit-top">
-          <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M9 12l2 2 4-4"/></svg></span>
-          <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+          <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M16.5 7.5c0-1.8-2-3-4.5-3s-4.5 1.2-4.5 3c0 1.8 2 2.6 4.5 3.2s4.5 1.6 4.5 3.3c0 1.8-2 3-4.5 3s-4.5-1.2-4.5-3"/><line x1="4" y1="20" x2="20" y2="4"/></svg></span>
         </div>
         <div>
           <h3>Membresía sin costo</h3>
@@ -1008,7 +1007,6 @@ footer{
       <div class="benefit-card reveal">
         <div class="benefit-top">
           <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>
-          <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </div>
         <div>
           <h3>Envío en 24hs</h3>
@@ -1018,7 +1016,6 @@ footer{
       <div class="benefit-card reveal">
         <div class="benefit-top">
           <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
-          <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </div>
         <div>
           <h3>100% legal</h3>
@@ -1028,7 +1025,6 @@ footer{
       <div class="benefit-card reveal">
         <div class="benefit-top">
           <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
-          <span class="benefit-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </div>
         <div>
           <h3>Acompañamiento real</h3>
@@ -1262,11 +1258,17 @@ footer{
   var heroSection = document.querySelector('.hero');
   var particlesCanvas = document.getElementById('particles');
   var heroContent = document.querySelector('.hero-content');
+  var heroCogollo = document.getElementById('heroCogollo');
   function updateParallax(){
     if(reduceMotion) return;
     var y = window.scrollY;
     if(y < window.innerHeight){
       particlesCanvas.style.transform = 'translateY(' + (y * 0.15) + 'px)';
+      if(heroCogollo){
+        var rotate = Math.min(y * 0.06, 22);
+        var lift = y * 0.22;
+        heroCogollo.style.transform = 'translateY(calc(-50% - ' + lift + 'px)) rotate(' + rotate + 'deg)';
+      }
     }
   }
 
