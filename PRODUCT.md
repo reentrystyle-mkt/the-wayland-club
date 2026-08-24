@@ -93,7 +93,11 @@ como favicon y, recortado, como ícono de marca en el nav junto al wordmark
   (Orgánicos de Argentina S.A.), `assets/badge-ministerio.jpg` (Ministerio de
   Salud, logo propio y separado de REPROCANN), `assets/badge-inase.jpg`
   (INASE). Orden fijo en la sección "Todo dentro del marco legal": REPROCANN,
-  Orgánicos, Ministerio, INASE — en mobile rotan solos en un carrusel.
+  Orgánicos, Ministerio, INASE — en mobile es un carrusel coverflow 3D
+  (rotan solas, arrastrable con el dedo) implementado en HTML/CSS/JS puro,
+  sin frameworks — la math (translateX/translateZ/rotateY por distancia al
+  centro) es un port manual de un componente React equivalente que se evaluó
+  y se descartó para no migrar el proyecto de static HTML a Next.js.
 - Imagen de ejemplo de la credencial REPROCANN (`assets/reprocann-card.jpg`,
   datos ficticios "Juan Perez") ilustrando la sección "¿Qué es REPROCANN?".
 - Envíos: solo dentro de Buenos Aires (NO "todo el país" — corregido
