@@ -200,23 +200,30 @@ section{ position:relative; }
   left:0;
   height:calc(100% - 0.7rem);
   border-radius:var(--radius-pill);
-  background:var(--color-text);
-  z-index:0;
+  background:#ffffff;
+  z-index:2;
   pointer-events:none;
   opacity:0;
+  /* Self-syncing contrast: the pill sits ABOVE the (always-white) link text
+     and inverts whatever it overlaps. Wherever the pill covers a word, that
+     word reads dark; nowhere else does — true every single frame, so a
+     spring-eased slide can never outrun a class toggle and leave text
+     invisible mid-flight (see the old .on-indicator approach this replaced). */
+  mix-blend-mode:difference;
 }
 .nav-pill a{
   position:relative;
   z-index:1;
   font-size:var(--fs-small);
-  color:var(--color-text-muted);
+  color:#ffffff;
+  opacity:0.6;
   padding:0.55rem 1.1rem;
   border-radius:var(--radius-pill);
-  transition:color 0.3s ease;
+  transition:opacity 0.3s ease;
   white-space:nowrap;
 }
-.nav-pill a:hover{ color:var(--color-bg); }
-.nav-pill a.active{ color:var(--color-bg); }
+.nav-pill a:hover,
+.nav-pill a.active{ opacity:1; }
 
 .nav-right{
   display:flex;
