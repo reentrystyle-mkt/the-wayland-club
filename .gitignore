@@ -2,3 +2,5 @@
 .codex/
 .agents/
 .impeccable/
+.vercel
+.env*
