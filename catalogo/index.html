@@ -144,158 +144,6 @@ section{ position:relative; }
   transform:scale(1.1) rotate(-8deg);
 }
 
-/* ---------- nav ---------- */
-.nav{
-  position:fixed;
-  top:0; left:0; right:0;
-  z-index:900;
-  padding:1.1rem 0;
-  transition:padding 0.4s ease;
-}
-.nav.scrolled{ padding:0.7rem 0; }
-.nav .container{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1rem;
-}
-.nav-logo{
-  display:flex;
-  align-items:center;
-  gap:0.65rem;
-  flex-shrink:0;
-}
-.nav-logo img{
-  height:40px;
-  width:auto;
-  transition:height 0.4s ease;
-  display:block;
-}
-.nav.scrolled .nav-logo img{ height:34px; }
-.nav-logo-word{
-  font-family:var(--font-display);
-  font-weight:700;
-  font-size:1.15rem;
-  letter-spacing:-0.01em;
-  color:var(--color-text);
-  white-space:nowrap;
-}
-.nav-logo-word span{ color:var(--color-accent-strong); }
-
-.nav-pill{
-  position:relative;
-  display:flex;
-  align-items:center;
-  gap:0.25rem;
-  background:rgba(13,21,24,0.75);
-  border:1px solid var(--color-border);
-  backdrop-filter:blur(14px);
-  border-radius:var(--radius-pill);
-  padding:0.35rem;
-}
-.nav-pill-indicator{
-  position:absolute;
-  top:0.35rem;
-  left:0;
-  height:calc(100% - 0.7rem);
-  border-radius:var(--radius-pill);
-  background:#ffffff;
-  z-index:2;
-  pointer-events:none;
-  opacity:0;
-  /* Self-syncing contrast: the pill sits ABOVE the (always-white) link text
-     and inverts whatever it overlaps. Wherever the pill covers a word, that
-     word reads dark; nowhere else does — true every single frame, so a
-     spring-eased slide can never outrun a class toggle and leave text
-     invisible mid-flight (see the old .on-indicator approach this replaced). */
-  mix-blend-mode:difference;
-}
-.nav-pill a{
-  position:relative;
-  z-index:1;
-  font-size:var(--fs-small);
-  color:#ffffff;
-  opacity:0.6;
-  padding:0.55rem 1.1rem;
-  border-radius:var(--radius-pill);
-  transition:opacity 0.3s ease;
-  white-space:nowrap;
-}
-.nav-pill a:hover,
-.nav-pill a.active{ opacity:1; }
-
-.nav-right{
-  display:flex;
-  align-items:center;
-  gap:0.6rem;
-  flex-shrink:0;
-}
-.nav-cta{
-  display:inline-block;
-  padding:0.65rem 1.4rem;
-  background:var(--color-accent-strong);
-  color:#ffffff;
-  font-family:var(--font-body);
-  font-weight:600;
-  font-size:0.85rem;
-  border-radius:var(--radius-pill);
-  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
-}
-.nav-cta:hover{ transform:scale(1.05) translateY(-2px); box-shadow:0 10px 24px -8px rgba(235,38,159,0.5); }
-
-.nav-toggle{
-  display:none;
-  flex-direction:column;
-  gap:5px;
-  background:var(--color-surface-2);
-  border:1px solid var(--color-border);
-  border-radius:50%;
-  width:44px;
-  height:44px;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  padding:0;
-  z-index:950;
-  flex-shrink:0;
-}
-.nav-toggle span{
-  width:18px;
-  height:1.5px;
-  background:var(--color-text);
-  transition:transform 0.3s ease, opacity 0.3s ease;
-}
-.nav-toggle.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
-.nav-toggle.open span:nth-child(2){ opacity:0; }
-.nav-toggle.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
-
-.mobile-menu{
-  position:fixed;
-  inset:0;
-  background:var(--color-surface);
-  z-index:890;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:1.75rem;
-  transform:translateY(-100%);
-  transition:transform 0.5s cubic-bezier(.65,0,.35,1);
-}
-.mobile-menu.open{ transform:translateY(0); }
-.mobile-menu a{
-  font-family:var(--font-display);
-  font-weight:600;
-  font-size:1.7rem;
-  color:var(--color-text);
-}
-.mobile-menu .mobile-social{
-  display:flex;
-  gap:0.75rem;
-  margin-top:0.5rem;
-}
-.mobile-menu .nav-cta{ margin-top:0.75rem; }
-
 .btn{
   position:relative;
   display:inline-flex;
@@ -451,7 +299,6 @@ footer{
 /* =====================================================================
    CATÁLOGO
    ===================================================================== */
-.section-pad{ padding:6.5rem 0; }
 h2{
   font-family:var(--font-display);
   font-weight:700;
@@ -459,6 +306,7 @@ h2{
   line-height:1.15;
   letter-spacing:-0.01em;
 }
+button{ font:inherit; }
 
 /* preview flag: borrar junto con el robots noindex al publicar */
 .preview-flag{
@@ -487,72 +335,229 @@ h2{
   background:var(--color-accent-strong);
 }
 
-/* ---------- hero del catálogo ---------- */
-.cat-hero{
-  position:relative;
+/* ---------- puerta de entrada (bienvenida) ---------- */
+html:not(.entered):not(.no-gate) body{ overflow:hidden; }
+.no-gate .gate{ display:none; }
+.gate{
+  position:fixed;
+  inset:0;
+  z-index:1200;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:2rem 1.5rem;
+  background:#000;
   overflow:hidden;
-  padding:10rem 0 4.5rem;
+  transition:transform 1s cubic-bezier(.76,0,.24,1);
 }
-.cat-hero::before{
+.gate::before{
   content:'';
   position:absolute;
   inset:0;
   background:
-    radial-gradient(ellipse 60% 55% at 15% 10%, rgba(21,85,116,0.42), transparent 60%),
-    radial-gradient(ellipse 50% 45% at 90% 25%, rgba(187,181,78,0.13), transparent 60%),
-    radial-gradient(ellipse 70% 60% at 50% 110%, rgba(5,10,12,0.9), transparent 70%);
+    radial-gradient(ellipse 60% 50% at 50% 38%, rgba(21,85,116,0.5), transparent 62%),
+    radial-gradient(ellipse 45% 40% at 85% 85%, rgba(187,181,78,0.12), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 10% 90%, rgba(235,38,159,0.10), transparent 60%);
 }
-.cat-hero .container{ position:relative; z-index:1; }
-.eyebrow{
+#gateParticles{ position:absolute; inset:0; width:100%; height:100%; }
+.gate.leaving{ transform:translateY(-100%); }
+.gate.leaving .gate-inner{ opacity:0; transform:translateY(-40px); transition:opacity 0.5s ease, transform 0.8s cubic-bezier(.76,0,.24,1); }
+.gate-inner{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  max-width:980px;
+}
+.gate-inner > *{
+  opacity:0;
+  transform:translateY(26px);
+  animation:gateIn 1.1s cubic-bezier(.16,1,.3,1) forwards;
+}
+.gate-inner > :nth-child(1){ animation-delay:0.15s; }
+.gate-inner > :nth-child(2){ animation-delay:0.5s; }
+.gate-inner > :nth-child(3){ animation-delay:0.65s; }
+.gate-inner > :nth-child(4){ animation-delay:0.95s; }
+.gate-inner > :nth-child(5){ animation-delay:1.2s; }
+.gate-inner > :nth-child(6){ animation-delay:1.6s; }
+@keyframes gateIn{ to{ opacity:1; transform:translateY(0); } }
+.gate-logo-wrap{ margin-bottom:1.6rem; }
+.gate-logo{
+  width:clamp(84px, 12vw, 120px);
+  height:auto;
+  display:block;
+  filter:drop-shadow(0 0 38px rgba(21,85,116,0.7));
+  animation:gateFloat 6s ease-in-out infinite;
+}
+@keyframes gateFloat{
+  0%,100%{ transform:translateY(0) rotate(-1.5deg); }
+  50%{ transform:translateY(-10px) rotate(1.5deg); }
+}
+.gate-eyebrow{
   font-family:var(--font-mono);
   font-size:var(--fs-mono);
-  color:var(--color-accent-strong);
-  letter-spacing:0.15em;
+  letter-spacing:0.22em;
   text-transform:uppercase;
-  margin-bottom:1.5rem;
+  color:var(--color-text-muted);
+  margin-bottom:1rem;
+}
+.gate-title{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:clamp(2.6rem, 8.5vw, 6rem);
+  line-height:1.02;
+  letter-spacing:-0.025em;
+  margin-bottom:1.4rem;
+}
+.gate-title span{ color:var(--color-accent-strong); }
+.gate-sub{
+  font-size:1.02rem;
+  font-weight:300;
+  color:var(--color-text-muted);
+  max-width:460px;
+  margin-bottom:2.4rem;
+}
+.gate-enter{ gap:0.7rem; }
+.gate-enter svg{ width:16px; height:16px; transition:transform 0.4s cubic-bezier(.34,1.56,.64,1); }
+.gate-enter:hover svg{ transform:translateY(3px); }
+.gate-hint{
+  margin-top:1.4rem;
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--color-text-muted);
+  opacity:0.7;
+}
+
+/* ---------- barra superior (reemplaza al menú) ---------- */
+.topbar{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:900;
+  height:64px;
+  display:flex;
+  align-items:center;
+  transition:background 0.4s ease, opacity 0.8s ease 0.5s, transform 0.8s cubic-bezier(.16,1,.3,1) 0.5s, border-color 0.4s ease;
+  border-bottom:1px solid transparent;
+}
+html:not(.entered):not(.no-gate) .topbar{ opacity:0; transform:translateY(-100%); }
+.topbar.scrolled{
+  background:rgba(0,0,0,0.88);
+  backdrop-filter:blur(12px);
+  border-bottom-color:var(--color-border);
+}
+.topbar .container{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+}
+.tb-logo{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.1rem;
+  letter-spacing:-0.01em;
+  color:#ffffff;
+  white-space:nowrap;
+}
+.tb-logo img{ height:34px; width:auto; display:block; }
+.tb-logo b{ color:var(--color-accent-strong); font-weight:700; }
+.tb-right{ display:flex; align-items:center; gap:0.6rem; }
+.cart-btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:44px; height:44px;
+  border-radius:50%;
+  background:var(--color-accent-strong);
+  color:#ffffff;
+  border:1px solid var(--color-accent-strong);
+  cursor:pointer;
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
+}
+.cart-btn svg{ width:19px; height:19px; }
+.cart-btn:hover{ transform:scale(1.08); box-shadow:0 10px 24px -8px rgba(235,38,159,0.55); }
+.cart-btn.bump{ animation:cartBump 0.5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes cartBump{ 0%{ transform:scale(1); } 40%{ transform:scale(1.22); } 100%{ transform:scale(1); } }
+.cart-badge{
+  position:absolute;
+  top:-5px; right:-5px;
+  min-width:20px; height:20px;
+  padding:0 5px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:var(--radius-pill);
+  background:#ffffff;
+  color:var(--color-accent-strong);
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  font-weight:500;
+  border:1px solid var(--color-accent-strong);
+}
+.cart-badge[hidden]{ display:none; }
+
+/* ---------- encabezado del catálogo (centrado) ---------- */
+.cat-intro{
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+  padding:9rem 0 4rem;
+}
+.cat-intro::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 0%, rgba(21,85,116,0.42), transparent 62%),
+    radial-gradient(ellipse 50% 45% at 90% 100%, rgba(187,181,78,0.10), transparent 60%);
+}
+.cat-intro .container{ position:relative; z-index:1; }
+html.entered:not(.no-gate) .cat-intro .container > *{
+  opacity:0;
+  transform:translateY(22px);
+  animation:gateIn 1s cubic-bezier(.16,1,.3,1) forwards;
+}
+html.entered:not(.no-gate) .cat-intro .container > :nth-child(1){ animation-delay:0.55s; }
+html.entered:not(.no-gate) .cat-intro .container > :nth-child(2){ animation-delay:0.7s; }
+html.entered:not(.no-gate) .cat-intro .container > :nth-child(3){ animation-delay:0.85s; }
+.cat-kicker{
   display:inline-flex;
   align-items:center;
   padding:0.5rem 1rem;
+  margin-bottom:1.4rem;
   background:#ffffff;
   border:1px solid var(--color-accent-strong);
   border-radius:var(--radius-pill);
+  font-family:var(--font-mono);
+  font-size:var(--fs-mono);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--color-accent-strong);
 }
-.cat-hero h1{
+.cat-title{
   font-family:var(--font-display);
   font-weight:700;
-  font-size:clamp(2.8rem, 7vw, 5.6rem);
-  line-height:1.02;
+  font-size:clamp(2.4rem, 6.5vw, 4.8rem);
+  line-height:1.04;
   letter-spacing:-0.02em;
-  margin-bottom:1.4rem;
+  margin-bottom:1.2rem;
 }
-.cat-hero h1 span{ color:var(--color-accent-strong); }
-.cat-hero .cat-sub{
-  max-width:520px;
-  font-size:1.05rem;
+.cat-title span{ color:var(--color-accent-strong); }
+.cat-sub{
+  max-width:540px;
+  margin:0 auto;
+  font-size:1.03rem;
   font-weight:300;
   color:var(--color-text-muted);
-  margin-bottom:2rem;
-}
-.cat-stats{
-  display:flex;
-  flex-wrap:wrap;
-  gap:0.6rem;
-}
-.cat-stat{
-  display:inline-flex;
-  align-items:center;
-  gap:0.5rem;
-  padding:0.5rem 1rem;
-  border:1px solid var(--color-border);
-  border-radius:var(--radius-pill);
-  background:rgba(13,21,24,0.6);
-  font-size:var(--fs-small);
-  color:var(--color-text-muted);
-}
-.cat-stat b{
-  font-family:var(--font-mono);
-  font-weight:400;
-  color:var(--color-text);
 }
 
 /* ---------- catálogo ---------- */
@@ -560,7 +565,7 @@ h2{
 
 .cat-toolbar{
   position:sticky;
-  top:62px;
+  top:64px;
   z-index:60;
   background:rgba(255,255,255,0.92);
   backdrop-filter:blur(12px);
@@ -587,7 +592,6 @@ h2{
   color:var(--color-text);
   border:1px solid var(--color-border);
   border-radius:var(--radius-pill);
-  font-family:var(--font-body);
   font-size:0.88rem;
   font-weight:500;
   cursor:pointer;
@@ -615,12 +619,7 @@ h2{
   gap:0.9rem 1.25rem;
   margin-top:0.9rem;
 }
-.cat-types{
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:0.4rem;
-}
+.cat-types{ display:flex; align-items:center; flex-wrap:wrap; gap:0.4rem; }
 .cat-types-label{
   font-family:var(--font-mono);
   font-size:0.68rem;
@@ -635,7 +634,6 @@ h2{
   color:var(--color-text-muted);
   border:1px solid var(--color-border);
   border-radius:var(--radius-pill);
-  font-family:var(--font-body);
   font-size:0.78rem;
   cursor:pointer;
   transition:color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
@@ -646,11 +644,7 @@ h2{
   border-color:var(--color-accent);
   background:rgba(21,85,116,0.07);
 }
-.cat-search{
-  position:relative;
-  display:flex;
-  align-items:center;
-}
+.cat-search{ position:relative; display:flex; align-items:center; }
 .cat-search svg{
   position:absolute;
   left:0.9rem;
@@ -717,6 +711,24 @@ h2{
   border-radius:inherit;
 }
 .p-open:focus-visible{ outline:2px solid var(--color-accent); outline-offset:-2px; }
+.p-add{
+  position:absolute;
+  right:0.85rem;
+  bottom:0.95rem;
+  z-index:3;
+  width:36px; height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--color-text);
+  color:#ffffff;
+  border:0;
+  border-radius:50%;
+  cursor:pointer;
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.3s ease;
+}
+.p-add svg{ width:16px; height:16px; }
+.p-add:hover{ background:var(--color-accent-strong); transform:scale(1.12) rotate(90deg); }
 
 .p-media{
   position:relative;
@@ -786,6 +798,7 @@ h2{
   font-weight:600;
   line-height:1.25;
   margin-bottom:0.25rem;
+  padding-right:2.4rem;
 }
 .p-sub{
   font-size:0.8rem;
@@ -796,6 +809,7 @@ h2{
   display:flex;
   gap:1rem;
   padding-top:0.8rem;
+  padding-right:2.6rem;
   border-top:1px solid var(--color-border);
   font-family:var(--font-mono);
   font-size:0.7rem;
@@ -817,6 +831,42 @@ h2{
   margin-bottom:0.4rem;
 }
 
+/* ---------- selector de cantidad ---------- */
+.stepper{
+  display:inline-flex;
+  align-items:center;
+  gap:0.2rem;
+  padding:0.25rem;
+  background:var(--color-surface);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-pill);
+}
+.stepper button{
+  width:36px; height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#ffffff;
+  color:var(--color-text);
+  border:1px solid var(--color-border);
+  border-radius:50%;
+  font-size:1.15rem;
+  line-height:1;
+  cursor:pointer;
+  transition:background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+.stepper button:hover:not(:disabled){ background:var(--color-text); color:#ffffff; border-color:var(--color-text); transform:scale(1.08); }
+.stepper button:disabled{ opacity:0.35; cursor:not-allowed; }
+.stepper output{
+  min-width:3.4rem;
+  text-align:center;
+  font-family:var(--font-mono);
+  font-size:0.95rem;
+  color:var(--color-text);
+}
+.stepper.sm button{ width:28px; height:28px; font-size:1rem; }
+.stepper.sm output{ min-width:2.7rem; font-size:0.82rem; }
+
 /* ---------- ficha (modal) ---------- */
 .p-modal{
   width:min(860px, calc(100vw - 2rem));
@@ -827,10 +877,7 @@ h2{
   overflow:hidden;
   margin:auto;
 }
-.p-modal::backdrop{
-  background:rgba(0,0,0,0.62);
-  backdrop-filter:blur(5px);
-}
+.p-modal::backdrop{ background:rgba(0,0,0,0.62); backdrop-filter:blur(5px); }
 .p-modal[open]{ animation:modalIn 0.45s cubic-bezier(.16,1,.3,1); }
 @keyframes modalIn{
   from{ opacity:0; transform:translateY(24px) scale(0.97); }
@@ -852,41 +899,25 @@ h2{
   min-height:280px;
 }
 .p-modal-media img.mark{ width:38%; opacity:0.18; filter:grayscale(1); }
-.p-modal-media img.photo{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-}
-.p-modal-info{
-  padding:2rem 2rem 1.75rem;
-  overflow-y:auto;
-}
-.p-modal-info h2{
-  font-size:clamp(1.5rem, 3vw, 2rem);
-  margin:0.9rem 0 0.7rem;
-}
-.p-modal-info .p-desc{
-  font-size:0.95rem;
-  color:var(--color-text-muted);
-  margin-bottom:1.4rem;
-}
-.p-specs{
-  margin-bottom:1.6rem;
-  border-top:1px solid var(--color-border);
-}
+.p-modal-media img.photo{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.p-modal-info{ padding:2rem 2rem 1.75rem; overflow-y:auto; }
+.p-modal-info h2{ font-size:clamp(1.5rem, 3vw, 2rem); margin:0.9rem 0 0.7rem; }
+.p-modal-info .p-desc{ font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1.3rem; }
+.p-specs{ margin-bottom:1.4rem; border-top:1px solid var(--color-border); }
 .p-specs div{
   display:flex;
   justify-content:space-between;
   gap:1rem;
-  padding:0.65rem 0;
+  padding:0.6rem 0;
   border-bottom:1px solid var(--color-border);
   font-size:0.85rem;
 }
 .p-specs dt{ color:var(--color-text-muted); }
 .p-specs dd{ font-weight:500; text-align:right; }
-.p-modal-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:0.7rem;
-}
+.qty-row{ margin-bottom:1.2rem; }
+.qty-label{ font-size:0.88rem; font-weight:500; margin-bottom:0.6rem; }
+.qty-note{ margin-top:0.55rem; font-size:0.76rem; color:var(--color-text-muted); }
+.p-modal-actions{ display:flex; flex-wrap:wrap; gap:0.7rem; }
 .p-close{
   position:absolute;
   top:0.9rem; right:0.9rem;
@@ -905,25 +936,190 @@ h2{
 .p-close:hover{ background:var(--color-text); color:#ffffff; transform:rotate(90deg); }
 .p-close svg{ width:16px; height:16px; }
 
+/* ---------- carrito (panel lateral) ---------- */
+.cart-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1100;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(4px);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+.cart-overlay.open{ opacity:1; visibility:visible; transition:opacity 0.4s ease; }
+.cart{
+  position:fixed;
+  top:0; right:0; bottom:0;
+  z-index:1110;
+  width:min(430px, 100vw);
+  display:flex;
+  flex-direction:column;
+  border-left:1px solid var(--color-border);
+  visibility:hidden;
+  transform:translateX(100%);
+  transition:transform 0.55s cubic-bezier(.16,1,.3,1), visibility 0s linear 0.55s;
+}
+.cart.open{ visibility:visible; transform:none; transition:transform 0.55s cubic-bezier(.16,1,.3,1); }
+.cart-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1.3rem 1.5rem;
+  border-bottom:1px solid var(--color-border);
+}
+.cart-head h2{ font-size:1.35rem; }
+.cart-x{
+  width:38px; height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--color-surface);
+  color:var(--color-text);
+  border:1px solid var(--color-border);
+  border-radius:50%;
+  cursor:pointer;
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.3s ease, color 0.3s ease;
+}
+.cart-x:hover{ background:var(--color-text); color:#ffffff; transform:rotate(90deg); }
+.cart-x svg{ width:15px; height:15px; }
+.cart-body{ flex:1; overflow-y:auto; padding:0.5rem 1.5rem; }
+.cart-item{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:0.35rem 1rem;
+  align-items:center;
+  padding:1.05rem 0;
+  border-bottom:1px solid var(--color-border);
+  animation:cardIn 0.45s cubic-bezier(.16,1,.3,1) both;
+}
+.cart-item h3{
+  font-family:var(--font-display);
+  font-size:0.98rem;
+  font-weight:600;
+  line-height:1.25;
+}
+.cart-item .ci-cat{
+  display:inline-flex;
+  align-items:center;
+  gap:0.4rem;
+  margin-top:0.2rem;
+  font-size:0.72rem;
+  color:var(--color-text-muted);
+}
+.cart-item .ci-cat i{ width:6px; height:6px; border-radius:50%; background:var(--dot, var(--color-accent)); }
+.cart-item .ci-actions{ display:flex; align-items:center; gap:0.55rem; }
+.ci-remove{
+  width:28px; height:28px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:transparent;
+  color:var(--color-text-muted);
+  border:0;
+  border-radius:50%;
+  cursor:pointer;
+  transition:color 0.25s ease, background 0.25s ease;
+}
+.ci-remove:hover{ color:var(--color-accent-strong); background:rgba(235,38,159,0.08); }
+.ci-remove svg{ width:15px; height:15px; }
+.cart-empty{
+  height:100%;
+  min-height:260px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+  text-align:center;
+  color:var(--color-text-muted);
+  padding:1rem;
+}
+.cart-empty svg{ width:38px; height:38px; opacity:0.35; margin-bottom:0.6rem; }
+.cart-empty strong{ font-family:var(--font-display); font-size:1.1rem; color:var(--color-text); }
+.cart-foot{
+  padding:1.2rem 1.5rem 1.5rem;
+  border-top:1px solid var(--color-border);
+  background:var(--color-surface);
+}
+.cart-total{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:1rem;
+  margin-bottom:0.7rem;
+}
+.cart-total span{ font-size:0.85rem; color:var(--color-text-muted); }
+.cart-total b{ font-family:var(--font-display); font-size:1.15rem; font-weight:700; text-align:right; }
+.cart-note{ font-size:0.76rem; color:var(--color-text-muted); margin-bottom:1rem; }
+.cart-send{ width:100%; justify-content:center; gap:0.6rem; }
+.cart-send svg{ width:18px; height:18px; }
+.cart-send:disabled{ opacity:0.45; cursor:not-allowed; pointer-events:none; }
+.cart-clear{
+  display:block;
+  margin:0.9rem auto 0;
+  background:none;
+  border:0;
+  font-size:0.78rem;
+  color:var(--color-text-muted);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+  transition:color 0.25s ease;
+}
+.cart-clear:hover{ color:var(--color-accent-strong); }
+.cart-clear[hidden]{ display:none; }
+
+/* ---------- aviso ---------- */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:1.6rem;
+  z-index:1300;
+  display:inline-flex;
+  align-items:center;
+  gap:0.6rem;
+  max-width:calc(100vw - 2rem);
+  padding:0.75rem 1.15rem;
+  background:#000000;
+  color:#ffffff;
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-pill);
+  font-size:0.85rem;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,0.6);
+  transform:translate(-50%, 24px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.35s ease, transform 0.5s cubic-bezier(.16,1,.3,1);
+}
+.toast.show{ opacity:1; transform:translate(-50%, 0); }
+.toast i{
+  flex-shrink:0;
+  width:8px; height:8px;
+  border-radius:50%;
+  background:var(--color-accent-strong);
+}
+
 /* ---------- responsive ---------- */
 @media (max-width:1100px){
   .p-grid{ grid-template-columns:repeat(3, 1fr); }
 }
 @media (max-width:768px){
-  .nav-pill, .nav-cta{ display:none; }
-  .nav-toggle{ display:flex; }
-  .cat-hero{ padding:8rem 0 3.2rem; }
-  .cat-toolbar{ top:56px; }
+  .cat-intro{ padding:7.5rem 0 3rem; }
+  .cat-toolbar{ top:64px; }
   .p-grid{ grid-template-columns:repeat(2, 1fr); gap:0.8rem; }
   .p-body{ padding:0.85rem 0.9rem 1rem; }
   .p-body h3{ font-size:0.92rem; }
   .p-meta{ gap:0.7rem; }
+  .p-add{ right:0.6rem; bottom:0.7rem; width:32px; height:32px; }
   .cat-filters{ justify-content:flex-start; }
   .cat-search{ width:100%; }
   .cat-search input{ width:100%; }
   .p-modal-grid{ grid-template-columns:1fr; overflow-y:auto; }
-  .p-modal-media{ min-height:180px; }
+  .p-modal-media{ min-height:170px; }
   .p-modal-info{ padding:1.4rem 1.3rem 1.4rem; overflow:visible; }
+  .tb-logo span{ display:none; }
+  .preview-flag{ display:none; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -934,81 +1130,68 @@ h2{
     scroll-behavior:auto !important;
   }
   .reveal{ opacity:1; transform:none; }
-  .p-card{ opacity:1; transform:none; animation:none; }
+  .p-card, .gate-inner > *{ opacity:1; transform:none; animation:none; }
 }
 </style>
+<script>
+  /* link directo a una categoría (/catalogo/#flores): saltea la bienvenida */
+  try{ if(/^#\w/.test(location.hash)) document.documentElement.classList.add('no-gate'); }catch(e){}
+</script>
 </head>
 <body>
 
 <div id="scroll-progress"></div>
 <div class="preview-flag">Vista previa · no publicada</div>
 
-<!-- ============ NAV ============ -->
-<nav class="nav" id="nav">
+<!-- ============ BIENVENIDA ============ -->
+<div class="gate" id="gate" role="region" aria-label="Bienvenida al catálogo">
+  <canvas id="gateParticles" aria-hidden="true"></canvas>
+  <div class="gate-inner">
+    <div class="gate-logo-wrap"><img class="gate-logo" src="/assets/favicon-512.png" alt="The Wayland Club"></div>
+    <p class="gate-eyebrow">Bienvenidos al catálogo de</p>
+    <h1 class="gate-title">The <span>Wayland</span> Club</h1>
+    <p class="gate-sub">C4NN4BIS medicinal. Solo para socios con REPROCANN vigente.</p>
+    <button type="button" class="btn btn-primary gate-enter" id="gateEnter">
+      Entrar al catálogo
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    </button>
+    <span class="gate-hint">o deslizá hacia abajo</span>
+  </div>
+</div>
+
+<!-- ============ BARRA SUPERIOR ============ -->
+<header class="topbar" id="topbar">
   <div class="container">
-    <a href="/" class="nav-logo">
+    <a href="/" class="tb-logo" aria-label="Volver al sitio de The Wayland Club">
       <img src="/assets/favicon-512.png" alt="">
-      <span class="nav-logo-word">The <span>Wayland</span> Club</span>
+      <span>The <b>Wayland</b> Club</span>
     </a>
-
-    <div class="nav-pill" id="navPill">
-      <span class="nav-pill-indicator" id="navPillIndicator"></span>
-      <a href="/">Inicio</a>
-      <a href="/#proceso">Cómo funciona</a>
-      <a href="/#reprocann">C4NN4BIS</a>
-      <a href="/catalogo/" class="active">Catálogo</a>
-      <a href="/#contacto">Contacto</a>
-    </div>
-
-    <div class="nav-right">
+    <div class="tb-right">
       <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
       </a>
-      <a href="https://wa.link/3i3nep" class="nav-cta" target="_blank" rel="noopener">Asociarse</a>
-      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
-        <span></span><span></span><span></span>
+      <button type="button" class="cart-btn" id="cartBtn" aria-label="Abrir mi pedido" aria-controls="cart" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <span class="cart-badge" id="cartBadge" hidden>0</span>
       </button>
-    </div>
-  </div>
-</nav>
-
-<div class="mobile-menu" id="mobileMenu">
-  <a href="/">Inicio</a>
-  <a href="/#proceso">Cómo funciona</a>
-  <a href="/#reprocann">C4NN4BIS</a>
-  <a href="/catalogo/">Catálogo</a>
-  <a href="/#contacto">Contacto</a>
-  <div class="mobile-social">
-    <a href="https://wa.link/3i3nep" class="icon-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.45 9.96-9.95S17.54 2 12.04 2zm5.83 14.24c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.78-.37h.56c.18 0 .42-.02.65.5.25.58.85 2.02.92 2.16.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2 1.11.99 2.05 1.3 2.35 1.45.3.15.47.12.65-.07.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.13.07.75-.18 1.45z"/></svg>
-    </a>
-    <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
-    </a>
-  </div>
-  <a href="https://wa.link/3i3nep" class="btn btn-primary nav-cta" target="_blank" rel="noopener">Asociarse</a>
-</div>
-
-
-<!-- ============ HERO DEL CATÁLOGO ============ -->
-<header class="cat-hero">
-  <div class="container">
-    <span class="eyebrow">Solo para socios · REPROCANN vigente</span>
-    <h1>Nuestro <span>catálogo</span></h1>
-    <p class="cat-sub">
-      Los productos que dispensamos dentro del marco legal de REPROCANN.
-      Explorá por categoría y consultanos la disponibilidad por WhatsApp.
-    </p>
-    <div class="cat-stats">
-      <span class="cat-stat"><b id="statProducts">20</b> productos</span>
-      <span class="cat-stat"><b id="statCats">4</b> categorías</span>
-      <span class="cat-stat">Envío en 24hs dentro de Buenos Aires</span>
     </div>
   </div>
 </header>
 
+<!-- ============ ENCABEZADO ============ -->
+<header class="cat-intro">
+  <div class="container">
+    <span class="cat-kicker">Solo para socios · REPROCANN vigente</span>
+    <h2 class="cat-title">Nuestro <span>catálogo</span></h2>
+    <p class="cat-sub">
+      Elegí tus productos, armá tu pedido y enviánoslo por WhatsApp.
+      Te confirmamos disponibilidad y coordinamos la entrega.
+    </p>
+  </div>
+</header>
+
 <!-- ============ CATÁLOGO ============ -->
-<main class="catalog light-section" id="catalogo">
+<main class="catalog light-section" id="catalogo" tabindex="-1">
   <div class="cat-toolbar">
     <div class="container">
       <div class="cat-tabs" id="catTabs" role="tablist" aria-label="Categorías"></div>
@@ -1042,22 +1225,45 @@ h2{
       <h2 id="pmName"></h2>
       <p class="p-desc" id="pmDesc"></p>
       <dl class="p-specs" id="pmSpecs"></dl>
+      <div class="qty-row">
+        <p class="qty-label" id="pmQtyLabel"></p>
+        <div class="stepper" role="group" aria-labelledby="pmQtyLabel">
+          <button type="button" id="pmMinus" aria-label="Menos">−</button>
+          <output id="pmQty" aria-live="polite">1</output>
+          <button type="button" id="pmPlus" aria-label="Más">+</button>
+        </div>
+        <p class="qty-note" id="pmNote"></p>
+      </div>
       <div class="p-modal-actions">
-        <a href="https://wa.link/3i3nep" class="btn btn-primary" target="_blank" rel="noopener">Consultar por WhatsApp</a>
-        <button type="button" class="btn btn-secondary" id="pmClose2" style="color:var(--color-text)">Volver al catálogo</button>
+        <button type="button" class="btn btn-primary" id="pmAdd">Agregar al pedido</button>
+        <button type="button" class="btn btn-secondary" id="pmClose2" style="color:var(--color-text)">Seguir viendo</button>
       </div>
     </div>
   </div>
 </dialog>
 
-<!-- ============ CTA FINAL ============ -->
-<section class="cta-final">
-  <div class="container reveal">
-    <h2>¿Querés consultar por un producto?</h2>
-    <p>Sin turnos. Sin esperas. Te respondemos a la brevedad.</p>
-    <a href="https://wa.link/3i3nep" class="btn btn-dark" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+<!-- ============ CARRITO ============ -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart light-section" id="cart" aria-label="Mi pedido" aria-hidden="true">
+  <div class="cart-head">
+    <h2>Mi pedido</h2>
+    <button type="button" class="cart-x" id="cartClose" aria-label="Cerrar pedido">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
   </div>
-</section>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>Total</span><b id="cartTotal">—</b></div>
+    <p class="cart-note">Al enviar se abre WhatsApp con tu pedido ya armado. Te confirmamos disponibilidad y coordinamos la entrega.</p>
+    <button type="button" class="btn btn-primary cart-send" id="cartSend">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.45 9.96-9.95S17.54 2 12.04 2zm5.83 14.24c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.78-.37h.56c.18 0 .42-.02.65.5.25.58.85 2.02.92 2.16.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2 1.11.99 2.05 1.3 2.35 1.45.3.15.47.12.65-.07.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.13.07.75-.18 1.45z"/></svg>
+      Enviar pedido
+    </button>
+    <button type="button" class="cart-clear" id="cartClear" hidden>Vaciar pedido</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><i></i><span id="toastText"></span></div>
 
 <footer>
   <div class="container">
@@ -1074,13 +1280,7 @@ h2{
       </a>
     </div>
 
-    <ul class="footer-nav">
-      <li><a href="/">Inicio</a></li>
-      <li><a href="/#proceso">Cómo funciona</a></li>
-      <li><a href="/#reprocann">C4NN4BIS</a></li>
-      <li><a href="/catalogo/">Catálogo</a></li>
-      <li><a href="/#contacto">Contacto</a></li>
-    </ul>
+    
     <p class="footer-legal">
       El acceso al catálogo está disponible exclusivamente para pacientes con
       REPROCANN vigente. El uso de C4NN4BIS medicinal debe realizarse dentro
@@ -1103,6 +1303,7 @@ h2{
   "use strict";
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
 
   var footerYear = document.getElementById('footerYear');
   if(footerYear){ footerYear.textContent = String(new Date().getFullYear()); }
@@ -1152,24 +1353,41 @@ h2{
   }
 
   /* =====================================================================
+     CONFIGURACIÓN DEL PEDIDO
+     ===================================================================== */
+  var WHATSAPP_NUMBER = '541178392229';   /* número que recibe los pedidos (sin + ni espacios) */
+  var WHATSAPP_GREETING = 'Hola Mati, este es mi pedido de The Wayland Club:';
+  var WHATSAPP_CLOSING = 'Quedo a la espera de tu confirmación. ¡Gracias!';
+
+  /* Límites del pedido. null = sin límite. Cuando haya un tope, cargarlo acá:
+       maxPerItem:    máximo por producto (en su unidad: gramos o unidades)
+       maxTotalGrams: máximo de gramos sumando todos los productos del pedido */
+  var LIMITS = { maxPerItem:null, maxTotalGrams:null };
+
+  /* =====================================================================
      DATOS DEL CATÁLOGO
      Para cargar productos reales: reemplazar los items de PRODUCTS.
      - cat:   id de una categoría de CATEGORIES
      - type:  'indica' | 'sativa' | 'hibrida' | null
      - img:   ruta de la foto, ej. '/assets/productos/black-cherry.jpg' (null = placeholder)
+     - unit:  'g' (gramos) o 'u' (unidades). Si no se indica, usa la unidad de la categoría.
      Todo lo que esté en null / vacío se muestra como "—".
      ===================================================================== */
   var CATEGORIES = [
-    { id:'flores',          label:'Flores',             dot:'#404416' },
-    { id:'cartuchos',       label:'Cartuchos',          dot:'#155574' },
-    { id:'cristales-salsa', label:'Cristales en salsa', dot:'#bbb54e' },
-    { id:'cristales-thc',   label:'Cristales de THC',   dot:'#6b7370' }
+    { id:'flores',          label:'Flores',             dot:'#404416', unit:'g' },
+    { id:'cartuchos',       label:'Cartuchos',          dot:'#155574', unit:'u' },
+    { id:'cristales-salsa', label:'Cristales en salsa', dot:'#bbb54e', unit:'g' },
+    { id:'cristales-thc',   label:'Cristales de THC',   dot:'#6b7370', unit:'g' }
   ];
   var TYPES = { indica:'Índica', sativa:'Sativa', hibrida:'Híbrida' };
+  var UNITS = {
+    g:{ short:'g', one:'gramo',   many:'gramos',   ask:'¿Cuántos gramos querés?' },
+    u:{ short:'u', one:'unidad',  many:'unidades', ask:'¿Cuántas unidades querés?' }
+  };
 
   function P(n, name, cat, type){
     return { id:n, name:name, cat:cat, type:type, thc:null, cbd:null,
-             terpenos:null, formato:null, genetica:null, img:null,
+             terpenos:null, formato:null, genetica:null, img:null, unit:null,
              desc:'Descripción del producto próximamente.' };
   }
   var PRODUCTS = [
@@ -1202,29 +1420,216 @@ h2{
       return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
     });
   }
-  function norm(s){
-    return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-  }
+  function norm(s){ return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
   function catOf(id){
     for(var i = 0; i < CATEGORIES.length; i++){ if(CATEGORIES[i].id === id) return CATEGORIES[i]; }
     return CATEGORIES[0];
   }
+  function productById(id){
+    for(var i = 0; i < PRODUCTS.length; i++){ if(String(PRODUCTS[i].id) === String(id)) return PRODUCTS[i]; }
+    return null;
+  }
+  function unitOf(p){ return UNITS[p.unit || catOf(p.cat).unit]; }
   function val(v){ return (v === null || v === undefined || v === '') ? '—' : v; }
+  function qtyText(p, n){
+    var u = unitOf(p);
+    return u.short === 'g' ? n + ' g' : n + ' ' + (n === 1 ? u.one : u.many);
+  }
 
-  /* ---------- estado ---------- */
+  /* =====================================================================
+     CARRITO
+     ===================================================================== */
+  var STORE_KEY = 'wayland-pedido-v1';
+  var items = [];   /* [{ id, qty }] */
+  try{
+    var saved = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+    if(Array.isArray(saved)){
+      items = saved.filter(function(it){ return productById(it.id) && it.qty > 0; });
+    }
+  }catch(e){ items = []; }
+  function persist(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(items)); }catch(e){} }
+
+  function qtyOf(id){
+    for(var i = 0; i < items.length; i++){ if(String(items[i].id) === String(id)) return items[i].qty; }
+    return 0;
+  }
+  function totals(){
+    var t = { g:0, u:0, n:0 };
+    items.forEach(function(it){
+      var p = productById(it.id);
+      if(unitOf(p).short === 'g'){ t.g += it.qty; } else { t.u += it.qty; }
+      t.n += 1;
+    });
+    return t;
+  }
+  function totalText(){
+    var t = totals(), parts = [];
+    if(t.g) parts.push(t.g + ' g');
+    if(t.u) parts.push(t.u + (t.u === 1 ? ' unidad' : ' unidades'));
+    return parts.length ? parts.join(' + ') : '—';
+  }
+
+  /* cuánto más se puede sumar de este producto (null = sin tope) */
+  function room(p){
+    var r = Infinity, have = qtyOf(p.id);
+    if(LIMITS.maxPerItem !== null){ r = Math.min(r, LIMITS.maxPerItem - have); }
+    if(LIMITS.maxTotalGrams !== null && unitOf(p).short === 'g'){
+      r = Math.min(r, LIMITS.maxTotalGrams - totals().g);
+    }
+    return r === Infinity ? null : Math.max(0, r);
+  }
+  function limitMsg(p){
+    if(LIMITS.maxTotalGrams !== null && unitOf(p).short === 'g' && totals().g >= LIMITS.maxTotalGrams){
+      return 'Llegaste al máximo de ' + LIMITS.maxTotalGrams + ' g por pedido.';
+    }
+    if(LIMITS.maxPerItem !== null){
+      return 'El máximo por producto es ' + qtyText(p, LIMITS.maxPerItem) + '.';
+    }
+    return '';
+  }
+
+  /* suma `n` (se recorta al tope). Devuelve lo realmente agregado */
+  function addItem(p, n){
+    var r = room(p);
+    var add = r === null ? n : Math.min(n, r);
+    if(add <= 0) return 0;
+    var found = false;
+    items.forEach(function(it){ if(String(it.id) === String(p.id)){ it.qty += add; found = true; } });
+    if(!found){ items.push({ id:p.id, qty:add }); }
+    persist(); renderCart();
+    return add;
+  }
+  function setQty(id, qty){
+    var p = productById(id);
+    var max = LIMITS.maxPerItem;
+    if(max !== null){ qty = Math.min(qty, max); }
+    if(LIMITS.maxTotalGrams !== null && unitOf(p).short === 'g'){
+      var others = totals().g - qtyOf(id);
+      qty = Math.min(qty, LIMITS.maxTotalGrams - others);
+    }
+    if(qty <= 0){ items = items.filter(function(it){ return String(it.id) !== String(id); }); }
+    else { items.forEach(function(it){ if(String(it.id) === String(id)) it.qty = qty; }); }
+    persist(); renderCart();
+  }
+
+  /* mensaje de WhatsApp: ítem por ítem */
+  function buildMessage(){
+    var lines = [WHATSAPP_GREETING, ''];
+    items.forEach(function(it){
+      var p = productById(it.id);
+      lines.push('• ' + p.name + ' — ' + qtyText(p, it.qty));
+    });
+    lines.push('', 'Total: ' + totalText(), '', WHATSAPP_CLOSING);
+    return lines.join('\n');
+  }
+  function sendOrder(){
+    if(!items.length) return;
+    var url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(buildMessage());
+    window.open(url, '_blank', 'noopener');
+  }
+
+  /* ---------- panel del carrito ---------- */
+  var cartEl = $('cart'), overlayEl = $('cartOverlay'), cartBtn = $('cartBtn'),
+      badgeEl = $('cartBadge'), bodyEl = $('cartBody'), sendBtn = $('cartSend'),
+      clearBtn = $('cartClear');
+
+  function renderCart(){
+    var t = totals();
+    badgeEl.hidden = t.n === 0;
+    badgeEl.textContent = String(t.n);
+    $('cartTotal').textContent = totalText();
+    sendBtn.disabled = t.n === 0;
+    clearBtn.hidden = t.n === 0;
+
+    if(!items.length){
+      bodyEl.innerHTML =
+        '<div class="cart-empty">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>' +
+        '<strong>Todavía no agregaste productos</strong>' +
+        '<span>Elegí del catálogo y se suman acá.</span></div>';
+      return;
+    }
+    bodyEl.innerHTML = items.map(function(it, i){
+      var p = productById(it.id), c = catOf(p.cat), u = unitOf(p);
+      var canPlus = room(p) === null || room(p) > 0;
+      return '<div class="cart-item" style="animation-delay:' + (i * 40) + 'ms" data-id="' + p.id + '">' +
+        '<div><h3>' + esc(p.name) + '</h3><span class="ci-cat" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span></div>' +
+        '<div class="ci-actions">' +
+          '<div class="stepper sm" role="group" aria-label="Cantidad de ' + esc(p.name) + '">' +
+            '<button type="button" data-act="minus" aria-label="Menos">−</button>' +
+            '<output>' + esc(u.short === 'g' ? it.qty + ' g' : it.qty + ' u') + '</output>' +
+            '<button type="button" data-act="plus" aria-label="Más"' + (canPlus ? '' : ' disabled') + '>+</button>' +
+          '</div>' +
+          '<button type="button" class="ci-remove" data-act="remove" aria-label="Quitar ' + esc(p.name) + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>' +
+          '</button>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  bodyEl.addEventListener('click', function(e){
+    var b = e.target.closest('[data-act]');
+    if(!b) return;
+    var row = b.closest('.cart-item');
+    var id = row.getAttribute('data-id');
+    var q = qtyOf(id), act = b.getAttribute('data-act');
+    if(act === 'plus'){ setQty(id, q + 1); }
+    if(act === 'minus'){ setQty(id, q - 1); }
+    if(act === 'remove'){ setQty(id, 0); }
+  });
+  sendBtn.addEventListener('click', sendOrder);
+  clearBtn.addEventListener('click', function(){ items = []; persist(); renderCart(); });
+
+  var lastFocus = null;
+  function openCart(){
+    lastFocus = document.activeElement;
+    cartEl.classList.add('open'); overlayEl.classList.add('open');
+    cartEl.setAttribute('aria-hidden', 'false'); cartBtn.setAttribute('aria-expanded', 'true');
+    $('cartClose').focus();
+  }
+  function closeCart(){
+    cartEl.classList.remove('open'); overlayEl.classList.remove('open');
+    cartEl.setAttribute('aria-hidden', 'true'); cartBtn.setAttribute('aria-expanded', 'false');
+    if(lastFocus && lastFocus.focus){ lastFocus.focus(); }
+  }
+  cartBtn.addEventListener('click', openCart);
+  $('cartClose').addEventListener('click', closeCart);
+  overlayEl.addEventListener('click', closeCart);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && cartEl.classList.contains('open')) closeCart();
+  });
+
+  /* aviso + rebote del carrito */
+  var toastEl = $('toast'), toastTimer = null;
+  function toast(text){
+    $('toastText').textContent = text;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600);
+  }
+  function bump(){
+    cartBtn.classList.remove('bump');
+    void cartBtn.offsetWidth;
+    cartBtn.classList.add('bump');
+  }
+  function added(p, n){
+    bump();
+    toast(esc0(p.name) + ' · ' + qtyText(p, n) + ' agregado al pedido');
+  }
+  function esc0(s){ return String(s); }
+
+  renderCart();
+
+  /* =====================================================================
+     CATÁLOGO
+     ===================================================================== */
   var state = { cat:'todos', type:'todos', q:'' };
-
   var tabsEl = $('catTabs'), typesEl = $('catTypes'), gridEl = $('pGrid'),
       countEl = $('catCount'), searchEl = $('catSearch');
 
-  $('statProducts').textContent = String(PRODUCTS.length);
-  $('statCats').textContent = String(CATEGORIES.length);
-
-  /* tabs de categorías */
   function renderTabs(){
     var html = '';
-    var all = [{ id:'todos', label:'Todos' }].concat(CATEGORIES);
-    all.forEach(function(c){
+    [{ id:'todos', label:'Todos' }].concat(CATEGORIES).forEach(function(c){
       var n = c.id === 'todos' ? PRODUCTS.length
         : PRODUCTS.filter(function(p){ return p.cat === c.id; }).length;
       html += '<button type="button" role="tab" class="cat-tab" data-cat="' + c.id + '" aria-selected="' +
@@ -1232,8 +1637,6 @@ h2{
     });
     tabsEl.innerHTML = html;
   }
-
-  /* chips de tipo */
   function renderTypes(){
     var html = '<span class="cat-types-label">Tipo</span>';
     [['todos','Todos']].concat(Object.keys(TYPES).map(function(k){ return [k, TYPES[k]]; }))
@@ -1243,8 +1646,6 @@ h2{
       });
     typesEl.innerHTML = html;
   }
-
-  /* tarjetas */
   function cardHTML(p, i){
     var c = catOf(p.cat);
     var media = p.img
@@ -1252,18 +1653,18 @@ h2{
       : '<img class="mark" src="/assets/favicon-512.png" alt="" aria-hidden="true"><span class="soon">Foto próximamente</span>';
     var sub = p.type ? TYPES[p.type] : c.label;
     return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms">' +
-      '<div class="p-media">' +
-        '<span class="p-tag" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span>' + media +
-      '</div>' +
+      '<div class="p-media"><span class="p-tag" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span>' + media + '</div>' +
       '<div class="p-body">' +
         '<h3>' + esc(p.name) + '</h3>' +
         '<p class="p-sub">' + esc(sub) + '</p>' +
         '<div class="p-meta"><span>THC <b>' + esc(val(p.thc)) + '</b></span><span>CBD <b>' + esc(val(p.cbd)) + '</b></span></div>' +
       '</div>' +
       '<button type="button" class="p-open" data-id="' + p.id + '" aria-label="Ver ficha de ' + esc(p.name) + '"></button>' +
+      '<button type="button" class="p-add" data-id="' + p.id + '" aria-label="Agregar ' + esc(p.name) + ' al pedido">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
+      '</button>' +
     '</article>';
   }
-
   function filtered(){
     var q = norm(state.q.trim());
     return PRODUCTS.filter(function(p){
@@ -1273,27 +1674,20 @@ h2{
       return true;
     });
   }
-
   function renderGrid(){
     var list = filtered();
-    if(!list.length){
-      gridEl.innerHTML = '<div class="cat-empty"><strong>No hay productos con esos filtros</strong>Probá con otra categoría o borrá la búsqueda.</div>';
-    } else {
-      gridEl.innerHTML = list.map(cardHTML).join('');
-    }
+    gridEl.innerHTML = list.length
+      ? list.map(cardHTML).join('')
+      : '<div class="cat-empty"><strong>No hay productos con esos filtros</strong>Probá con otra categoría o borrá la búsqueda.</div>';
     countEl.textContent = list.length + (list.length === 1 ? ' producto' : ' productos');
   }
-
   function render(){ renderTabs(); renderTypes(); renderGrid(); }
 
-  function setCat(id, skipHash){
+  function setCat(id){
     state.cat = id;
-    if(!skipHash){
-      history.replaceState(null, '', id === 'todos' ? location.pathname : '#' + id);
-    }
+    history.replaceState(null, '', id === 'todos' ? location.pathname : '#' + id);
     render();
   }
-
   tabsEl.addEventListener('click', function(e){
     var b = e.target.closest('.cat-tab');
     if(b) setCat(b.getAttribute('data-cat'));
@@ -1302,29 +1696,36 @@ h2{
     var b = e.target.closest('.type-chip');
     if(!b) return;
     state.type = b.getAttribute('data-type');
-    renderTypes();
-    renderGrid();
+    renderTypes(); renderGrid();
   });
-  searchEl.addEventListener('input', function(){
-    state.q = searchEl.value;
-    renderGrid();
-  });
+  searchEl.addEventListener('input', function(){ state.q = searchEl.value; renderGrid(); });
 
-  /* deep-link por hash: /catalogo/#flores */
   function fromHash(){
     var h = location.hash.replace('#','');
-    var ok = h && CATEGORIES.some(function(c){ return c.id === h; });
-    state.cat = ok ? h : 'todos';
+    state.cat = (h && CATEGORIES.some(function(c){ return c.id === h; })) ? h : 'todos';
   }
   window.addEventListener('hashchange', function(){ fromHash(); render(); });
   fromHash();
   render();
 
-  /* ---------- ficha ---------- */
-  var modal = $('pModal');
+  /* ---------- ficha de producto ---------- */
+  var modal = $('pModal'), current = null, modalQty = 1;
+  function syncStepper(){
+    var r = room(current);
+    $('pmQty').textContent = unitOf(current).short === 'g' ? modalQty + ' g' : String(modalQty);
+    $('pmMinus').disabled = modalQty <= 1;
+    $('pmPlus').disabled = r !== null && modalQty >= r;
+    $('pmAdd').disabled = r !== null && r <= 0;
+    var have = qtyOf(current.id), note = '';
+    if(have){ note = 'Ya tenés ' + qtyText(current, have) + ' de este producto en tu pedido. '; }
+    if(r !== null && r <= 0){ note += limitMsg(current); }
+    else if(r !== null){ note += 'Podés sumar hasta ' + qtyText(current, r) + ' más.'; }
+    $('pmNote').textContent = note.trim();
+  }
   function openProduct(id){
-    var p = PRODUCTS.filter(function(x){ return String(x.id) === String(id); })[0];
+    var p = productById(id);
     if(!p) return;
+    current = p; modalQty = 1;
     var c = catOf(p.cat);
     $('pmMedia').innerHTML = p.img
       ? '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '">'
@@ -1332,109 +1733,132 @@ h2{
     $('pmTag').innerHTML = '<i style="width:6px;height:6px;border-radius:50%;background:' + c.dot + '"></i>' + esc(c.label);
     $('pmName').textContent = p.name;
     $('pmDesc').textContent = p.desc;
-    var rows = [
-      ['Tipo', p.type ? TYPES[p.type] : null],
-      ['THC', p.thc], ['CBD', p.cbd],
+    $('pmSpecs').innerHTML = [
+      ['Tipo', p.type ? TYPES[p.type] : null], ['THC', p.thc], ['CBD', p.cbd],
       ['Terpenos', p.terpenos], ['Genética', p.genetica], ['Formato', p.formato]
-    ];
-    $('pmSpecs').innerHTML = rows.map(function(r){
-      return '<div><dt>' + r[0] + '</dt><dd>' + esc(val(r[1])) + '</dd></div>';
-    }).join('');
+    ].map(function(r){ return '<div><dt>' + r[0] + '</dt><dd>' + esc(val(r[1])) + '</dd></div>'; }).join('');
+    $('pmQtyLabel').textContent = unitOf(p).ask;
+    syncStepper();
     modal.showModal();
   }
-  gridEl.addEventListener('click', function(e){
-    var b = e.target.closest('.p-open');
-    if(b) openProduct(b.getAttribute('data-id'));
+  $('pmMinus').addEventListener('click', function(){ if(modalQty > 1){ modalQty--; syncStepper(); } });
+  $('pmPlus').addEventListener('click', function(){
+    var r = room(current);
+    if(r === null || modalQty < r){ modalQty++; syncStepper(); }
+  });
+  $('pmAdd').addEventListener('click', function(){
+    var n = addItem(current, modalQty);
+    modal.close();
+    if(n > 0){ added(current, n); }
   });
   $('pmClose').addEventListener('click', function(){ modal.close(); });
   $('pmClose2').addEventListener('click', function(){ modal.close(); });
   modal.addEventListener('click', function(e){ if(e.target === modal) modal.close(); });
 
-  /* ---------- scroll progress / nav ---------- */
-  var progressBar = $('scroll-progress');
-  var nav = $('nav');
-  var ticking = false;
+  gridEl.addEventListener('click', function(e){
+    var add = e.target.closest('.p-add');
+    if(add){
+      var p = productById(add.getAttribute('data-id'));
+      var n = addItem(p, 1);
+      if(n > 0){ added(p, n); } else { bump(); toast(limitMsg(p)); }
+      return;
+    }
+    var open = e.target.closest('.p-open');
+    if(open) openProduct(open.getAttribute('data-id'));
+  });
+
+  /* =====================================================================
+     BIENVENIDA
+     ===================================================================== */
+  var gate = $('gate'), entered = root.classList.contains('no-gate');
+  var pRaf = null;
+
+  function startParticles(){
+    var cv = $('gateParticles'); if(!cv) return;
+    var ctx = cv.getContext('2d'), w = 0, h = 0, parts = [];
+    function size(){ w = cv.width = gate.offsetWidth; h = cv.height = gate.offsetHeight; }
+    size();
+    window.addEventListener('resize', size);
+    for(var i = 0; i < 70; i++){
+      parts.push({ x:Math.random() * w, y:Math.random() * h, r:Math.random() * 2 + 0.6,
+        vx:(Math.random() - 0.5) * 0.18, vy:-Math.random() * 0.14 - 0.03, a:Math.random() * 0.5 + 0.3 });
+    }
+    function draw(){
+      ctx.clearRect(0, 0, w, h);
+      parts.forEach(function(p){
+        p.x += p.vx; p.y += p.vy;
+        if(p.y < -10){ p.y = h + 10; p.x = Math.random() * w; }
+        if(p.x < -10) p.x = w + 10;
+        if(p.x > w + 10) p.x = -10;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(187,181,78,' + (p.a * 0.28) + ')';
+        ctx.fill();
+      });
+      if(!reduceMotion && !entered){ pRaf = requestAnimationFrame(draw); }
+    }
+    draw();
+  }
+
+  function enter(){
+    if(entered) return;
+    entered = true;
+    root.classList.add('entered');
+    gate.classList.add('leaving');
+    if(pRaf){ cancelAnimationFrame(pRaf); pRaf = null; }
+    window.scrollTo(0, 0);
+    setTimeout(function(){ gate.style.display = 'none'; }, reduceMotion ? 0 : 1100);
+  }
+
+  if(entered){
+    root.classList.add('entered');
+  } else {
+    startParticles();
+    $('gateEnter').addEventListener('click', enter);
+    window.addEventListener('wheel', function(e){ if(e.deltaY > 8) enter(); }, { passive:true });
+    var ty = null;
+    window.addEventListener('touchstart', function(e){ ty = e.touches[0].clientY; }, { passive:true });
+    window.addEventListener('touchmove', function(e){
+      if(ty !== null && ty - e.touches[0].clientY > 30) enter();
+    }, { passive:true });
+    window.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowDown' || e.key === 'PageDown'){ enter(); }
+    });
+  }
+
+  /* ---------- barra superior / progreso ---------- */
+  var progressBar = $('scroll-progress'), topbar = $('topbar'), ticking = false;
   function onScroll(){
     if(ticking) return;
     ticking = true;
     requestAnimationFrame(function(){
       var docH = document.documentElement.scrollHeight - window.innerHeight;
       progressBar.style.width = (docH > 0 ? (window.scrollY / docH) * 100 : 0) + '%';
-      nav.classList.toggle('scrolled', window.scrollY > 40);
+      topbar.classList.toggle('scrolled', window.scrollY > 40);
       ticking = false;
     });
   }
   window.addEventListener('scroll', onScroll, { passive:true });
   onScroll();
 
-  /* ---------- menú mobile ---------- */
-  var navToggle = $('navToggle'), mobileMenu = $('mobileMenu');
-  navToggle.addEventListener('click', function(){
-    navToggle.classList.toggle('open');
-    mobileMenu.classList.toggle('open');
-  });
-  mobileMenu.querySelectorAll('a').forEach(function(l){
-    l.addEventListener('click', function(){
-      navToggle.classList.remove('open');
-      mobileMenu.classList.remove('open');
-    });
-  });
-
-  /* ---------- indicador del nav (la página activa es Catálogo) ---------- */
-  var navPill = $('navPill'), navPillIndicator = $('navPillIndicator');
-  var navLinks = document.querySelectorAll('.nav-pill a');
-  var activeLink = document.querySelector('.nav-pill a.active');
-  var indicatorX = createSpring({ stiffness:340, damping:30,
-    onUpdate:function(v){ navPillIndicator.style.transform = 'translateX(' + v + 'px)'; } });
-  var indicatorW = createSpring({ stiffness:340, damping:30,
-    onUpdate:function(v){ navPillIndicator.style.width = v + 'px'; } });
-  function moveIndicatorTo(link, instant){
-    if(!link) return;
-    var pr = navPill.getBoundingClientRect(), lr = link.getBoundingClientRect();
-    navPillIndicator.style.opacity = '1';
-    if(instant || reduceMotion){ indicatorX.jump(lr.left - pr.left); indicatorW.jump(lr.width); }
-    else { indicatorX.set(lr.left - pr.left); indicatorW.set(lr.width); }
-  }
-  moveIndicatorTo(activeLink, true);
-  if(window.matchMedia('(hover: hover)').matches){
-    navLinks.forEach(function(l){ l.addEventListener('mouseenter', function(){ moveIndicatorTo(l); }); });
-    navPill.addEventListener('mouseleave', function(){ moveIndicatorTo(activeLink); });
-  }
-  window.addEventListener('resize', function(){ moveIndicatorTo(activeLink, true); });
-  window.addEventListener('load', function(){ moveIndicatorTo(activeLink, true); });
-
-  /* ---------- reveal (solo el CTA final) ---------- */
-  var revealEls = document.querySelectorAll('.reveal');
-  if('IntersectionObserver' in window && !reduceMotion){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(en.isIntersecting){ en.target.classList.add('is-visible'); io.unobserve(en.target); }
-      });
-    }, { threshold:0.15 });
-    revealEls.forEach(function(el){ io.observe(el); });
-  } else {
-    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
-  }
-
   /* ---------- botones magnéticos ---------- */
   if(!reduceMotion && window.matchMedia('(hover: hover)').matches){
-    document.querySelectorAll('.btn, .icon-btn, .nav-cta').forEach(function(btn){
+    document.querySelectorAll('.btn, .icon-btn').forEach(function(btn){
       var isIcon = btn.classList.contains('icon-btn');
       var hoverExtra = isIcon ? 'scale(1.1) rotate(-8deg)' : 'scale(1.04) translateY(-3px)';
       var on = 0;
-      function render(){
+      function paint(){
         btn.style.transform = 'translate(' + sx.get() + 'px,' + sy.get() + 'px) ' + (on ? hoverExtra : 'scale(1)');
       }
-      var sx = createSpring({ stiffness:260, damping:20, onUpdate:render });
-      var sy = createSpring({ stiffness:260, damping:20, onUpdate:render });
+      var sx = createSpring({ stiffness:260, damping:20, onUpdate:paint });
+      var sy = createSpring({ stiffness:260, damping:20, onUpdate:paint });
       btn.addEventListener('mousemove', function(e){
         var r = btn.getBoundingClientRect();
         on = 1;
         sx.set((e.clientX - r.left - r.width / 2) * 0.3);
         sy.set((e.clientY - r.top - r.height / 2) * 0.3);
-        render();
+        paint();
       });
-      btn.addEventListener('mouseleave', function(){ on = 0; sx.set(0); sy.set(0); render(); });
+      btn.addEventListener('mouseleave', function(){ on = 0; sx.set(0); sy.set(0); paint(); });
     });
   }
 })();
