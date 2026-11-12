@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo — The Wayland Club</title>
+<meta name="description" content="Catálogo de The Wayland Club: productos de cannabis medicinal disponibles para socios con REPROCANN vigente.">
+<!-- PREVIEW: sacar este robots cuando se publique -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Arapey:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap');
+
+:root{
+  /* Official brand palette: black/white base, teal as the structural/trust
+     accent, magenta reserved for action moments, olive+mustard as small
+     textural highlights tying back to the plant without the cliché
+     "cannabis green". See PRODUCT.md for the critique behind this hierarchy. */
+  --color-bg: #000000;
+  --color-surface: #0d1518;
+  --color-surface-2: #131f23;
+  --color-accent: #155574;        /* teal — structural/trust */
+  --color-accent-strong: #eb269f; /* magenta — action/CTA, used sparingly */
+  --color-accent-soft: #bbb54e;   /* mustard — small texture */
+  --color-accent-deep: #404416;   /* olive — deep texture/tint */
+  --color-text: #ffffff;
+  --color-text-muted: #9aa8a6;
+  --color-border: #1c2a2e;
+
+  --font-display: 'Montserrat', sans-serif;
+  --font-serif: 'Arapey', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+
+  --fs-hero: clamp(3rem, 7.5vw, 6.4rem);
+  --fs-display: clamp(2rem, 4vw, 3.5rem);
+  --fs-h2: clamp(1.6rem, 3vw, 2.4rem);
+  --fs-body: 1rem;
+  --fs-small: 0.85rem;
+  --fs-mono: 0.8rem;
+
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-pill: 999px;
+}
+
+/* Light sections: page moves from a dark hero into airy white/off-white
+   sections. Redefining the same tokens keeps every component (cards, chips,
+   headings) automatically adapting without a second set of classes. */
+.light-section{
+  --color-bg: #ffffff;
+  --color-surface: #f2f5f5;
+  --color-surface-2: #ffffff;
+  --color-text: #0d0d0d;
+  --color-text-muted: #55605f;
+  --color-border: #e1e6e6;
+  background:var(--color-bg);
+  color:var(--color-text);
+}
+.light-section .btn-primary{ color:#ffffff; }
+.light-section .step-card,
+.light-section .benefit-card{ box-shadow:0 1px 2px rgba(13,13,13,0.04); }
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  background:var(--color-bg);
+  color:var(--color-text);
+  font-family:var(--font-body);
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+img{ max-width:100%; display:block; }
+svg{ display:block; }
+
+a{ color:inherit; text-decoration:none; }
+
+.container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 clamp(1.25rem, 4vw, 3rem);
+}
+
+section{ position:relative; }
+
+/* ---------- scroll progress bar ---------- */
+#scroll-progress{
+  position:fixed;
+  top:0; left:0;
+  height:2px;
+  width:0%;
+  background:var(--color-accent-strong);
+  z-index:1000;
+  transition:width 0.1s linear;
+}
+
+/* ---------- reveal on scroll ---------- */
+.reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
+}
+.reveal.is-visible{
+  opacity:1;
+  transform:translateY(0);
+}
+/* staggered children: grids animate in as a cascade, not all at once */
+.benefits-grid .reveal:nth-child(1){ transition-delay:0s; }
+.benefits-grid .reveal:nth-child(2){ transition-delay:0.08s; }
+.benefits-grid .reveal:nth-child(3){ transition-delay:0.16s; }
+.benefits-grid .reveal:nth-child(4){ transition-delay:0.24s; }
+.backing-track .reveal:nth-child(1){ transition-delay:0s; }
+.backing-track .reveal:nth-child(2){ transition-delay:0.08s; }
+.backing-track .reveal:nth-child(3){ transition-delay:0.16s; }
+.backing-track .reveal:nth-child(4){ transition-delay:0.24s; }
+
+/* ---------- icon buttons ---------- */
+.icon-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  color:var(--color-text);
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.3s ease, border-color 0.3s ease;
+  flex-shrink:0;
+}
+.icon-btn svg{ width:17px; height:17px; }
+.icon-btn:hover{
+  background:var(--color-accent);
+  border-color:var(--color-accent);
+  color:var(--color-bg);
+  transform:scale(1.1) rotate(-8deg);
+}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:900;
+  padding:1.1rem 0;
+  transition:padding 0.4s ease;
+}
+.nav.scrolled{ padding:0.7rem 0; }
+.nav .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+}
+.nav-logo{
+  display:flex;
+  align-items:center;
+  gap:0.65rem;
+  flex-shrink:0;
+}
+.nav-logo img{
+  height:40px;
+  width:auto;
+  transition:height 0.4s ease;
+  display:block;
+}
+.nav.scrolled .nav-logo img{ height:34px; }
+.nav-logo-word{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.15rem;
+  letter-spacing:-0.01em;
+  color:var(--color-text);
+  white-space:nowrap;
+}
+.nav-logo-word span{ color:var(--color-accent-strong); }
+
+.nav-pill{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:0.25rem;
+  background:rgba(13,21,24,0.75);
+  border:1px solid var(--color-border);
+  backdrop-filter:blur(14px);
+  border-radius:var(--radius-pill);
+  padding:0.35rem;
+}
+.nav-pill-indicator{
+  position:absolute;
+  top:0.35rem;
+  left:0;
+  height:calc(100% - 0.7rem);
+  border-radius:var(--radius-pill);
+  background:#ffffff;
+  z-index:2;
+  pointer-events:none;
+  opacity:0;
+  /* Self-syncing contrast: the pill sits ABOVE the (always-white) link text
+     and inverts whatever it overlaps. Wherever the pill covers a word, that
+     word reads dark; nowhere else does — true every single frame, so a
+     spring-eased slide can never outrun a class toggle and leave text
+     invisible mid-flight (see the old .on-indicator approach this replaced). */
+  mix-blend-mode:difference;
+}
+.nav-pill a{
+  position:relative;
+  z-index:1;
+  font-size:var(--fs-small);
+  color:#ffffff;
+  opacity:0.6;
+  padding:0.55rem 1.1rem;
+  border-radius:var(--radius-pill);
+  transition:opacity 0.3s ease;
+  white-space:nowrap;
+}
+.nav-pill a:hover,
+.nav-pill a.active{ opacity:1; }
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  flex-shrink:0;
+}
+.nav-cta{
+  display:inline-block;
+  padding:0.65rem 1.4rem;
+  background:var(--color-accent-strong);
+  color:#ffffff;
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:0.85rem;
+  border-radius:var(--radius-pill);
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
+}
+.nav-cta:hover{ transform:scale(1.05) translateY(-2px); box-shadow:0 10px 24px -8px rgba(235,38,159,0.5); }
+
+.nav-toggle{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:50%;
+  width:44px;
+  height:44px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  padding:0;
+  z-index:950;
+  flex-shrink:0;
+}
+.nav-toggle span{
+  width:18px;
+  height:1.5px;
+  background:var(--color-text);
+  transition:transform 0.3s ease, opacity 0.3s ease;
+}
+.nav-toggle.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2){ opacity:0; }
+.nav-toggle.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu{
+  position:fixed;
+  inset:0;
+  background:var(--color-surface);
+  z-index:890;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1.75rem;
+  transform:translateY(-100%);
+  transition:transform 0.5s cubic-bezier(.65,0,.35,1);
+}
+.mobile-menu.open{ transform:translateY(0); }
+.mobile-menu a{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.7rem;
+  color:var(--color-text);
+}
+.mobile-menu .mobile-social{
+  display:flex;
+  gap:0.75rem;
+  margin-top:0.5rem;
+}
+.mobile-menu .nav-cta{ margin-top:0.75rem; }
+
+.btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:1rem 1.9rem;
+  font-family:var(--font-body);
+  font-size:0.9rem;
+  font-weight:600;
+  letter-spacing:0.01em;
+  border-radius:var(--radius-pill);
+  overflow:hidden;
+  z-index:1;
+  cursor:pointer;
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), border-color 0.4s ease, box-shadow 0.35s ease;
+}
+.btn::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  transform:translateY(101%);
+  transition:transform 0.45s cubic-bezier(.65,0,.35,1);
+}
+.btn:hover::before{ transform:translateY(0); }
+.btn:hover{ transform:scale(1.04) translateY(-3px); }
+.btn:active{ transform:scale(0.98) translateY(-1px); }
+
+.btn-primary{
+  background:var(--color-accent-strong);
+  color:#ffffff;
+  border:1px solid var(--color-accent-strong);
+}
+.btn-primary::before{ background:#ff4fb8; }
+.btn-primary:hover{ box-shadow:0 14px 28px -10px rgba(235,38,159,0.55); }
+
+.btn-secondary{
+  background:transparent;
+  color:var(--color-text);
+  border:1px solid var(--color-border);
+}
+.btn-secondary::before{ background:var(--color-surface-2); }
+.btn-secondary:hover{ border-color:var(--color-accent); }
+
+.btn-dark{
+  background:var(--color-bg);
+  color:var(--color-text);
+  border:1px solid var(--color-bg);
+}
+.btn-dark::before{ background:#151515; }
+.btn-dark:hover{ box-shadow:0 14px 28px -10px rgba(0,0,0,0.55); }
+
+/* ---------- cta final ---------- */
+.cta-final{
+  background:var(--color-accent-strong);
+  color:#ffffff;
+  text-align:center;
+  padding:6rem 0;
+}
+.cta-final h2{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:var(--fs-display);
+  color:#ffffff;
+  max-width:800px;
+  margin:0 auto 1.25rem;
+}
+.cta-final p{
+  font-size:1.05rem;
+  color:rgba(255,255,255,0.8);
+  margin-bottom:2.25rem;
+}
+.cta-final .btn-dark:hover{ box-shadow:0 14px 28px -10px rgba(0,0,0,0.4); }
+
+/* ---------- footer ---------- */
+footer{
+  background:var(--color-bg);
+  padding:4rem 0 2.5rem;
+  text-align:center;
+  border-top:1px solid var(--color-border);
+}
+.footer-logo{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:0.5rem;
+}
+.footer-logo img{
+  height:110px;
+  width:auto;
+}
+.footer-social{
+  display:flex;
+  justify-content:center;
+  gap:0.75rem;
+  margin:1.5rem 0;
+}
+.footer-meta{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+  margin-bottom:0.3rem;
+}
+.footer-nav{
+  display:flex;
+  justify-content:center;
+  gap:1.75rem;
+  flex-wrap:wrap;
+  list-style:none;
+  margin:2rem 0;
+}
+.footer-nav a{
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+  transition:color 0.3s ease;
+}
+.footer-nav a:hover{ color:var(--color-accent); }
+.footer-legal{
+  max-width:640px;
+  margin:1.5rem auto 0;
+  font-size:0.75rem;
+  color:var(--color-text-muted);
+  line-height:1.7;
+}
+.footer-link{
+  color:inherit;
+  text-decoration:underline;
+  text-underline-offset:2px;
+  text-decoration-color:var(--color-border);
+  transition:color 0.3s ease, text-decoration-color 0.3s ease;
+}
+.footer-link:hover{ color:var(--color-accent-strong); text-decoration-color:var(--color-accent-strong); }
+.footer-credit{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.4rem;
+  margin-top:2rem;
+  padding-top:1.5rem;
+  border-top:1px solid var(--color-border);
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+}
+.footer-credit .footer-link{ text-decoration:none; font-weight:500; }
+.footer-credit-icon{
+  display:inline-flex;
+  color:var(--color-text-muted);
+  transition:color 0.3s ease;
+}
+.footer-credit-icon svg{ width:14px; height:14px; }
+.footer-credit-icon:hover{ color:var(--color-accent-strong); }
+
+
+/* =====================================================================
+   CATÁLOGO
+   ===================================================================== */
+.section-pad{ padding:6.5rem 0; }
+h2{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:var(--fs-h2);
+  line-height:1.15;
+  letter-spacing:-0.01em;
+}
+
+/* preview flag: borrar junto con el robots noindex al publicar */
+.preview-flag{
+  position:fixed;
+  left:1rem; bottom:1rem;
+  z-index:960;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.45rem 0.9rem;
+  border-radius:var(--radius-pill);
+  background:rgba(0,0,0,0.82);
+  border:1px solid var(--color-border);
+  backdrop-filter:blur(8px);
+  color:var(--color-text-muted);
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  pointer-events:none;
+}
+.preview-flag::before{
+  content:'';
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--color-accent-strong);
+}
+
+/* ---------- hero del catálogo ---------- */
+.cat-hero{
+  position:relative;
+  overflow:hidden;
+  padding:10rem 0 4.5rem;
+}
+.cat-hero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 55% at 15% 10%, rgba(21,85,116,0.42), transparent 60%),
+    radial-gradient(ellipse 50% 45% at 90% 25%, rgba(187,181,78,0.13), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 50% 110%, rgba(5,10,12,0.9), transparent 70%);
+}
+.cat-hero .container{ position:relative; z-index:1; }
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:var(--fs-mono);
+  color:var(--color-accent-strong);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-bottom:1.5rem;
+  display:inline-flex;
+  align-items:center;
+  padding:0.5rem 1rem;
+  background:#ffffff;
+  border:1px solid var(--color-accent-strong);
+  border-radius:var(--radius-pill);
+}
+.cat-hero h1{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:clamp(2.8rem, 7vw, 5.6rem);
+  line-height:1.02;
+  letter-spacing:-0.02em;
+  margin-bottom:1.4rem;
+}
+.cat-hero h1 span{ color:var(--color-accent-strong); }
+.cat-hero .cat-sub{
+  max-width:520px;
+  font-size:1.05rem;
+  font-weight:300;
+  color:var(--color-text-muted);
+  margin-bottom:2rem;
+}
+.cat-stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.6rem;
+}
+.cat-stat{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.5rem 1rem;
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-pill);
+  background:rgba(13,21,24,0.6);
+  font-size:var(--fs-small);
+  color:var(--color-text-muted);
+}
+.cat-stat b{
+  font-family:var(--font-mono);
+  font-weight:400;
+  color:var(--color-text);
+}
+
+/* ---------- catálogo ---------- */
+.catalog{ padding-bottom:6rem; }
+
+.cat-toolbar{
+  position:sticky;
+  top:62px;
+  z-index:60;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--color-border);
+  padding:1rem 0 0.9rem;
+  margin-bottom:2.25rem;
+}
+.cat-tabs{
+  display:flex;
+  gap:0.5rem;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:0.2rem;
+}
+.cat-tabs::-webkit-scrollbar{ display:none; }
+.cat-tab{
+  flex-shrink:0;
+  display:inline-flex;
+  align-items:center;
+  gap:0.55rem;
+  padding:0.65rem 1.15rem;
+  background:var(--color-surface-2);
+  color:var(--color-text);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-pill);
+  font-family:var(--font-body);
+  font-size:0.88rem;
+  font-weight:500;
+  cursor:pointer;
+  transition:background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+.cat-tab:hover{ border-color:var(--color-accent); transform:translateY(-2px); }
+.cat-tab .n{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--color-text-muted);
+  transition:color 0.3s ease;
+}
+.cat-tab[aria-selected="true"]{
+  background:var(--color-text);
+  color:#ffffff;
+  border-color:var(--color-text);
+}
+.cat-tab[aria-selected="true"] .n{ color:rgba(255,255,255,0.65); }
+
+.cat-filters{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:0.9rem 1.25rem;
+  margin-top:0.9rem;
+}
+.cat-types{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:0.4rem;
+}
+.cat-types-label{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--color-text-muted);
+  margin-right:0.3rem;
+}
+.type-chip{
+  padding:0.4rem 0.85rem;
+  background:transparent;
+  color:var(--color-text-muted);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-pill);
+  font-family:var(--font-body);
+  font-size:0.78rem;
+  cursor:pointer;
+  transition:color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.type-chip:hover{ color:var(--color-text); border-color:var(--color-accent); }
+.type-chip[aria-pressed="true"]{
+  color:var(--color-accent);
+  border-color:var(--color-accent);
+  background:rgba(21,85,116,0.07);
+}
+.cat-search{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+.cat-search svg{
+  position:absolute;
+  left:0.9rem;
+  width:15px; height:15px;
+  color:var(--color-text-muted);
+  pointer-events:none;
+}
+.cat-search input{
+  width:min(260px, 62vw);
+  padding:0.6rem 1rem 0.6rem 2.4rem;
+  background:var(--color-surface);
+  color:var(--color-text);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-pill);
+  font-family:var(--font-body);
+  font-size:0.85rem;
+  outline:none;
+  transition:border-color 0.3s ease, background 0.3s ease;
+}
+.cat-search input::placeholder{ color:var(--color-text-muted); }
+.cat-search input:focus{ border-color:var(--color-accent); background:#ffffff; }
+
+.cat-count{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--color-text-muted);
+  margin-bottom:1.25rem;
+}
+
+.p-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:1.25rem;
+}
+.p-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(22px);
+  animation:cardIn 0.6s cubic-bezier(.16,1,.3,1) forwards;
+  transition:border-color 0.35s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes cardIn{ to{ opacity:1; transform:translateY(0); } }
+.p-card:hover{
+  border-color:var(--color-accent);
+  transform:translateY(-6px);
+  box-shadow:0 22px 40px -24px rgba(13,13,13,0.35);
+}
+.p-open{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  width:100%;
+  background:transparent;
+  border:0;
+  cursor:pointer;
+  border-radius:inherit;
+}
+.p-open:focus-visible{ outline:2px solid var(--color-accent); outline-offset:-2px; }
+
+.p-media{
+  position:relative;
+  aspect-ratio:4/5;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 38%, rgba(21,85,116,0.10), transparent 70%),
+    var(--color-surface);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.p-media img.mark{
+  width:42%;
+  height:auto;
+  opacity:0.16;
+  filter:grayscale(1);
+  transition:transform 0.6s cubic-bezier(.16,1,.3,1), opacity 0.4s ease;
+}
+.p-card:hover .p-media img.mark{ transform:scale(1.12) rotate(-4deg); opacity:0.26; }
+.p-media img.photo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform 0.7s cubic-bezier(.16,1,.3,1);
+}
+.p-card:hover .p-media img.photo{ transform:scale(1.05); }
+.p-media .soon{
+  position:absolute;
+  bottom:0.8rem;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--color-text-muted);
+  white-space:nowrap;
+}
+.p-tag{
+  position:absolute;
+  top:0.8rem;
+  left:0.8rem;
+  z-index:1;
+  display:inline-flex;
+  align-items:center;
+  gap:0.4rem;
+  padding:0.3rem 0.7rem;
+  background:#ffffff;
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-pill);
+  font-size:0.68rem;
+  font-weight:500;
+  color:var(--color-text);
+}
+.p-tag i{
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--dot, var(--color-accent));
+}
+.p-body{ padding:1rem 1.1rem 1.2rem; }
+.p-body h3{
+  font-family:var(--font-display);
+  font-size:1.02rem;
+  font-weight:600;
+  line-height:1.25;
+  margin-bottom:0.25rem;
+}
+.p-sub{
+  font-size:0.8rem;
+  color:var(--color-text-muted);
+  margin-bottom:0.85rem;
+}
+.p-meta{
+  display:flex;
+  gap:1rem;
+  padding-top:0.8rem;
+  border-top:1px solid var(--color-border);
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--color-text-muted);
+}
+.p-meta b{ font-weight:400; color:var(--color-text); }
+
+.cat-empty{
+  grid-column:1 / -1;
+  text-align:center;
+  padding:4rem 1rem;
+  color:var(--color-text-muted);
+}
+.cat-empty strong{
+  display:block;
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  color:var(--color-text);
+  margin-bottom:0.4rem;
+}
+
+/* ---------- ficha (modal) ---------- */
+.p-modal{
+  width:min(860px, calc(100vw - 2rem));
+  max-height:calc(100vh - 2rem);
+  padding:0;
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  margin:auto;
+}
+.p-modal::backdrop{
+  background:rgba(0,0,0,0.62);
+  backdrop-filter:blur(5px);
+}
+.p-modal[open]{ animation:modalIn 0.45s cubic-bezier(.16,1,.3,1); }
+@keyframes modalIn{
+  from{ opacity:0; transform:translateY(24px) scale(0.97); }
+  to{ opacity:1; transform:none; }
+}
+.p-modal-grid{
+  display:grid;
+  grid-template-columns:0.9fr 1.1fr;
+  max-height:calc(100vh - 2rem);
+}
+.p-modal-media{
+  position:relative;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 40%, rgba(21,85,116,0.12), transparent 70%),
+    var(--color-surface);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:280px;
+}
+.p-modal-media img.mark{ width:38%; opacity:0.18; filter:grayscale(1); }
+.p-modal-media img.photo{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+.p-modal-info{
+  padding:2rem 2rem 1.75rem;
+  overflow-y:auto;
+}
+.p-modal-info h2{
+  font-size:clamp(1.5rem, 3vw, 2rem);
+  margin:0.9rem 0 0.7rem;
+}
+.p-modal-info .p-desc{
+  font-size:0.95rem;
+  color:var(--color-text-muted);
+  margin-bottom:1.4rem;
+}
+.p-specs{
+  margin-bottom:1.6rem;
+  border-top:1px solid var(--color-border);
+}
+.p-specs div{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  padding:0.65rem 0;
+  border-bottom:1px solid var(--color-border);
+  font-size:0.85rem;
+}
+.p-specs dt{ color:var(--color-text-muted); }
+.p-specs dd{ font-weight:500; text-align:right; }
+.p-modal-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.7rem;
+}
+.p-close{
+  position:absolute;
+  top:0.9rem; right:0.9rem;
+  z-index:3;
+  width:40px; height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#ffffff;
+  color:var(--color-text);
+  border:1px solid var(--color-border);
+  border-radius:50%;
+  cursor:pointer;
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.3s ease, color 0.3s ease;
+}
+.p-close:hover{ background:var(--color-text); color:#ffffff; transform:rotate(90deg); }
+.p-close svg{ width:16px; height:16px; }
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .p-grid{ grid-template-columns:repeat(3, 1fr); }
+}
+@media (max-width:768px){
+  .nav-pill, .nav-cta{ display:none; }
+  .nav-toggle{ display:flex; }
+  .cat-hero{ padding:8rem 0 3.2rem; }
+  .cat-toolbar{ top:56px; }
+  .p-grid{ grid-template-columns:repeat(2, 1fr); gap:0.8rem; }
+  .p-body{ padding:0.85rem 0.9rem 1rem; }
+  .p-body h3{ font-size:0.92rem; }
+  .p-meta{ gap:0.7rem; }
+  .cat-filters{ justify-content:flex-start; }
+  .cat-search{ width:100%; }
+  .cat-search input{ width:100%; }
+  .p-modal-grid{ grid-template-columns:1fr; overflow-y:auto; }
+  .p-modal-media{ min-height:180px; }
+  .p-modal-info{ padding:1.4rem 1.3rem 1.4rem; overflow:visible; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+    scroll-behavior:auto !important;
+  }
+  .reveal{ opacity:1; transform:none; }
+  .p-card{ opacity:1; transform:none; animation:none; }
+}
+</style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<div class="preview-flag">Vista previa · no publicada</div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="container">
+    <a href="/" class="nav-logo">
+      <img src="/assets/favicon-512.png" alt="">
+      <span class="nav-logo-word">The <span>Wayland</span> Club</span>
+    </a>
+
+    <div class="nav-pill" id="navPill">
+      <span class="nav-pill-indicator" id="navPillIndicator"></span>
+      <a href="/">Inicio</a>
+      <a href="/#proceso">Cómo funciona</a>
+      <a href="/#reprocann">C4NN4BIS</a>
+      <a href="/catalogo/" class="active">Catálogo</a>
+      <a href="/#contacto">Contacto</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+      <a href="https://wa.link/3i3nep" class="nav-cta" target="_blank" rel="noopener">Asociarse</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/">Inicio</a>
+  <a href="/#proceso">Cómo funciona</a>
+  <a href="/#reprocann">C4NN4BIS</a>
+  <a href="/catalogo/">Catálogo</a>
+  <a href="/#contacto">Contacto</a>
+  <div class="mobile-social">
+    <a href="https://wa.link/3i3nep" class="icon-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.45 9.96-9.95S17.54 2 12.04 2zm5.83 14.24c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.78-.37h.56c.18 0 .42-.02.65.5.25.58.85 2.02.92 2.16.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2 1.11.99 2.05 1.3 2.35 1.45.3.15.47.12.65-.07.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.13.07.75-.18 1.45z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+    </a>
+  </div>
+  <a href="https://wa.link/3i3nep" class="btn btn-primary nav-cta" target="_blank" rel="noopener">Asociarse</a>
+</div>
+
+
+<!-- ============ HERO DEL CATÁLOGO ============ -->
+<header class="cat-hero">
+  <div class="container">
+    <span class="eyebrow">Solo para socios · REPROCANN vigente</span>
+    <h1>Nuestro <span>catálogo</span></h1>
+    <p class="cat-sub">
+      Los productos que dispensamos dentro del marco legal de REPROCANN.
+      Explorá por categoría y consultanos la disponibilidad por WhatsApp.
+    </p>
+    <div class="cat-stats">
+      <span class="cat-stat"><b id="statProducts">20</b> productos</span>
+      <span class="cat-stat"><b id="statCats">4</b> categorías</span>
+      <span class="cat-stat">Envío en 24hs dentro de Buenos Aires</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ CATÁLOGO ============ -->
+<main class="catalog light-section" id="catalogo">
+  <div class="cat-toolbar">
+    <div class="container">
+      <div class="cat-tabs" id="catTabs" role="tablist" aria-label="Categorías"></div>
+      <div class="cat-filters">
+        <div class="cat-types" id="catTypes" role="group" aria-label="Filtrar por tipo">
+          <span class="cat-types-label">Tipo</span>
+        </div>
+        <label class="cat-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input type="search" id="catSearch" placeholder="Buscar producto" aria-label="Buscar producto" autocomplete="off">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p class="cat-count" id="catCount" aria-live="polite"></p>
+    <div class="p-grid" id="pGrid"></div>
+  </div>
+</main>
+
+<!-- ficha de producto -->
+<dialog class="p-modal light-section" id="pModal" aria-labelledby="pmName">
+  <button type="button" class="p-close" id="pmClose" aria-label="Cerrar ficha">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="p-modal-grid">
+    <div class="p-modal-media" id="pmMedia"></div>
+    <div class="p-modal-info">
+      <span class="p-tag" id="pmTag" style="position:static;display:inline-flex"></span>
+      <h2 id="pmName"></h2>
+      <p class="p-desc" id="pmDesc"></p>
+      <dl class="p-specs" id="pmSpecs"></dl>
+      <div class="p-modal-actions">
+        <a href="https://wa.link/3i3nep" class="btn btn-primary" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+        <button type="button" class="btn btn-secondary" id="pmClose2" style="color:var(--color-text)">Volver al catálogo</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- ============ CTA FINAL ============ -->
+<section class="cta-final">
+  <div class="container reveal">
+    <h2>¿Querés consultar por un producto?</h2>
+    <p>Sin turnos. Sin esperas. Te respondemos a la brevedad.</p>
+    <a href="https://wa.link/3i3nep" class="btn btn-dark" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-logo"><img src="/assets/wayland-logo.png" alt="The Wayland Club"></div>
+    <p class="footer-meta">ONG habilitada por el <a href="https://www.argentina.gob.ar/salud" target="_blank" rel="noopener" class="footer-link">Ministerio de Salud</a> de Argentina</p>
+    <p class="footer-meta">Marco legal <a href="https://www.argentina.gob.ar/salud/cannabis-medicinal/reprocann" target="_blank" rel="noopener" class="footer-link">REPROCANN</a></p>
+
+    <div class="footer-social">
+      <a href="https://wa.link/3i3nep" class="icon-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.45 9.96-9.95S17.54 2 12.04 2zm5.83 14.24c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.78-.37h.56c.18 0 .42-.02.65.5.25.58.85 2.02.92 2.16.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2 1.11.99 2.05 1.3 2.35 1.45.3.15.47.12.65-.07.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.13.07.75-.18 1.45z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+    </div>
+
+    <ul class="footer-nav">
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/#proceso">Cómo funciona</a></li>
+      <li><a href="/#reprocann">C4NN4BIS</a></li>
+      <li><a href="/catalogo/">Catálogo</a></li>
+      <li><a href="/#contacto">Contacto</a></li>
+    </ul>
+    <p class="footer-legal">
+      El acceso al catálogo está disponible exclusivamente para pacientes con
+      REPROCANN vigente. El uso de C4NN4BIS medicinal debe realizarse dentro
+      del marco legal correspondiente.
+    </p>
+
+    <p class="footer-credit">
+      Hecho por
+      <a href="https://reentrystyle.com.ar" target="_blank" rel="noopener" class="footer-link">Reentry Style</a>
+      <a href="https://www.instagram.com/reentrystyle/" target="_blank" rel="noopener" aria-label="Instagram de Reentry Style" class="footer-credit-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+      · <span id="footerYear"></span>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var footerYear = document.getElementById('footerYear');
+  if(footerYear){ footerYear.textContent = String(new Date().getFullYear()); }
+
+  function createSpring(opts){
+    opts = opts || {};
+    var stiffness = opts.stiffness || 220;
+    var damping = opts.damping || 24;
+    var mass = opts.mass || 1;
+    var precision = opts.precision || 0.01;
+    var onUpdate = opts.onUpdate || function(){};
+    var onComplete = opts.onComplete || function(){};
+    var value = opts.from || 0;
+    var target = value;
+    var velocity = 0;
+    var raf = null;
+
+    function step(){
+      var force = -stiffness * (value - target);
+      var dampingForce = -damping * velocity;
+      var accel = (force + dampingForce) / mass;
+      velocity += accel * (1 / 60);
+      value += velocity * (1 / 60);
+      onUpdate(value);
+      if(Math.abs(target - value) < precision && Math.abs(velocity) < precision){
+        value = target;
+        onUpdate(value);
+        raf = null;
+        onComplete();
+        return;
+      }
+      raf = requestAnimationFrame(step);
+    }
+
+    return {
+      set: function(t){
+        target = t;
+        if(!raf){ raf = requestAnimationFrame(step); }
+      },
+      jump: function(v){
+        value = v; target = v; velocity = 0;
+        if(raf){ cancelAnimationFrame(raf); raf = null; }
+        onUpdate(value);
+      },
+      get: function(){ return value; }
+    };
+  }
+
+  /* =====================================================================
+     DATOS DEL CATÁLOGO
+     Para cargar productos reales: reemplazar los items de PRODUCTS.
+     - cat:   id de una categoría de CATEGORIES
+     - type:  'indica' | 'sativa' | 'hibrida' | null
+     - img:   ruta de la foto, ej. '/assets/productos/black-cherry.jpg' (null = placeholder)
+     Todo lo que esté en null / vacío se muestra como "—".
+     ===================================================================== */
+  var CATEGORIES = [
+    { id:'flores',          label:'Flores',             dot:'#404416' },
+    { id:'cartuchos',       label:'Cartuchos',          dot:'#155574' },
+    { id:'cristales-salsa', label:'Cristales en salsa', dot:'#bbb54e' },
+    { id:'cristales-thc',   label:'Cristales de THC',   dot:'#6b7370' }
+  ];
+  var TYPES = { indica:'Índica', sativa:'Sativa', hibrida:'Híbrida' };
+
+  function P(n, name, cat, type){
+    return { id:n, name:name, cat:cat, type:type, thc:null, cbd:null,
+             terpenos:null, formato:null, genetica:null, img:null,
+             desc:'Descripción del producto próximamente.' };
+  }
+  var PRODUCTS = [
+    P(1,  'Flor 01', 'flores', 'indica'),
+    P(2,  'Flor 02', 'flores', 'sativa'),
+    P(3,  'Flor 03', 'flores', 'hibrida'),
+    P(4,  'Flor 04', 'flores', 'indica'),
+    P(5,  'Flor 05', 'flores', 'sativa'),
+    P(6,  'Flor 06', 'flores', 'hibrida'),
+    P(7,  'Flor 07', 'flores', 'indica'),
+    P(8,  'Flor 08', 'flores', 'hibrida'),
+    P(9,  'Flor 09', 'flores', 'sativa'),
+    P(10, 'Flor 10', 'flores', 'hibrida'),
+    P(11, 'Cartucho 01', 'cartuchos', 'indica'),
+    P(12, 'Cartucho 02', 'cartuchos', 'sativa'),
+    P(13, 'Cartucho 03', 'cartuchos', 'hibrida'),
+    P(14, 'Cartucho 04', 'cartuchos', 'hibrida'),
+    P(15, 'Cristales en salsa 01', 'cristales-salsa', null),
+    P(16, 'Cristales en salsa 02', 'cristales-salsa', null),
+    P(17, 'Cristales en salsa 03', 'cristales-salsa', null),
+    P(18, 'Cristales de THC 01', 'cristales-thc', null),
+    P(19, 'Cristales de THC 02', 'cristales-thc', null),
+    P(20, 'Cristales de THC 03', 'cristales-thc', null)
+  ];
+
+  /* ---------- helpers ---------- */
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+  function norm(s){
+    return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  }
+  function catOf(id){
+    for(var i = 0; i < CATEGORIES.length; i++){ if(CATEGORIES[i].id === id) return CATEGORIES[i]; }
+    return CATEGORIES[0];
+  }
+  function val(v){ return (v === null || v === undefined || v === '') ? '—' : v; }
+
+  /* ---------- estado ---------- */
+  var state = { cat:'todos', type:'todos', q:'' };
+
+  var tabsEl = $('catTabs'), typesEl = $('catTypes'), gridEl = $('pGrid'),
+      countEl = $('catCount'), searchEl = $('catSearch');
+
+  $('statProducts').textContent = String(PRODUCTS.length);
+  $('statCats').textContent = String(CATEGORIES.length);
+
+  /* tabs de categorías */
+  function renderTabs(){
+    var html = '';
+    var all = [{ id:'todos', label:'Todos' }].concat(CATEGORIES);
+    all.forEach(function(c){
+      var n = c.id === 'todos' ? PRODUCTS.length
+        : PRODUCTS.filter(function(p){ return p.cat === c.id; }).length;
+      html += '<button type="button" role="tab" class="cat-tab" data-cat="' + c.id + '" aria-selected="' +
+        (state.cat === c.id) + '">' + esc(c.label) + ' <span class="n">' + n + '</span></button>';
+    });
+    tabsEl.innerHTML = html;
+  }
+
+  /* chips de tipo */
+  function renderTypes(){
+    var html = '<span class="cat-types-label">Tipo</span>';
+    [['todos','Todos']].concat(Object.keys(TYPES).map(function(k){ return [k, TYPES[k]]; }))
+      .forEach(function(t){
+        html += '<button type="button" class="type-chip" data-type="' + t[0] + '" aria-pressed="' +
+          (state.type === t[0]) + '">' + esc(t[1]) + '</button>';
+      });
+    typesEl.innerHTML = html;
+  }
+
+  /* tarjetas */
+  function cardHTML(p, i){
+    var c = catOf(p.cat);
+    var media = p.img
+      ? '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy">'
+      : '<img class="mark" src="/assets/favicon-512.png" alt="" aria-hidden="true"><span class="soon">Foto próximamente</span>';
+    var sub = p.type ? TYPES[p.type] : c.label;
+    return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms">' +
+      '<div class="p-media">' +
+        '<span class="p-tag" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span>' + media +
+      '</div>' +
+      '<div class="p-body">' +
+        '<h3>' + esc(p.name) + '</h3>' +
+        '<p class="p-sub">' + esc(sub) + '</p>' +
+        '<div class="p-meta"><span>THC <b>' + esc(val(p.thc)) + '</b></span><span>CBD <b>' + esc(val(p.cbd)) + '</b></span></div>' +
+      '</div>' +
+      '<button type="button" class="p-open" data-id="' + p.id + '" aria-label="Ver ficha de ' + esc(p.name) + '"></button>' +
+    '</article>';
+  }
+
+  function filtered(){
+    var q = norm(state.q.trim());
+    return PRODUCTS.filter(function(p){
+      if(state.cat !== 'todos' && p.cat !== state.cat) return false;
+      if(state.type !== 'todos' && p.type !== state.type) return false;
+      if(q && norm(p.name).indexOf(q) === -1) return false;
+      return true;
+    });
+  }
+
+  function renderGrid(){
+    var list = filtered();
+    if(!list.length){
+      gridEl.innerHTML = '<div class="cat-empty"><strong>No hay productos con esos filtros</strong>Probá con otra categoría o borrá la búsqueda.</div>';
+    } else {
+      gridEl.innerHTML = list.map(cardHTML).join('');
+    }
+    countEl.textContent = list.length + (list.length === 1 ? ' producto' : ' productos');
+  }
+
+  function render(){ renderTabs(); renderTypes(); renderGrid(); }
+
+  function setCat(id, skipHash){
+    state.cat = id;
+    if(!skipHash){
+      history.replaceState(null, '', id === 'todos' ? location.pathname : '#' + id);
+    }
+    render();
+  }
+
+  tabsEl.addEventListener('click', function(e){
+    var b = e.target.closest('.cat-tab');
+    if(b) setCat(b.getAttribute('data-cat'));
+  });
+  typesEl.addEventListener('click', function(e){
+    var b = e.target.closest('.type-chip');
+    if(!b) return;
+    state.type = b.getAttribute('data-type');
+    renderTypes();
+    renderGrid();
+  });
+  searchEl.addEventListener('input', function(){
+    state.q = searchEl.value;
+    renderGrid();
+  });
+
+  /* deep-link por hash: /catalogo/#flores */
+  function fromHash(){
+    var h = location.hash.replace('#','');
+    var ok = h && CATEGORIES.some(function(c){ return c.id === h; });
+    state.cat = ok ? h : 'todos';
+  }
+  window.addEventListener('hashchange', function(){ fromHash(); render(); });
+  fromHash();
+  render();
+
+  /* ---------- ficha ---------- */
+  var modal = $('pModal');
+  function openProduct(id){
+    var p = PRODUCTS.filter(function(x){ return String(x.id) === String(id); })[0];
+    if(!p) return;
+    var c = catOf(p.cat);
+    $('pmMedia').innerHTML = p.img
+      ? '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '">'
+      : '<img class="mark" src="/assets/favicon-512.png" alt="" aria-hidden="true">';
+    $('pmTag').innerHTML = '<i style="width:6px;height:6px;border-radius:50%;background:' + c.dot + '"></i>' + esc(c.label);
+    $('pmName').textContent = p.name;
+    $('pmDesc').textContent = p.desc;
+    var rows = [
+      ['Tipo', p.type ? TYPES[p.type] : null],
+      ['THC', p.thc], ['CBD', p.cbd],
+      ['Terpenos', p.terpenos], ['Genética', p.genetica], ['Formato', p.formato]
+    ];
+    $('pmSpecs').innerHTML = rows.map(function(r){
+      return '<div><dt>' + r[0] + '</dt><dd>' + esc(val(r[1])) + '</dd></div>';
+    }).join('');
+    modal.showModal();
+  }
+  gridEl.addEventListener('click', function(e){
+    var b = e.target.closest('.p-open');
+    if(b) openProduct(b.getAttribute('data-id'));
+  });
+  $('pmClose').addEventListener('click', function(){ modal.close(); });
+  $('pmClose2').addEventListener('click', function(){ modal.close(); });
+  modal.addEventListener('click', function(e){ if(e.target === modal) modal.close(); });
+
+  /* ---------- scroll progress / nav ---------- */
+  var progressBar = $('scroll-progress');
+  var nav = $('nav');
+  var ticking = false;
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var docH = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (docH > 0 ? (window.scrollY / docH) * 100 : 0) + '%';
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  /* ---------- menú mobile ---------- */
+  var navToggle = $('navToggle'), mobileMenu = $('mobileMenu');
+  navToggle.addEventListener('click', function(){
+    navToggle.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(function(l){
+    l.addEventListener('click', function(){
+      navToggle.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+
+  /* ---------- indicador del nav (la página activa es Catálogo) ---------- */
+  var navPill = $('navPill'), navPillIndicator = $('navPillIndicator');
+  var navLinks = document.querySelectorAll('.nav-pill a');
+  var activeLink = document.querySelector('.nav-pill a.active');
+  var indicatorX = createSpring({ stiffness:340, damping:30,
+    onUpdate:function(v){ navPillIndicator.style.transform = 'translateX(' + v + 'px)'; } });
+  var indicatorW = createSpring({ stiffness:340, damping:30,
+    onUpdate:function(v){ navPillIndicator.style.width = v + 'px'; } });
+  function moveIndicatorTo(link, instant){
+    if(!link) return;
+    var pr = navPill.getBoundingClientRect(), lr = link.getBoundingClientRect();
+    navPillIndicator.style.opacity = '1';
+    if(instant || reduceMotion){ indicatorX.jump(lr.left - pr.left); indicatorW.jump(lr.width); }
+    else { indicatorX.set(lr.left - pr.left); indicatorW.set(lr.width); }
+  }
+  moveIndicatorTo(activeLink, true);
+  if(window.matchMedia('(hover: hover)').matches){
+    navLinks.forEach(function(l){ l.addEventListener('mouseenter', function(){ moveIndicatorTo(l); }); });
+    navPill.addEventListener('mouseleave', function(){ moveIndicatorTo(activeLink); });
+  }
+  window.addEventListener('resize', function(){ moveIndicatorTo(activeLink, true); });
+  window.addEventListener('load', function(){ moveIndicatorTo(activeLink, true); });
+
+  /* ---------- reveal (solo el CTA final) ---------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !reduceMotion){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('is-visible'); io.unobserve(en.target); }
+      });
+    }, { threshold:0.15 });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  /* ---------- botones magnéticos ---------- */
+  if(!reduceMotion && window.matchMedia('(hover: hover)').matches){
+    document.querySelectorAll('.btn, .icon-btn, .nav-cta').forEach(function(btn){
+      var isIcon = btn.classList.contains('icon-btn');
+      var hoverExtra = isIcon ? 'scale(1.1) rotate(-8deg)' : 'scale(1.04) translateY(-3px)';
+      var on = 0;
+      function render(){
+        btn.style.transform = 'translate(' + sx.get() + 'px,' + sy.get() + 'px) ' + (on ? hoverExtra : 'scale(1)');
+      }
+      var sx = createSpring({ stiffness:260, damping:20, onUpdate:render });
+      var sy = createSpring({ stiffness:260, damping:20, onUpdate:render });
+      btn.addEventListener('mousemove', function(e){
+        var r = btn.getBoundingClientRect();
+        on = 1;
+        sx.set((e.clientX - r.left - r.width / 2) * 0.3);
+        sy.set((e.clientY - r.top - r.height / 2) * 0.3);
+        render();
+      });
+      btn.addEventListener('mouseleave', function(){ on = 0; sx.set(0); sy.set(0); render(); });
+    });
+  }
+})();
+</script>
+</body>
+</html>
