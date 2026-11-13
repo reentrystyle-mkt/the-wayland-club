@@ -1221,8 +1221,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 }
 .cart-total span{ font-size:0.85rem; color:var(--color-text-muted); }
 .cart-total b{ font-family:var(--font-display); font-size:1.15rem; font-weight:700; text-align:right; }
-.cart-rules{ font-size:0.76rem; line-height:1.45; color:var(--color-text); background:var(--color-surface); border-radius:10px; padding:0.7rem 0.85rem; margin-bottom:0.8rem; }
-.cart-rules strong{ font-weight:600; }
+.cart-rules{ font-size:0.78rem; line-height:1.45; color:var(--color-text); background:rgba(235,38,159,0.08); border:1px solid rgba(235,38,159,0.25); border-radius:10px; padding:0.7rem 0.85rem; margin-bottom:0.8rem; }
+.cart-rules[hidden]{ display:none; }
 .cart-note{ font-size:0.76rem; color:var(--color-text-muted); margin-bottom:1rem; }
 .cart-send{ width:100%; justify-content:center; gap:0.6rem; }
 .cart-send svg{ width:18px; height:18px; }
@@ -1425,7 +1425,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   <div class="cart-body" id="cartBody"></div>
   <div class="cart-foot">
     <div class="cart-total"><span>Total</span><b id="cartTotal">—</b></div>
-    <p class="cart-rules"><strong>Reglas del pedido:</strong> mínimo 10 g de flores, que se suman de a 5 g.</p>
+    <p class="cart-rules" id="cartRules" hidden></p>
     <p class="cart-note">Al enviar tu pedido te confirmaremos disponibilidad y coordinaremos la entrega en las próximas 24 horas.</p>
     <button type="button" class="btn btn-primary cart-send" id="cartSend">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.45 9.96-9.95S17.54 2 12.04 2zm5.83 14.24c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.78-.37h.56c.18 0 .42-.02.65.5.25.58.85 2.02.92 2.16.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2 1.11.99 2.05 1.3 2.35 1.45.3.15.47.12.65-.07.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.13.07.75-.18 1.45z"/></svg>
@@ -1833,6 +1833,9 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   function renderCart(){
     var t = totals();
     syncQtyBadges();
+    /* las reglas solo se muestran mientras se están incumpliendo; al corregir el pedido desaparecen */
+    var rp = items.length ? rulesProblem() : '';
+    var rEl = $('cartRules'); rEl.textContent = rp; rEl.hidden = !rp;
     badgeEl.hidden = t.n === 0;
     badgeEl.textContent = String(t.n);
     $('cartTotal').textContent = totalText();
