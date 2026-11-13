@@ -441,6 +441,10 @@ html:not(.entered):not(.no-gate) body{ overflow:hidden; }
   max-width:460px;
   margin-bottom:2.4rem;
 }
+.gate-sub{ max-width:none; }
+.gate-br{ display:none; }
+@media (min-width:721px){ .gate-sub{ white-space:nowrap; } }
+@media (max-width:720px){ .gate-br{ display:inline; } .gate-sub{ text-wrap:balance; } }
 .gate-enter{ gap:0.7rem; }
 .gate-enter svg{ width:16px; height:16px; transition:transform 0.4s cubic-bezier(.34,1.56,.64,1); }
 .gate-enter:hover svg{ transform:translateY(3px); }
@@ -1382,7 +1386,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     <div class="gate-logo-wrap"><img class="gate-logo" src="/assets/favicon-512.png" alt="The Wayland Club"></div>
     <p class="gate-eyebrow">Bienvenidos al catálogo de</p>
     <h1 class="gate-title">The <span>Wayland</span> Club</h1>
-    <p class="gate-sub">C4NN4BIS medicinal. Solo para socios con REPROCANN vigente.</p>
+    <p class="gate-sub">C4NN4BIS medicinal. Solo para socios con <br class="gate-br">REPROCANN vigente.</p>
     <button type="button" class="btn btn-primary gate-enter" id="gateEnter">
       Entrar al catálogo
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
