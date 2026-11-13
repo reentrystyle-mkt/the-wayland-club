@@ -1039,7 +1039,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 
 /* ---------- ficha (modal) ---------- */
 .p-modal{
-  width:min(860px, calc(100vw - 2rem));
+  width:min(1180px, calc(100vw - 2rem));
   max-height:calc(100vh - 2rem);
   padding:0;
   border:1px solid var(--color-border);
@@ -1055,35 +1055,32 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 }
 .p-modal-grid{
   display:grid;
-  grid-template-columns:0.9fr 1.1fr;
+  grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
   max-height:calc(100vh - 2rem);
 }
+/* la imagen manda: ocupa casi toda la altura disponible y se puede dar vuelta (frente / reverso) */
 .p-modal-media{
   position:relative;
-  background:
-    radial-gradient(ellipse 70% 55% at 50% 40%, rgba(21,85,116,0.12), transparent 70%),
-    var(--color-surface);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:280px;
+  background:radial-gradient(ellipse 70% 60% at 50% 40%, rgba(21,85,116,0.25), transparent 70%), #05090b;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.8rem;
+  padding:1rem;
 }
-.p-modal-media img.mark{ width:38%; opacity:0.18; filter:grayscale(1); }
-.p-modal-media img.photo{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.p-modal-info{ padding:2rem 2rem 1.75rem; overflow-y:auto; }
-.p-modal-info h2{ font-size:clamp(1.5rem, 3vw, 2rem); margin:0.9rem 0 0.7rem; }
-.p-modal-info .p-desc{ font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1.3rem; }
-.p-specs{ margin-bottom:1.4rem; border-top:1px solid var(--color-border); }
-.p-specs div{
-  display:flex;
-  justify-content:space-between;
-  gap:1rem;
-  padding:0.6rem 0;
-  border-bottom:1px solid var(--color-border);
-  font-size:0.85rem;
-}
-.p-specs dt{ color:var(--color-text-muted); }
-.p-specs dd{ font-weight:500; text-align:right; }
+.flip{ perspective:1800px; cursor:pointer; width:100%; max-width:calc((100vh - 7.5rem) * 0.8); aspect-ratio:4/5; }
+.flip-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform 0.75s cubic-bezier(.4,.1,.2,1); }
+.flip.flipped .flip-inner{ transform:rotateY(180deg); }
+.flip-face{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:var(--radius-md); backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:0 24px 50px -20px rgba(0,0,0,0.8); background:#0a1214; }
+.flip-back{ transform:rotateY(180deg); }
+.flip-toggle{ display:flex; gap:0.4rem; padding:0.25rem; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); }
+.flip-toggle button{ border:0; background:none; color:rgba(255,255,255,0.75); font:inherit; font-size:0.78rem; font-weight:600; padding:0.4rem 1rem; border-radius:999px; cursor:pointer; transition:background 0.25s, color 0.25s; }
+.flip-toggle button[aria-pressed="true"]{ background:#fff; color:#0d0d0d; }
+.p-modal-info{ padding:1.6rem 1.6rem 1.4rem; overflow-y:auto; }
+.p-modal-info h2{ font-size:clamp(1.25rem, 2.2vw, 1.6rem); margin:0.8rem 0 0.5rem; }
+.p-modal-info .p-desc{ font-size:0.8rem; line-height:1.5; color:var(--color-text-muted); margin-bottom:1rem; }
+/* datos en 3 columnas (3 y 3) */
+.p-specs{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:0.5rem 0.9rem; margin-bottom:1.1rem; padding-top:0.9rem; border-top:1px solid var(--color-border); }
+.p-specs div{ display:flex; flex-direction:column; gap:0.15rem; padding:0; border:0; font-size:0.74rem; min-width:0; }
+.p-specs dt{ color:var(--color-text-muted); font-size:0.66rem; letter-spacing:0.04em; text-transform:uppercase; }
+.p-specs dd{ font-weight:500; text-align:left; font-size:0.76rem; line-height:1.3; overflow-wrap:anywhere; }
 .qty-row{ margin-bottom:1.2rem; }
 .qty-label{ font-size:0.88rem; font-weight:500; margin-bottom:0.6rem; }
 .qty-note{ margin-top:0.55rem; font-size:0.76rem; color:var(--color-text-muted); }
@@ -1288,7 +1285,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   .cat-search{ width:100%; }
   .cat-search input{ width:100%; }
   .p-modal-grid{ grid-template-columns:1fr; overflow-y:auto; }
-  .p-modal-media{ min-height:170px; }
+  .p-modal-media{ padding:0.8rem; }
+  .flip{ max-width:none; }
   .p-modal-info{ padding:1.4rem 1.3rem 1.4rem; overflow:visible; }
   .tb-logo span{ display:none; }
 }
@@ -1390,7 +1388,18 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
   <div class="p-modal-grid">
-    <div class="p-modal-media" id="pmMedia"></div>
+    <div class="p-modal-media">
+      <div class="flip" id="pmFlip" title="Tocá para dar vuelta">
+        <div class="flip-inner">
+          <img class="flip-face flip-front" id="pmFront" alt="">
+          <img class="flip-face flip-back" id="pmBack" alt="">
+        </div>
+      </div>
+      <div class="flip-toggle" role="group" aria-label="Frente o reverso">
+        <button type="button" id="pmShowFront" aria-pressed="true">Frente</button>
+        <button type="button" id="pmShowBack" aria-pressed="false">Reverso</button>
+      </div>
+    </div>
     <div class="p-modal-info">
       <span class="p-tag" id="pmTag" style="position:static;display:inline-flex"></span>
       <h2 id="pmName"></h2>
@@ -1602,32 +1611,34 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     u:{ short:'u', one:'unidad',  many:'unidades', ask:'¿Cuántas unidades querés?' }
   };
 
-  function P(n, name, cat, type){
-    return { id:n, name:name, cat:cat, type:type, thc:null, cbd:null,
-             terpenos:null, formato:null, genetica:null, img:null, unit:null,
-             desc:'Descripción del producto próximamente.' };
+  function P(n, slug, name, cat, type, d){
+    d = d || {};
+    return { id:n, name:name, cat:cat, type:type, slug:slug,
+             thc:d.thc || null, cbd:d.cbd || null, potencia:d.potencia || null,
+             genetica:d.genetica || null, aroma:d.aroma || null, formato:d.formato || null,
+             uso:d.uso || null, producto:d.producto || null,
+             desc:d.desc || '',
+             img:'/assets/productos/' + slug + '-t.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', unit:null };
   }
   var PRODUCTS = [
-    P(1,  'Flor 01', 'flores', 'indica'),
-    P(2,  'Flor 02', 'flores', 'sativa'),
-    P(3,  'Flor 03', 'flores', 'hibrida'),
-    P(4,  'Flor 04', 'flores', 'indica'),
-    P(5,  'Flor 05', 'flores', 'sativa'),
-    P(6,  'Flor 06', 'flores', 'hibrida'),
-    P(7,  'Flor 07', 'flores', 'indica'),
-    P(8,  'Flor 08', 'flores', 'hibrida'),
-    P(9,  'Flor 09', 'flores', 'sativa'),
-    P(10, 'Flor 10', 'flores', 'hibrida'),
-    P(11, 'Cartucho 01', 'cartuchos', 'indica'),
-    P(12, 'Cartucho 02', 'cartuchos', 'sativa'),
-    P(13, 'Cartucho 03', 'cartuchos', 'hibrida'),
-    P(14, 'Cartucho 04', 'cartuchos', 'hibrida'),
-    P(15, 'Cristales en salsa 01', 'cristales-salsa', null),
-    P(16, 'Cristales en salsa 02', 'cristales-salsa', null),
-    P(17, 'Cristales en salsa 03', 'cristales-salsa', null),
-    P(18, 'Cristales de THC 01', 'cristales-thc', null),
-    P(19, 'Cristales de THC 02', 'cristales-thc', null),
-    P(20, 'Cristales de THC 03', 'cristales-thc', null)
+    P(1, 'petroleum', 'Petroleum', 'flores', 'indica', { genetica:'Híbrida con dominancia índica', aroma:'Diésel, tierra húmeda, pimienta, toque cítrico', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
+      desc:'Relajación corporal profunda, euforia inicial y potente sensación de bienestar. Ideal para aliviar el estrés, el dolor y favorecer el descanso nocturno.' }),
+    P(2, 'moby', 'Moby', 'flores', 'sativa', { genetica:'Híbrida balanceada con tendencia sativa', aroma:'Frutos del bosque, arándanos, cítricos, fondo Haze', thc:'22–28%', potencia:'Alta', formato:'Flor',
+      desc:'Estimula la creatividad, mejora el estado de ánimo y aporta energía mental, finalizando con una relajación suave.' }),
+    P(3, 'runtz', 'Runtz', 'flores', 'hibrida', { genetica:'Híbrida equilibrada sativa / índica', aroma:'Caramelos, frutas tropicales, vainilla, crema', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
+      desc:'Produce una intensa euforia acompañada de relajación progresiva. Muy resinosa y con un perfil de terpenos excepcional.' }),
+    P(4, 'spritz', 'Spritz', 'flores', 'sativa', { genetica:'Híbrida con ligera dominancia sativa', aroma:'Limón, naranja, mandarina, pomelo, notas gaseosas, fondo dulce', thc:'22–27%', potencia:'Alta', formato:'Flor',
+      desc:'Energizante, sociable y creativa. Ideal para actividades diurnas o encuentros sociales.' }),
+    P(5, 'black-cherry', 'Black Cherry', 'flores', 'indica', { genetica:'Híbrida con dominancia índica', aroma:'Cereza negra, frutos rojos, uva, madera, especias', thc:'20–27%', potencia:'Alta', formato:'Flor',
+      desc:'Relajación física y mental con una agradable sensación de tranquilidad. Excelente para finalizar el día.' }),
+    P(6, 'cake-crasher', 'Cake Crasher', 'flores', 'hibrida', { genetica:'Híbrida equilibrada sativa / índica', aroma:'Torta de vainilla, crema, frutas dulces, fondo gaseoso', thc:'25–30%', potencia:'Muy alta', formato:'Flor',
+      desc:'Comienza con una fuerte euforia cerebral y evoluciona hacia una relajación corporal profunda y duradera. Una de las variedades más potentes y exclusivas del catálogo.' }),
+    P(7, 'cartuchos-thc', 'Cartuchos de THC', 'cartuchos', null, { producto:'Cartucho de THC con salsa de terpenos', uso:'Dispositivo compatible', thc:'+90%', potencia:'Muy alta', formato:'Cartucho',
+      desc:'Cartucho de THC con salsa de terpenos.' }),
+    P(8, 'cristales-salsa', 'Cristales en salsa', 'cristales-salsa', null, { producto:'Cristales de THC sumergidos en salsa de terpenos', uso:'Vaporizar', thc:'+90%', potencia:'Muy alta', formato:'Cristales',
+      desc:'Cristales de THC sumergidos en salsa de terpenos.' }),
+    P(9, 'cristales-thc', 'Cristales de THC', 'cristales-thc', null, { producto:'Cristales de THC', uso:'Vaporizar, mezclar con flor', thc:'+90%', potencia:'Muy alta', formato:'Cristales',
+      desc:'Cristales de THC.' })
   ];
 
   /* ---------- helpers ---------- */
@@ -1658,7 +1669,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   /* =====================================================================
      CARRITO
      ===================================================================== */
-  var STORE_KEY = 'wayland-pedido-v1';
+  var STORE_KEY = 'wayland-pedido-v2';
   var items = [];   /* [{ id, qty }] */
   try{
     var saved = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
@@ -1939,17 +1950,15 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     typesEl.innerHTML = html;
   }
   function cardHTML(p, i){
-    var c = catOf(p.cat);
-    var media = p.img
-      ? '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy">'
-      : '<img class="mark" src="/assets/favicon-512.png" alt="" aria-hidden="true"><span class="soon">Foto próximamente</span>';
-    var sub = p.type ? TYPES[p.type] : c.label;
+    var meta = [];
+    if(p.thc){ meta.push('<span>THC <b>' + esc(p.thc) + '</b></span>'); }
+    if(p.cbd){ meta.push('<span>CBD <b>' + esc(p.cbd) + '</b></span>'); }
     return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms">' +
-      '<div class="p-media"><span class="p-tag" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span><span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' + media + '</div>' +
+      '<div class="p-media"><span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
+        '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy"></div>' +
       '<div class="p-body">' +
         '<h3>' + esc(p.name) + '</h3>' +
-        '<p class="p-sub">' + esc(sub) + '</p>' +
-        '<div class="p-meta"><span>THC <b>' + esc(val(p.thc)) + '</b></span><span>CBD <b>' + esc(val(p.cbd)) + '</b></span></div>' +
+        '<div class="p-meta">' + meta.join('') + '</div>' +
       '</div>' +
       '<button type="button" class="p-open" data-id="' + p.id + '" aria-label="Ver ficha de ' + esc(p.name) + '"></button>' +
       '<button type="button" class="p-add" data-id="' + p.id + '" aria-label="Agregar ' + esc(p.name) + ' al pedido">' +
@@ -1999,22 +2008,30 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     else if(r !== null){ note += 'Podés sumar hasta ' + qtyText(current, r) + ' más.'; }
     $('pmNote').textContent = note.trim();
   }
+  function flipSet(b){
+    $('pmFlip').classList.toggle('flipped', !!b);
+    $('pmShowFront').setAttribute('aria-pressed', b ? 'false' : 'true');
+    $('pmShowBack').setAttribute('aria-pressed', b ? 'true' : 'false');
+  }
   function openProduct(id){
     var p = productById(id);
     if(!p) return;
     current = p; modalQty = stepOf(p);
     var c = catOf(p.cat);
-    $('pmMedia').innerHTML = p.img
-      ? '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '">'
-      : '<img class="mark" src="/assets/favicon-512.png" alt="" aria-hidden="true">';
+    flipSet(false);
+    $('pmFront').src = p.imgBig; $('pmFront').alt = p.name;
+    $('pmBack').src = p.imgBack; $('pmBack').alt = 'Reverso de ' + p.name;
     $('pmTag').innerHTML = '<i style="width:6px;height:6px;border-radius:50%;background:' + c.dot + '"></i>' + esc(c.label);
     $('pmName').textContent = p.name;
     $('pmDesc').textContent = p.desc;
-    $('pmSpecs').innerHTML = [
-      ['Tipo', p.type ? TYPES[p.type] : null], ['THC', p.thc], ['CBD', p.cbd],
-      ['Terpenos', p.terpenos], ['Genética', p.genetica], ['Formato', p.formato]
-    ].map(function(r){ return '<div><dt>' + r[0] + '</dt><dd>' + esc(val(r[1])) + '</dd></div>'; }).join('');
-    $('pmQtyLabel').textContent = unitOf(p).ask + (stepOf(p) > 1 ? ' (se suma de a ' + stepOf(p) + ' g)' : '');
+    $('pmSpecs').innerHTML = (p.cat === 'flores' ? [
+      ['Tipo', p.type ? TYPES[p.type] : null], ['Genética', p.genetica], ['THC', p.thc],
+      ['Potencia', p.potencia], ['Aroma y sabor', p.aroma], ['Formato', p.formato]
+    ] : [
+      ['Producto', p.producto], ['Modo de uso', p.uso], ['THC', p.thc],
+      ['Potencia', p.potencia], ['Formato', p.formato]
+    ]).filter(function(r){ return r[1]; }).map(function(r){ return '<div><dt>' + r[0] + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('');
+    $('pmQtyLabel').textContent = unitOf(p).ask;
     syncStepper();
     modal.showModal();
   }
@@ -2028,6 +2045,9 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     modal.close();
     if(n > 0){ added(current, n); }
   });
+  $('pmShowFront').addEventListener('click', function(){ flipSet(false); });
+  $('pmShowBack').addEventListener('click', function(){ flipSet(true); });
+  $('pmFlip').addEventListener('click', function(){ flipSet(!$('pmFlip').classList.contains('flipped')); });
   $('pmClose').addEventListener('click', function(){ modal.close(); });
   $('pmClose2').addEventListener('click', function(){ modal.close(); });
   modal.addEventListener('click', function(e){ if(e.target === modal) modal.close(); });
