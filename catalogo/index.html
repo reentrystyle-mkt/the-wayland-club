@@ -6,7 +6,6 @@
 <title>Catálogo — The Wayland Club</title>
 <meta name="description" content="Catálogo de The Wayland Club: productos de cannabis medicinal disponibles para socios con REPROCANN vigente.">
 <!-- PREVIEW: sacar este robots cuando se publique -->
-<meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -308,32 +307,6 @@ h2{
 }
 button{ font:inherit; }
 
-/* preview flag: borrar junto con el robots noindex al publicar */
-.preview-flag{
-  position:fixed;
-  left:1rem; bottom:1rem;
-  z-index:960;
-  display:inline-flex;
-  align-items:center;
-  gap:0.5rem;
-  padding:0.45rem 0.9rem;
-  border-radius:var(--radius-pill);
-  background:rgba(0,0,0,0.82);
-  border:1px solid var(--color-border);
-  backdrop-filter:blur(8px);
-  color:var(--color-text-muted);
-  font-family:var(--font-mono);
-  font-size:0.68rem;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  pointer-events:none;
-}
-.preview-flag::before{
-  content:'';
-  width:6px; height:6px;
-  border-radius:50%;
-  background:var(--color-accent-strong);
-}
 
 /* ---------- puerta de entrada (bienvenida) ---------- */
 html:not(.entered):not(.no-gate) body{ overflow:hidden; }
@@ -1146,7 +1119,6 @@ html.entered:not(.no-gate) .cat-intro .container > :nth-child(3){ animation-dela
   .p-modal-media{ min-height:170px; }
   .p-modal-info{ padding:1.4rem 1.3rem 1.4rem; overflow:visible; }
   .tb-logo span{ display:none; }
-  .preview-flag{ display:none; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -1164,7 +1136,6 @@ html.entered:not(.no-gate) .cat-intro .container > :nth-child(3){ animation-dela
 <body>
 
 <div id="scroll-progress"></div>
-<div class="preview-flag">Vista previa · no publicada</div>
 
 <!-- ============ BIENVENIDA ============ -->
 <div class="gate" id="gate" role="region" aria-label="Bienvenida al catálogo">
