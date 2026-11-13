@@ -805,7 +805,7 @@ h2{
 .catalog-card .catalog-photo{
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:fill; pointer-events:none; user-select:none;
-  filter:saturate(1.45) contrast(1.08) brightness(1.04);
+  filter:saturate(1.45) contrast(1.08) brightness(1.04) drop-shadow(0 22px 26px rgba(0,0,0,0.38));
 }
 .catalog-card .catalog-inner{
   position:absolute;
@@ -815,7 +815,8 @@ h2{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding:clamp(1rem, 4vw, 3rem);
 }
-.catalog-card .btn{ gap:0.6rem; }
+.catalog-card .catalog-inner > *{ position:relative; }
+.catalog-card .btn{ gap:0.6rem; box-shadow:0 10px 30px rgba(0,0,0,0.45); }
 .catalog-card .btn-ico{ width:18px; height:18px; flex-shrink:0; }
 .catalog-card h2{ max-width:640px; margin:0 auto 1rem; color:#fff; text-shadow:0 2px 18px rgba(0,0,0,0.55); }
 .catalog-card p{
