@@ -5,6 +5,12 @@
       "has": [{ "type": "host", "value": "www.thewaylandclub.com.ar" }],
       "destination": "https://thewaylandclub.com.ar/$1",
       "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "the-wayland-club.vercel.app" }],
+      "destination": "https://thewaylandclub.com.ar/$1",
+      "permanent": true
     }
   ]
 }
