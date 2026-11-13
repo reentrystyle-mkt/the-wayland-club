@@ -545,24 +545,39 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 }
 
 
-/* ---------- música (Spotify) ---------- */
-.music{ position:fixed; left:14px; bottom:14px; z-index:800; display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
-.music-btn{
-  width:46px; height:46px; border-radius:50%; border:0; cursor:pointer;
-  background:rgba(13,13,13,0.88); color:#fff; display:grid; place-items:center;
-  box-shadow:0 10px 26px -8px rgba(0,0,0,0.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-  transition:transform 0.25s ease, background 0.25s ease;
+
+/* ---------- reproductor (Spotify) en la barra superior ---------- */
+.mp{
+  position:relative; display:flex; align-items:center; gap:2px; height:44px; padding:0 10px 0 5px;
+  border-radius:999px; overflow:hidden; background:rgba(13,13,13,0.72);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.12);
 }
-.music-btn svg{ width:20px; height:20px; }
-.music-btn:hover{ transform:scale(1.08); }
-.music-btn[aria-expanded="true"]{ background:var(--color-accent-strong); }
-.music-panel{
-  width:min(320px, calc(100vw - 28px)); border-radius:14px; overflow:hidden; background:#121212;
-  box-shadow:0 18px 44px -10px rgba(0,0,0,0.6);
-  transform-origin:bottom left; transition:opacity 0.25s ease, transform 0.25s ease;
+.mp-art{ width:32px; height:32px; border-radius:50%; object-fit:cover; flex-shrink:0; margin-right:4px; background:#1a1a1a; }
+.mp-btn{
+  width:28px; height:28px; border:0; padding:0; border-radius:50%; background:none; color:#fff; cursor:pointer;
+  display:grid; place-items:center; flex-shrink:0; transition:transform 0.2s ease, opacity 0.2s;
 }
-.music-panel[hidden]{ display:block; opacity:0; transform:scale(0.92) translateY(8px); pointer-events:none; visibility:hidden; height:0; }
-.music-panel iframe{ display:block; width:100%; height:152px; border:0; }
+.mp-btn svg{ width:16px; height:16px; fill:currentColor; }
+.mp-btn:hover{ transform:scale(1.12); }
+.mp-play{ width:32px; height:32px; background:#fff; color:#0d0d0d; }
+.mp-play svg{ width:15px; height:15px; }
+.mp-play .i-pause{ display:none; }
+.mp.playing .mp-play .i-play{ display:none; }
+.mp.playing .mp-play .i-pause{ display:block; }
+.mp.loading .mp-play{ opacity:0.6; }
+.mp-logo{ width:20px; height:20px; margin-left:6px; flex-shrink:0; }
+.mp-bar{ position:absolute; left:0; right:0; bottom:0; height:3px; background:rgba(255,255,255,0.16); }
+.mp-bar i{ display:block; height:100%; width:0; background:#1ed760; transition:width 0.4s linear; }
+/* casi invisible pero 'visible' para el navegador: si se oculta del todo, Spotify pausa la música */
+.mp-embed{ position:fixed; left:0; bottom:0; width:300px; height:80px; opacity:0.01; pointer-events:none; z-index:-1; }
+@media (max-width:420px){
+  .mp{ padding:0 8px 0 4px; }
+  .mp-art{ width:28px; height:28px; margin-right:2px; }
+  .mp-btn{ width:24px; height:24px; } .mp-btn svg{ width:14px; height:14px; }
+  .mp-play{ width:28px; height:28px; } .mp-play svg{ width:13px; height:13px; }
+  .mp-logo{ width:18px; height:18px; margin-left:3px; }
+  .tb-right{ gap:0.4rem; }
+}
 
 /* ---------- avisos (REPROCANN / datos del pedido) ---------- */
 .notice{
@@ -1267,6 +1282,15 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
       <span>The <b>Wayland</b> Club</span>
     </a>
     <div class="tb-right">
+      <div class="mp" id="mp" role="group" aria-label="Música de fondo">
+        <img class="mp-art" id="mpArt" alt="" width="32" height="32">
+        <button type="button" class="mp-btn" id="mpPrev" aria-label="Canción anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2v14H6zM20 5v14L9.5 12z"/></svg></button>
+        <button type="button" class="mp-btn mp-play" id="mpPlay" aria-label="Reproducir o pausar"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <button type="button" class="mp-btn" id="mpNext" aria-label="Canción siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5h2v14h-2zM4 5v14l10.5-7z"/></svg></button>
+        <svg class="mp-logo" viewBox="0 0 24 24" role="img" aria-label="Spotify"><circle cx="12" cy="12" r="12" fill="#1ed760"/><path d="M5.6 9.2c4.2-1.2 8.6-.9 12.4 1.1M6.2 12.5c3.5-.9 7-.6 10.1 1M6.8 15.6c2.8-.7 5.5-.4 8 .8" fill="none" stroke="#0d0d0d" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span class="mp-bar" aria-hidden="true"><i id="mpProg"></i></span>
+      </div>
+      <div class="mp-embed" id="mpEmbedWrap" aria-hidden="true"><div id="mpEmbed"></div></div>
       <a href="https://www.instagram.com/the.waylandclub/" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
       </a>
@@ -2018,28 +2042,61 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 })();
 </script>
 
-<div class="music" id="music">
-  <div class="music-panel" id="musicPanel" hidden></div>
-  <button type="button" class="music-btn" id="musicBtn" aria-expanded="false" aria-controls="musicPanel" aria-label="Música">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-  </button>
-</div>
+
 <script>
 (function(){
-  /* playlist de Spotify: cambiar solo este ID por el de la playlist de The Wayland */
-  var PLAYLIST_ID = '7wDZ5nB0Wb1tcoloILplN8';
-  var btn = document.getElementById('musicBtn'), panel = document.getElementById('musicPanel'), loaded = false;
-  btn.addEventListener('click', function(){
-    var open = btn.getAttribute('aria-expanded') !== 'true';
-    if(open && !loaded){
-      var f = document.createElement('iframe');
-      f.src = 'https://open.spotify.com/embed/playlist/' + PLAYLIST_ID + '?utm_source=generator&theme=0';
-      f.title = 'Música — Spotify'; f.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'; f.loading = 'lazy';
-      panel.appendChild(f); loaded = true;
-    }
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    panel.hidden = !open;   /* se oculta sin destruir el reproductor: la música sigue */
+  /* música de fondo: Mac Miller (IDs de canciones de Spotify; se pueden cambiar o agregar) */
+  var TRACKS = ['5bJ1DrEM4hNCafcDd1oxHx','01z2fBGB8Hl3Jd3zXe4IXR','39NDBdU5Xkm5pCFGa5kZtI','4gT3mNJA8lnlkYFqGZ8IA2','2hwOoMtWPtTSSn6WHV7Vp5','3YnwIp2b99p3e5dsFTXIIx','1oFEAWvPHP5TdSlmIs77sV','6WVdae8LbPfpOXAWuYdMnT','3iEUDvanZwQhLCIqUmCR7N','1OubIZ0ARYCUq5kceYUQiO'];
+  var mp = document.getElementById('mp'), art = document.getElementById('mpArt'), prog = document.getElementById('mpProg');
+  var idx = 0, ctrl = null, starting = false, wantPlay = false, lastAdvance = 0, artCache = {};
+
+  function setArt(i){
+    var id = TRACKS[i];
+    if(artCache[id]){ art.src = artCache[id]; return; }
+    fetch('https://open.spotify.com/oembed?url=' + encodeURIComponent('https://open.spotify.com/track/' + id))
+      .then(function(r){ return r.json(); })
+      .then(function(d){ artCache[id] = d.thumbnail_url; if(i === idx){ art.src = d.thumbnail_url; } })
+      .catch(function(){});
+  }
+  setArt(0);
+
+  function onUpdate(e){
+    var d = e.data || {};
+    mp.classList.toggle('playing', !d.isPaused);
+    mp.classList.remove('loading');
+    if(d.duration){ prog.style.width = Math.min(100, d.position / d.duration * 100) + '%'; }
+    /* terminó la canción (o su fragmento): pasa a la siguiente */
+    if(d.duration && d.position >= d.duration - 400 && !d.isBuffering && Date.now() - lastAdvance > 3000){ go(idx + 1, true); }
+  }
+  function ensure(cb){
+    if(ctrl){ cb(); return; }
+    if(starting) return;
+    starting = true; mp.classList.add('loading');
+    window.onSpotifyIframeApiReady = function(api){
+      api.createController(document.getElementById('mpEmbed'), { uri:'spotify:track:' + TRACKS[idx], width:300, height:80 }, function(c){
+        ctrl = c; starting = false;
+        c.addListener('playback_update', onUpdate);
+        var done = false;
+        function once(){ if(done) return; done = true; cb(); }
+        c.addListener('ready', once);
+        setTimeout(once, 1800);   /* por si el aviso 'ready' no llega */
+        setTimeout(function(){ mp.classList.remove('loading'); }, 9000);
+      });
+    };
+    var s = document.createElement('script'); s.src = 'https://open.spotify.com/embed/iframe-api/v1'; s.async = true;
+    s.onerror = function(){ starting = false; mp.classList.remove('loading'); };
+    document.head.appendChild(s);
+  }
+  function go(n, auto){
+    idx = (n + TRACKS.length) % TRACKS.length; lastAdvance = Date.now();
+    prog.style.width = '0'; setArt(idx);
+    ensure(function(){ ctrl.loadUri('spotify:track:' + TRACKS[idx]); setTimeout(function(){ ctrl.play(); }, 350); });
+  }
+  document.getElementById('mpPlay').addEventListener('click', function(){
+    if(!ctrl){ ensure(function(){ ctrl.play(); }); } else { ctrl.togglePlay(); }
   });
+  document.getElementById('mpNext').addEventListener('click', function(){ go(idx + 1); });
+  document.getElementById('mpPrev').addEventListener('click', function(){ go(idx - 1); });
 })();
 </script>
 </body>
