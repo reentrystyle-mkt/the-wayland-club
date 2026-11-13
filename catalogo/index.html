@@ -479,61 +479,52 @@ html:not(.entered):not(.no-gate) .topbar{ opacity:0; transform:translateY(-100%)
 }
 .cart-badge[hidden]{ display:none; }
 
-/* ---------- encabezado del catálogo (centrado) ---------- */
+/* ---------- encabezado del catálogo: banner con foto ---------- */
+.sr-only{ position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 .cat-intro{
   position:relative;
   overflow:hidden;
   text-align:center;
-  padding:9rem 0 4rem;
+  background:#000;
+  padding:6.5rem 0 0;
 }
-.cat-intro::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(ellipse 60% 70% at 50% 0%, rgba(21,85,116,0.42), transparent 62%),
-    radial-gradient(ellipse 50% 45% at 90% 100%, rgba(187,181,78,0.10), transparent 60%);
-}
-.cat-intro .container{ position:relative; z-index:1; }
-html.entered:not(.no-gate) .cat-intro .container > *{
-  opacity:0;
-  transform:translateY(22px);
-  animation:gateIn 1s cubic-bezier(.16,1,.3,1) forwards;
-}
-html.entered:not(.no-gate) .cat-intro .container > :nth-child(1){ animation-delay:0.55s; }
-html.entered:not(.no-gate) .cat-intro .container > :nth-child(2){ animation-delay:0.7s; }
-html.entered:not(.no-gate) .cat-intro .container > :nth-child(3){ animation-delay:0.85s; }
 .cat-kicker{
-  display:inline-flex;
-  align-items:center;
-  padding:0.5rem 1rem;
-  margin-bottom:1.4rem;
-  background:#ffffff;
-  border:1px solid var(--color-accent-strong);
-  border-radius:var(--radius-pill);
+  display:block;
+  padding:0 1rem;
+  margin:0 0 1.1rem;
   font-family:var(--font-mono);
   font-size:var(--fs-mono);
   letter-spacing:0.15em;
   text-transform:uppercase;
-  color:var(--color-accent-strong);
+  color:rgba(255,255,255,0.9);
 }
-.cat-title{
-  font-family:var(--font-display);
-  font-weight:700;
-  font-size:clamp(2.4rem, 6.5vw, 4.8rem);
-  line-height:1.04;
-  letter-spacing:-0.02em;
-  margin-bottom:1.2rem;
-}
-.cat-title span{ color:var(--color-accent-strong); }
+.cat-banner{ position:relative; aspect-ratio:3/1; }
+.cat-banner::after{ content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(rgba(0,0,0,0.6), transparent 34%); }
+.cat-banner img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
 .cat-sub{
   max-width:540px;
   margin:0 auto;
-  font-size:1.03rem;
+  padding:1.6rem 1.25rem 2.6rem;
+  font-size:1rem;
   font-weight:300;
-  color:var(--color-text-muted);
+  color:rgba(255,255,255,0.8);
 }
-
+html.entered:not(.no-gate) .cat-intro > *{ opacity:0; animation:gateIn 1s cubic-bezier(.16,1,.3,1) forwards; }
+html.entered:not(.no-gate) .cat-intro > :nth-child(2){ animation-delay:0.5s; }
+html.entered:not(.no-gate) .cat-intro > :nth-child(3){ animation-delay:0.65s; }
+html.entered:not(.no-gate) .cat-intro > :nth-child(4){ animation-delay:0.8s; }
+html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
+/* pantallas anchas: los textos van encima de la foto */
+@media (min-width:1000px){
+  .cat-intro{ padding:0; }
+  .cat-kicker{ position:absolute; z-index:2; left:0; right:0; top:19%; margin:0; text-shadow:0 2px 14px rgba(0,0,0,0.8); }
+  .cat-sub{
+    position:absolute; z-index:2; left:0; right:0; top:62%;
+    width:min(560px, 90%); max-width:none; padding:0; margin:0 auto;
+    color:#fff; font-weight:400; text-shadow:0 1px 14px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.7);
+  }
+  .cat-sub::before{ content:''; position:absolute; z-index:-1; inset:-14px -40px; background:radial-gradient(ellipse at center, rgba(0,6,2,0.6), transparent 72%); }
+}
 
 /* ---------- avisos (REPROCANN / datos del pedido) ---------- */
 .notice{
@@ -1151,7 +1142,6 @@ html.entered:not(.no-gate) .cat-intro .container > :nth-child(3){ animation-dela
   .p-grid{ grid-template-columns:repeat(3, 1fr); }
 }
 @media (max-width:768px){
-  .cat-intro{ padding:7.5rem 0 3rem; }
   .cat-toolbar{ top:64px; }
   .p-grid{ grid-template-columns:repeat(2, 1fr); gap:0.8rem; }
   .p-body{ padding:0.85rem 0.9rem 1rem; }
@@ -1220,14 +1210,13 @@ html.entered:not(.no-gate) .cat-intro .container > :nth-child(3){ animation-dela
 
 <!-- ============ ENCABEZADO ============ -->
 <header class="cat-intro">
-  <div class="container">
-    <span class="cat-kicker">Solo para socios · REPROCANN vigente</span>
-    <h2 class="cat-title">Nuestro <span>catálogo</span></h2>
-    <p class="cat-sub">
-      Elegí tus productos, armá tu pedido y enviánoslo por WhatsApp.
-      Te confirmamos disponibilidad y coordinamos la entrega.
-    </p>
-  </div>
+  <p class="cat-kicker">Solo para socios · REPROCANN vigente</p>
+  <div class="cat-banner"><img src="/assets/catalogo-banner.webp" alt="" width="2000" height="667" fetchpriority="high"></div>
+  <h2 class="sr-only">Nuestro catálogo</h2>
+  <p class="cat-sub">
+    Elegí tus productos, armá tu pedido y enviánoslo por WhatsApp.
+    Te confirmamos disponibilidad y coordinamos la entrega.
+  </p>
 </header>
 
 <!-- ============ CATÁLOGO ============ -->
