@@ -108,6 +108,12 @@
 .light-section.backing{ padding-bottom:3rem; }
 .light-section.catalog-teaser{ padding-top:2rem; }
 
+
+/* burbujas oscuras flotando en las secciones de fondo blanco (las claras del hero, pero en tinta oscura) */
+.bubbles-host{ position:relative; isolation:isolate; }
+.bubbles-host > .container{ position:relative; z-index:1; }
+.bubbles-canvas{ position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
 *{ margin:0; padding:0; box-sizing:border-box; }
 
 html{ scroll-behavior:smooth; }
@@ -1829,6 +1835,56 @@ footer{
       ctx.fill();
     });
   }
+
+  /* ---------- burbujas oscuras en las secciones blancas ---------- */
+  (function(){
+    var hosts = document.querySelectorAll('.about, .process, .backing, .catalog-teaser');
+    var items = [];
+    hosts.forEach(function(sec){
+      sec.classList.add('bubbles-host');
+      var c = document.createElement('canvas');
+      c.className = 'bubbles-canvas'; c.setAttribute('aria-hidden', 'true');
+      sec.insertBefore(c, sec.firstChild);
+      var it = { sec:sec, c:c, x:c.getContext('2d'), w:0, h:0, ps:[], vis:true };
+      items.push(it);
+    });
+    function make(it){
+      return { x:Math.random() * it.w, y:Math.random() * it.h, r:Math.random() * 3 + 1,
+        vx:(Math.random() - 0.5) * 0.18, vy:-Math.random() * 0.16 - 0.04, a:Math.random() * 0.25 + 0.2 };
+    }
+    function size(it){
+      it.w = it.c.width = it.sec.offsetWidth; it.h = it.c.height = it.sec.offsetHeight;
+      var n = Math.max(14, Math.min(55, Math.round(it.w * it.h / 20000)));
+      it.ps = []; for(var i = 0; i < n; i++){ it.ps.push(make(it)); }
+    }
+    function draw(it, move){
+      it.x.clearRect(0, 0, it.w, it.h);
+      it.ps.forEach(function(p){
+        if(move){
+          p.x += p.vx; p.y += p.vy;
+          if(p.y < -10){ p.y = it.h + 10; p.x = Math.random() * it.w; }
+          if(p.x < -10) p.x = it.w + 10;
+          if(p.x > it.w + 10) p.x = -10;
+        }
+        it.x.beginPath(); it.x.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        it.x.fillStyle = 'rgba(13,40,48,' + (p.a * 0.5) + ')';
+        it.x.fill();
+      });
+    }
+    items.forEach(size);
+    window.addEventListener('resize', function(){ items.forEach(size); });
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(es){
+        es.forEach(function(e){ items.forEach(function(it){ if(it.sec === e.target){ it.vis = e.isIntersecting; } }); });
+      });
+      items.forEach(function(it){ io.observe(it.sec); });
+    }
+    if(reduceMotion){ items.forEach(function(it){ draw(it, false); }); return; }
+    (function loop(){
+      items.forEach(function(it){ if(it.vis){ draw(it, true); } });
+      requestAnimationFrame(loop);
+    })();
+  })();
 
 })();
 </script>
