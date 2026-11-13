@@ -608,9 +608,17 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   background:var(--color-bg);
   color:var(--color-text);
 }
-.catalog.light-section{ background:radial-gradient(ellipse 60% 30% at 15% 8%, rgba(235,38,159,0.1), transparent 70%), radial-gradient(ellipse 55% 35% at 90% 40%, rgba(21,85,116,0.28), transparent 70%), radial-gradient(ellipse 60% 30% at 20% 85%, rgba(64,68,22,0.35), transparent 70%), #000; }
+.catalog.light-section{ background:#000000; }
 .light-section .cat-toolbar{ background:rgba(0,0,0,0.78); -webkit-backdrop-filter:blur(20px) saturate(1.5); backdrop-filter:blur(20px) saturate(1.5); border-color:rgba(255,255,255,0.1); }
-.light-section .p-card{ background:var(--glass-bg); box-shadow:var(--glass-shadow); -webkit-backdrop-filter:blur(16px) saturate(1.4); backdrop-filter:blur(16px) saturate(1.4); }
+.light-section .p-card{
+  background:
+    radial-gradient(ellipse 70% 38% at 0% 100%, rgba(235,38,159,0.34), transparent 70%),
+    radial-gradient(ellipse 60% 34% at 100% 100%, rgba(86,191,227,0.22), transparent 70%),
+    radial-gradient(ellipse 45% 26% at 100% 62%, rgba(235,38,159,0.16), transparent 70%),
+    #040506;
+  border-color:rgba(255,255,255,0.1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 50px -22px rgba(0,0,0,0.9);
+}
 .light-section .p-card:hover{ box-shadow:var(--glass-shadow), 0 0 0 1px rgba(86,191,227,0.35); }
 .light-section .p-media{ background:#05090b; }
 .light-section .p-tag,
@@ -626,7 +634,14 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .light-section .type-chip[aria-pressed="true"]{ background:rgba(86,191,227,0.2); border-color:rgba(86,191,227,0.6); color:#fff; }
 .light-section .cat-search input{ background:rgba(255,255,255,0.08); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 .light-section .cat-search input:focus{ background:rgba(255,255,255,0.12); }
-.p-modal.light-section, .cart.light-section{ background:rgba(6,12,14,0.86); -webkit-backdrop-filter:blur(26px) saturate(1.5); backdrop-filter:blur(26px) saturate(1.5); box-shadow:0 30px 80px rgba(0,0,0,0.6); }
+.p-modal.light-section, .cart.light-section{ background:#000; box-shadow:0 30px 80px rgba(0,0,0,0.7); }
+.p-modal.light-section .p-modal-media{ background:
+    radial-gradient(ellipse 55% 38% at 6% 4%, rgba(235,38,159,0.34), transparent 70%),
+    radial-gradient(ellipse 50% 36% at 96% 22%, rgba(86,191,227,0.26), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 12% 100%, rgba(235,38,159,0.30), transparent 70%),
+    radial-gradient(ellipse 50% 36% at 100% 98%, rgba(86,191,227,0.22), transparent 70%),
+    #000; }
+.p-modal.light-section .p-modal-info{ background:radial-gradient(ellipse 70% 30% at 100% 100%, rgba(235,38,159,0.14), transparent 70%), #000; }
 .notice.light-section .notice-box{ background:linear-gradient(145deg, rgba(24,38,42,0.92), rgba(6,12,14,0.94)); border:1px solid rgba(255,255,255,0.14); color:#fff; -webkit-backdrop-filter:blur(24px); backdrop-filter:blur(24px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 30px 80px rgba(0,0,0,0.6); }
 .notice.light-section .notice-field input{ background:rgba(255,255,255,0.08); color:#fff; border-color:rgba(255,255,255,0.2); }
 .notice.light-section .notice-field input::placeholder{ color:rgba(255,255,255,0.45); }
@@ -957,15 +972,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   object-fit:cover;
   transition:transform 0.7s cubic-bezier(.16,1,.3,1);
 }
-/* las fotos giran 360° al acercar el mouse o apoyar el dedo (como el video) */
-.p-media{ perspective:900px; }
-.p-flip, .p-flip-inner{ position:absolute; inset:0; }
-.p-flip-inner{ transform-style:preserve-3d; }
-.p-face{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
-.p-back{ transform:rotateY(180deg); }
-.p-flip-inner.spin{ animation:cardSpin 1.1s cubic-bezier(.45,.05,.25,1); }
-@keyframes cardSpin{ from{ transform:rotateY(0deg); } to{ transform:rotateY(360deg); } }
-@media (prefers-reduced-motion:reduce){ .p-flip-inner.spin{ animation:none; } }
+.p-card:hover .p-media img.photo{ transform:scale(1.05); }
 .p-media .soon{
   position:absolute;
   bottom:0.8rem;
@@ -1114,6 +1121,16 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 }
 .flip{ position:relative; perspective:1800px; width:100%; max-width:calc((100vh - 5rem) * 0.8); aspect-ratio:4/5; touch-action:pan-y; cursor:grab; user-select:none; -webkit-user-select:none; }
 .flip.dragging{ cursor:grabbing; }
+.flip-float{ position:relative; width:100%; height:100%; transform-style:preserve-3d; animation:cardFloat 7s ease-in-out infinite; }
+@keyframes cardFloat{
+  0%,100%{ transform:translateY(0) rotateX(0deg) rotateZ(0deg); }
+  25%{ transform:translateY(-9px) rotateX(2.2deg) rotateZ(-0.5deg); }
+  50%{ transform:translateY(-14px) rotateX(0deg) rotateZ(0.4deg); }
+  75%{ transform:translateY(-7px) rotateX(-2deg) rotateZ(0.6deg); }
+}
+.flip::after{ content:''; position:absolute; left:12%; right:12%; bottom:-26px; height:22px; border-radius:50%; background:radial-gradient(ellipse at center, rgba(235,38,159,0.38), transparent 70%); filter:blur(8px); animation:cardShadow 7s ease-in-out infinite; pointer-events:none; }
+@keyframes cardShadow{ 0%,100%{ transform:scale(1); opacity:0.9; } 50%{ transform:scale(0.82); opacity:0.5; } }
+@media (prefers-reduced-motion:reduce){ .flip-float, .flip::after{ animation:none; } }
 .flip-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; will-change:transform; }
 .flip-face{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:var(--radius-md); backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:0 24px 50px -20px rgba(0,0,0,0.8); background:#0a1214; pointer-events:none; }
 .flip-back{ transform:rotateY(180deg); }
@@ -1440,10 +1457,10 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   <div class="p-modal-grid">
     <div class="p-modal-media">
       <div class="flip" id="pmFlip">
-        <div class="flip-inner" id="pmInner">
+        <div class="flip-float"><div class="flip-inner" id="pmInner">
           <img class="flip-face flip-front" id="pmFront" alt="" draggable="false">
           <img class="flip-face flip-back" id="pmBack" alt="" draggable="false">
-        </div>
+        </div></div>
         <button type="button" class="flip-arrow flip-prev" id="pmPrev" aria-label="Girar a la izquierda">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
         </button>
@@ -1670,7 +1687,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
              genetica:d.genetica || null, aroma:d.aroma || null, formato:d.formato || null,
              uso:d.uso || null, producto:d.producto || null,
              desc:d.desc || '',
-             img:'/assets/productos/' + slug + '-t.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', imgThumbBack:'/assets/productos/' + slug + '-rt.webp', unit:null };
+             img:'/assets/productos/' + slug + '-t.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', unit:null };
   }
   var PRODUCTS = [
     P(1, 'petroleum', 'Petroleum', 'flores', 'indica', { genetica:'Híbrida con dominancia índica', aroma:'Diésel, tierra húmeda, pimienta, toque cítrico', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
@@ -2007,10 +2024,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     if(p.cbd){ meta.push('<span>CBD <b>' + esc(p.cbd) + '</b></span>'); }
     return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms">' +
       '<div class="p-media"><span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
-        '<div class="p-flip"><div class="p-flip-inner">' +
-          '<img class="photo p-face p-front" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy">' +
-          '<img class="photo p-face p-back" src="' + esc(p.imgThumbBack) + '" alt="" aria-hidden="true" loading="lazy">' +
-        '</div></div></div>' +
+        '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy"></div>' +
       '<div class="p-body">' +
         '<h3>' + esc(p.name) + '</h3>' +
         '<div class="p-meta">' + meta.join('') + '</div>' +
@@ -2075,7 +2089,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   function introSpin(){
     setAng(-360, 0); void inner.offsetWidth;          /* arranca una vuelta antes del frente */
     if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ setAng(0, 0); return; }
-    setAng(0, 1900);
+    setAng(0, (window.matchMedia && matchMedia('(max-width:720px), (hover:none)').matches) ? 1900 : 3200);
   }
   flipEl.addEventListener('pointerdown', function(e){
     if(e.target.closest('.flip-arrow')) return;
@@ -2105,15 +2119,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   $('pmPrev').addEventListener('click', function(){ settle(ang - 180, 800); });
   $('pmNext').addEventListener('click', function(){ settle(ang + 180, 800); });
 
-  /* fotos de la lista: giran 360° al acercar el mouse o apoyar el dedo */
-  function spinCard(card){
-    var fi = card.querySelector('.p-flip-inner');
-    if(!fi || fi.classList.contains('spin')) return;
-    fi.classList.add('spin');
-    fi.addEventListener('animationend', function(){ fi.classList.remove('spin'); }, { once:true });
-  }
-  gridEl.addEventListener('pointerenter', function(e){ var c = e.target.closest && e.target.closest('.p-card'); if(c && e.pointerType === 'mouse'){ spinCard(c); } }, true);
-  gridEl.addEventListener('pointerdown', function(e){ var c = e.target.closest('.p-card'); if(c && e.pointerType !== 'mouse'){ spinCard(c); } });
+
   function openProduct(id){
     var p = productById(id);
     if(!p) return;
