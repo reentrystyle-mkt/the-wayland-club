@@ -798,39 +798,36 @@ h2{
 .catalog-teaser{ background:var(--color-bg); }
 .catalog-card{
   position:relative;
-  aspect-ratio:1823/863;
+  aspect-ratio:1500/709;
   text-align:center;
 }
-/* la foto trae su propio marco redondeado y las hojas salen por fuera (PNG/WebP con transparencia) */
+/* marco oscuro detrás: las plantas (PNG/WebP recortado) salen por arriba y por los costados */
+.catalog-card::before{
+  content:''; position:absolute; z-index:0; left:4%; right:4%; top:26%; bottom:0;
+  border-radius:clamp(18px, 3vw, 48px);
+  background:
+    radial-gradient(ellipse 70% 90% at 50% 30%, rgba(30,70,32,0.55), transparent 70%),
+    linear-gradient(#071209, #020604);
+  box-shadow:inset 0 14px 40px rgba(0,0,0,0.7), 0 26px 50px rgba(0,0,0,0.45);
+}
 .catalog-card .catalog-photo{
-  position:absolute; inset:0; width:100%; height:100%;
+  position:absolute; z-index:1; inset:0; width:100%; height:100%;
   object-fit:fill; pointer-events:none; user-select:none;
-  filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 26px 30px rgba(0,0,0,0.62));
+  filter:saturate(1.3) contrast(1.06) drop-shadow(0 22px 26px rgba(0,0,0,0.55));
+  -webkit-mask-image:linear-gradient(#000 82%, transparent 100%);
+  mask-image:linear-gradient(#000 82%, transparent 100%);
 }
 .catalog-card .catalog-inner{
-  position:absolute;
-  left:4.1%; right:4.1%; top:10.9%; bottom:12.9%;
-  border-radius:clamp(18px, 3vw, 56px);
-  background:none;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:clamp(1rem, 4vw, 3rem);
+  position:absolute; z-index:2; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  padding:0 1rem;
 }
-.catalog-card .catalog-inner > *{ position:relative; }
-.catalog-card .btn{ gap:0.6rem; box-shadow:0 10px 30px rgba(0,0,0,0.45); }
+.catalog-card .btn{ gap:0.6rem; box-shadow:0 12px 34px rgba(0,0,0,0.6); }
 .catalog-card .btn-ico{ width:18px; height:18px; flex-shrink:0; }
-.catalog-card h2{ max-width:640px; margin:0 auto 1rem; color:#fff; text-shadow:0 2px 18px rgba(0,0,0,0.55); }
-.catalog-card p{
-  max-width:520px;
-  margin:0 auto 2rem;
-  color:rgba(255,255,255,0.95);
-  font-size:1rem;
-  text-shadow:0 1px 12px rgba(0,0,0,0.6);
-}
 @media (max-width:720px){
-  .catalog-card{ aspect-ratio:auto; height:560px; overflow:hidden; border-radius:0; }
+  .catalog-card{ aspect-ratio:auto; height:430px; overflow:hidden; }
+  .catalog-card::before{ left:0; right:0; border-radius:20px; }
   .catalog-card .catalog-photo{ left:50%; width:auto; max-width:none; min-width:0; transform:translateX(-50%); object-fit:contain; }
-  .catalog-card .catalog-inner{ left:6px; right:6px; }
-  .catalog-card p{ font-size:0.92rem; margin-bottom:1.4rem; }
 }
 
 /* ---------- cta final ---------- */
@@ -1270,7 +1267,7 @@ footer{
 <section class="catalog-teaser light-section section-pad" id="catalogo">
   <div class="container">
     <div class="catalog-card reveal">
-      <img class="catalog-photo" src="assets/catalogo-marco.webp" alt="" width="1823" height="863" loading="lazy">
+      <img class="catalog-photo" src="assets/catalogo-plantas.webp" alt="" width="1500" height="709" loading="lazy">
       <div class="catalog-inner">
         <a href="/catalogo/" class="btn btn-primary"><svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3.5h2.7l2.4 11.2a1.6 1.6 0 0 0 1.6 1.3h8.1a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.2"/></svg>Nuestro catálogo</a>
       </div>
