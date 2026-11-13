@@ -843,7 +843,7 @@ h2{
 .catalog-card .catalog-photo{
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:fill; pointer-events:none; user-select:none;
-  filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 34px 36px rgba(0,0,0,0.88));
+  filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 26px 30px rgba(0,0,0,0.62));
 }
 .catalog-card .catalog-inner{
   position:absolute;
@@ -870,8 +870,8 @@ h2{
   .catalog-card{ --cw:min(78vw, 330px); aspect-ratio:auto; width:var(--cw); height:calc(var(--cw)*0.9735); margin:calc(var(--cw)*0.13) auto calc(var(--cw)*0.17); }
   .catalog-card::before{
     content:''; position:absolute; z-index:0; inset:0; border-radius:calc(var(--cw)*0.055); pointer-events:none;
-    background:radial-gradient(ellipse 80% 80% at 50% 25%, rgba(46,110,50,0.3), transparent 75%), linear-gradient(#050d07, #000000);
-    box-shadow:0 28px 50px rgba(0,0,0,0.7);
+    background:radial-gradient(ellipse 80% 80% at 50% 25%, rgba(46,110,50,0.75), transparent 75%), linear-gradient(#0d2412, #030a05);
+    box-shadow:0 24px 44px rgba(0,0,0,0.45);
   }
   .catalog-card .btn-primary{
     background:rgba(8,14,10,0.5); color:var(--color-accent-strong); border:0;
@@ -882,7 +882,7 @@ h2{
   .catalog-card .btn-primary:hover, .catalog-card .btn-primary:active, .catalog-card .btn-primary:focus-visible{ color:#fff; box-shadow:none; }
   .catalog-card .catalog-photo{
     z-index:1; position:absolute; inset:auto; width:calc(var(--cw)*1.1911); height:auto; max-width:none; aspect-ratio:1122/1120; left:calc(var(--cw)*-0.0849); top:calc(var(--cw)*-0.0902); object-fit:fill; transform:none; -webkit-mask-image:none; mask-image:none;
-    filter:drop-shadow(0 22px 22px rgba(0,0,0,0.8));   /* misma foto que el aviso de REPROCANN: sin realce de color */
+    filter:drop-shadow(0 18px 18px rgba(0,0,0,0.5));   /* misma foto que el aviso de REPROCANN: sin realce de color */
   }
   .catalog-card .catalog-inner{ z-index:3; inset:0; left:0; right:0; top:0; bottom:0; align-items:center; justify-content:flex-end; padding:0 0 16px; background:none; box-shadow:none; border-radius:0; }
 }
