@@ -499,7 +499,9 @@ html:not(.entered):not(.no-gate) .topbar{ opacity:0; transform:translateY(-100%)
   color:rgba(255,255,255,0.9);
 }
 .cat-banner{ position:relative; aspect-ratio:1/1; }
+.cat-banner picture{ display:contents; }
 @media (min-width:600px){ .cat-banner{ aspect-ratio:2/1; } }
+@media (min-width:1000px){ .cat-banner{ aspect-ratio:3/1; } }
 .cat-banner::after{ content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(rgba(0,0,0,0.6), transparent 34%); }
 .cat-banner img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
 .cat-sub{
@@ -518,9 +520,9 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 /* pantallas anchas: los textos van encima de la foto */
 @media (min-width:1000px){
   .cat-intro{ padding:0; }
-  .cat-kicker{ position:absolute; z-index:2; left:0; right:0; top:12%; margin:0; text-shadow:0 2px 14px rgba(0,0,0,0.8); }
+  .cat-kicker{ position:absolute; z-index:2; left:0; right:0; top:19%; margin:0; text-shadow:0 2px 14px rgba(0,0,0,0.8); }
   .cat-sub{
-    position:absolute; z-index:2; left:0; right:0; top:68%;
+    position:absolute; z-index:2; left:0; right:0; top:62%;
     width:min(560px, 90%); max-width:none; padding:0; margin:0 auto;
     color:#fff; font-weight:400; text-shadow:0 1px 14px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.7);
   }
@@ -567,25 +569,18 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 /* aviso REPROCANN con la foto: las plantas salen del recuadro */
 .notice-photo{ width:min(94vw, 920px); max-height:none; overflow:visible; }
 .notice-photo::backdrop{ background:rgba(4,8,4,0.86); backdrop-filter:blur(10px); }
-.rc-card{ position:relative; aspect-ratio:1500/709; }
-.rc-card::before{
-  content:''; position:absolute; z-index:0; left:4%; right:4%; top:26%; bottom:0;
-  border-radius:clamp(18px, 3vw, 48px);
-  background:radial-gradient(ellipse 70% 90% at 50% 30%, rgba(30,70,32,0.55), transparent 70%), linear-gradient(#071209, #020604);
-  box-shadow:inset 0 14px 40px rgba(0,0,0,0.7), 0 26px 60px rgba(0,0,0,0.6);
-}
+.rc-card{ position:relative; aspect-ratio:1823/863; }
 .rc-photo{
-  position:absolute; z-index:1; inset:0; width:100%; height:100%; object-fit:fill; pointer-events:none; user-select:none;
-  filter:saturate(1.3) contrast(1.06) drop-shadow(0 26px 40px rgba(0,0,0,0.7));
-  -webkit-mask-image:linear-gradient(#000 82%, transparent 100%); mask-image:linear-gradient(#000 82%, transparent 100%);
+  position:absolute; inset:0; width:100%; height:100%; object-fit:fill; pointer-events:none; user-select:none;
+  filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 26px 40px rgba(0,0,0,0.7));
 }
 .rc-inner{
-  position:absolute; z-index:2; left:4.1%; right:4.1%; top:22%; bottom:6%;
+  position:absolute; left:4.1%; right:4.1%; top:10.9%; bottom:12.9%;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   text-align:center; padding:1rem clamp(1rem,5vw,3.5rem); color:#fff;
 }
 .rc-inner::before{ content:''; position:absolute; inset:-4% 8%; z-index:0; pointer-events:none;
-  background:radial-gradient(ellipse 62% 66% at 50% 50%, rgba(0,6,2,0.85), rgba(0,6,2,0.55) 55%, transparent 82%); }
+  background:radial-gradient(ellipse 62% 66% at 50% 50%, rgba(0,6,2,0.78), rgba(0,6,2,0.45) 55%, transparent 80%); }
 .rc-inner > *{ position:relative; z-index:1; }
 .rc-logo{ width:44px; height:44px; margin-bottom:0.7rem; filter:drop-shadow(0 4px 14px rgba(0,0,0,0.6)); }
 .rc-inner h2{ color:#fff; font-size:clamp(1.15rem, 2.6vw, 1.9rem); line-height:1.2; margin-bottom:0.6rem; text-shadow:0 2px 20px rgba(0,0,0,0.85); }
@@ -600,9 +595,17 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .rc-ghost:hover{ background:rgba(255,255,255,0.16); }
 @media (max-width:720px){
   .rc-card{ aspect-ratio:auto; height:540px; }
-  .rc-card::before{ left:0; right:0; border-radius:20px; }
-  .rc-photo{ left:50%; width:auto; max-width:none; transform:translateX(-50%); object-fit:contain; }
-  .rc-inner{ left:6px; right:6px; top:20%; bottom:4%; padding:0.8rem 1.1rem; }
+  .rc-card::before{
+    content:''; position:absolute; z-index:0; left:0; right:0; top:26%; bottom:0; border-radius:20px;
+    background:radial-gradient(ellipse 70% 90% at 50% 30%, rgba(30,70,32,0.55), transparent 70%), linear-gradient(#071209, #020604);
+    box-shadow:inset 0 14px 40px rgba(0,0,0,0.7), 0 26px 60px rgba(0,0,0,0.6);
+  }
+  .rc-photo{
+    z-index:1; left:50%; width:auto; max-width:none; transform:translateX(-50%); object-fit:contain;
+    filter:saturate(1.3) contrast(1.06) drop-shadow(0 26px 40px rgba(0,0,0,0.7));
+    -webkit-mask-image:linear-gradient(#000 82%, transparent 100%); mask-image:linear-gradient(#000 82%, transparent 100%);
+  }
+  .rc-inner{ z-index:2; left:6px; right:6px; top:20%; bottom:4%; padding:0.8rem 1.1rem; }
   .rc-logo{ display:none; }
   .rc-actions{ flex-direction:column; width:100%; }
   .rc-actions .btn{ width:100%; justify-content:center; }
@@ -1221,7 +1224,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 <!-- ============ ENCABEZADO ============ -->
 <header class="cat-intro">
   <p class="cat-kicker">Solo para socios · REPROCANN vigente</p>
-  <div class="cat-banner"><img src="/assets/catalogo-banner.webp" alt="" width="1254" height="1254" fetchpriority="high"></div>
+  <div class="cat-banner"><picture><source media="(max-width:999px)" srcset="/assets/catalogo-banner-mobile.webp"><img src="/assets/catalogo-banner.webp" alt="" width="2000" height="667" fetchpriority="high"></picture></div>
   <h2 class="sr-only">Nuestro catálogo</h2>
   <p class="cat-sub">
     Elegí tus productos, armá tu pedido y enviánoslo por WhatsApp.
@@ -1303,7 +1306,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 
 <dialog class="notice notice-photo" id="reprocannModal" aria-labelledby="rcTitle">
   <div class="rc-card">
-    <img class="rc-photo" src="/assets/catalogo-plantas.webp" alt="" width="1500" height="709">
+    <picture><source media="(max-width:720px)" srcset="/assets/catalogo-plantas.webp"><img class="rc-photo" src="/assets/catalogo-marco.webp" alt="" width="1823" height="863"></picture>
     <div class="rc-inner">
       <img class="rc-logo" src="/assets/favicon-512.png" alt="">
       <h2 id="rcTitle">Acceso solo para socios con REPROCANN</h2>
