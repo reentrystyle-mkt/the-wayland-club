@@ -503,7 +503,7 @@ html:not(.entered):not(.no-gate) .topbar{ opacity:0; transform:translateY(-100%)
 @media (min-width:600px){ .cat-banner{ aspect-ratio:2/1; } }
 @media (min-width:1000px){ .cat-banner{ aspect-ratio:3/1; } }
 .cat-banner::after{ content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(rgba(0,0,0,0.6), transparent 34%); }
-.cat-banner img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+.cat-banner img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; filter:saturate(1.55) contrast(1.08) brightness(1.14); }
 .cat-sub{
   max-width:540px;
   margin:0 auto;
@@ -515,7 +515,7 @@ html:not(.entered):not(.no-gate) .topbar{ opacity:0; transform:translateY(-100%)
 @media (max-width:599px){
   .cat-intro{ padding:0; }
   .cat-banner{ aspect-ratio:4/5; }
-  .cat-banner img{ object-fit:cover; filter:brightness(1.18) saturate(1.2) contrast(1.04); }
+  .cat-banner img{ object-fit:cover; filter:saturate(1.55) contrast(1.08) brightness(1.16); }
   .cat-kicker{
     position:absolute; z-index:2; left:0; right:0; top:34%; margin:0; padding:0 1rem;
     font-size:0.6rem; letter-spacing:0.13em; text-shadow:0 2px 12px rgba(0,0,0,0.9);
