@@ -553,7 +553,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .notice[open]{ animation:noticeIn 0.5s cubic-bezier(.16,1,.3,1); }
 /* al entrar: el recuadro se viene hacia el usuario, lo atraviesa y deja ver la pantalla de la W */
 .notice-photo.zoom-through .rc-card{ animation:rcZoom 0.55s cubic-bezier(.45,0,.75,.4) forwards; will-change:transform, opacity; backface-visibility:hidden; }
-.notice-photo.zoom-through .rc-photo{ filter:none; }
+.notice-photo.zoom-through .rc-photo{ filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 14px 14px rgba(0,0,0,0.6)); }
 .notice-photo.zoom-through::backdrop{ backdrop-filter:none; animation:rcBackdrop 0.55s linear forwards; }
 @keyframes rcZoom{
   0%{ transform:scale(1); opacity:1; }
