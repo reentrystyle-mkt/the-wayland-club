@@ -594,6 +594,45 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 
 
 
+/* ---------- catálogo en negro (vidrio oscuro) ---------- */
+.catalog.light-section, .p-modal.light-section, .cart.light-section, .notice.light-section{
+  --color-bg: #000000;
+  --color-surface: rgba(255,255,255,0.05);
+  --color-surface-2: rgba(255,255,255,0.06);
+  --color-text: #ffffff;
+  --color-text-muted: #a9b8b6;
+  --color-border: rgba(255,255,255,0.13);
+  --color-accent: #56bfe3;
+  --glass-bg: linear-gradient(145deg, rgba(255,255,255,0.11), rgba(255,255,255,0.035));
+  --glass-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 24px 50px -22px rgba(0,0,0,0.85);
+  background:var(--color-bg);
+  color:var(--color-text);
+}
+.catalog.light-section{ background:radial-gradient(ellipse 60% 30% at 15% 8%, rgba(235,38,159,0.1), transparent 70%), radial-gradient(ellipse 55% 35% at 90% 40%, rgba(21,85,116,0.28), transparent 70%), radial-gradient(ellipse 60% 30% at 20% 85%, rgba(64,68,22,0.35), transparent 70%), #000; }
+.light-section .cat-toolbar{ background:rgba(0,0,0,0.78); -webkit-backdrop-filter:blur(20px) saturate(1.5); backdrop-filter:blur(20px) saturate(1.5); border-color:rgba(255,255,255,0.1); }
+.light-section .p-card{ background:var(--glass-bg); box-shadow:var(--glass-shadow); -webkit-backdrop-filter:blur(16px) saturate(1.4); backdrop-filter:blur(16px) saturate(1.4); }
+.light-section .p-card:hover{ box-shadow:var(--glass-shadow), 0 0 0 1px rgba(86,191,227,0.35); }
+.light-section .p-media{ background:#05090b; }
+.light-section .p-tag,
+.light-section .type-chip,
+.light-section .p-add,
+.light-section .stepper button,
+.light-section .p-close,
+.light-section .cart-x{
+  background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.18);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+}
+.light-section .p-add:hover, .light-section .stepper button:hover:not(:disabled), .light-section .p-close:hover, .light-section .cart-x:hover{ background:var(--color-accent-strong); border-color:var(--color-accent-strong); color:#fff; }
+.light-section .type-chip[aria-pressed="true"]{ background:rgba(86,191,227,0.2); border-color:rgba(86,191,227,0.6); color:#fff; }
+.light-section .cat-search input{ background:rgba(255,255,255,0.08); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+.light-section .cat-search input:focus{ background:rgba(255,255,255,0.12); }
+.p-modal.light-section, .cart.light-section{ background:rgba(6,12,14,0.86); -webkit-backdrop-filter:blur(26px) saturate(1.5); backdrop-filter:blur(26px) saturate(1.5); box-shadow:0 30px 80px rgba(0,0,0,0.6); }
+.notice.light-section .notice-box{ background:linear-gradient(145deg, rgba(24,38,42,0.92), rgba(6,12,14,0.94)); border:1px solid rgba(255,255,255,0.14); color:#fff; -webkit-backdrop-filter:blur(24px); backdrop-filter:blur(24px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 30px 80px rgba(0,0,0,0.6); }
+.notice.light-section .notice-field input{ background:rgba(255,255,255,0.08); color:#fff; border-color:rgba(255,255,255,0.2); }
+.notice.light-section .notice-field input::placeholder{ color:rgba(255,255,255,0.45); }
+.notice.light-section .notice-check, .notice.light-section .notice-link{ color:rgba(255,255,255,0.85); }
+.cart-rules{ background:rgba(235,38,159,0.12); }
+
 /* ---------- reproductor (Spotify) en la barra superior ---------- */
 .mp{
   position:relative; display:flex; align-items:center; gap:2px; height:44px; padding:0 12px 0 5px;
@@ -918,7 +957,15 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   object-fit:cover;
   transition:transform 0.7s cubic-bezier(.16,1,.3,1);
 }
-.p-card:hover .p-media img.photo{ transform:scale(1.05); }
+/* las fotos giran 360° al acercar el mouse o apoyar el dedo (como el video) */
+.p-media{ perspective:900px; }
+.p-flip, .p-flip-inner{ position:absolute; inset:0; }
+.p-flip-inner{ transform-style:preserve-3d; }
+.p-face{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+.p-back{ transform:rotateY(180deg); }
+.p-flip-inner.spin{ animation:cardSpin 1.1s cubic-bezier(.45,.05,.25,1); }
+@keyframes cardSpin{ from{ transform:rotateY(0deg); } to{ transform:rotateY(360deg); } }
+@media (prefers-reduced-motion:reduce){ .p-flip-inner.spin{ animation:none; } }
 .p-media .soon{
   position:absolute;
   bottom:0.8rem;
@@ -1065,14 +1112,17 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.8rem;
   padding:1rem;
 }
-.flip{ perspective:1800px; cursor:pointer; width:100%; max-width:calc((100vh - 7.5rem) * 0.8); aspect-ratio:4/5; }
-.flip-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform 0.75s cubic-bezier(.4,.1,.2,1); }
-.flip.flipped .flip-inner{ transform:rotateY(180deg); }
-.flip-face{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:var(--radius-md); backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:0 24px 50px -20px rgba(0,0,0,0.8); background:#0a1214; }
+.flip{ position:relative; perspective:1800px; width:100%; max-width:calc((100vh - 5rem) * 0.8); aspect-ratio:4/5; touch-action:pan-y; cursor:grab; user-select:none; -webkit-user-select:none; }
+.flip.dragging{ cursor:grabbing; }
+.flip-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; will-change:transform; }
+.flip-face{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:var(--radius-md); backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:0 24px 50px -20px rgba(0,0,0,0.8); background:#0a1214; pointer-events:none; }
 .flip-back{ transform:rotateY(180deg); }
-.flip-toggle{ display:flex; gap:0.4rem; padding:0.25rem; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); }
-.flip-toggle button{ border:0; background:none; color:rgba(255,255,255,0.75); font:inherit; font-size:0.78rem; font-weight:600; padding:0.4rem 1rem; border-radius:999px; cursor:pointer; transition:background 0.25s, color 0.25s; }
-.flip-toggle button[aria-pressed="true"]{ background:#fff; color:#0d0d0d; }
+/* flechas sutiles a los costados: solo en computadora; en celular no hay nada */
+.flip-arrow{ position:absolute; top:50%; width:40px; height:40px; margin-top:-20px; border-radius:50%; border:1px solid rgba(255,255,255,0.22); background:rgba(8,14,16,0.5); color:#fff; display:grid; place-items:center; cursor:pointer; z-index:3; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); opacity:0.7; transition:opacity 0.25s, transform 0.25s, background 0.25s; }
+.flip-arrow svg{ width:18px; height:18px; }
+.flip-arrow:hover{ opacity:1; background:rgba(8,14,16,0.75); transform:scale(1.08); }
+.flip-prev{ left:-14px; } .flip-next{ right:-14px; }
+@media (hover:none), (max-width:720px){ .flip-arrow{ display:none; } }
 .p-modal-info{ padding:1.6rem 1.6rem 1.4rem; overflow-y:auto; }
 .p-modal-info h2{ font-size:clamp(1.25rem, 2.2vw, 1.6rem); margin:0.8rem 0 0.5rem; }
 .p-modal-info .p-desc{ font-size:0.8rem; line-height:1.5; color:var(--color-text-muted); margin-bottom:1rem; }
@@ -1389,15 +1439,17 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   </button>
   <div class="p-modal-grid">
     <div class="p-modal-media">
-      <div class="flip" id="pmFlip" title="Tocá para dar vuelta">
-        <div class="flip-inner">
-          <img class="flip-face flip-front" id="pmFront" alt="">
-          <img class="flip-face flip-back" id="pmBack" alt="">
+      <div class="flip" id="pmFlip">
+        <div class="flip-inner" id="pmInner">
+          <img class="flip-face flip-front" id="pmFront" alt="" draggable="false">
+          <img class="flip-face flip-back" id="pmBack" alt="" draggable="false">
         </div>
-      </div>
-      <div class="flip-toggle" role="group" aria-label="Frente o reverso">
-        <button type="button" id="pmShowFront" aria-pressed="true">Frente</button>
-        <button type="button" id="pmShowBack" aria-pressed="false">Reverso</button>
+        <button type="button" class="flip-arrow flip-prev" id="pmPrev" aria-label="Girar a la izquierda">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button type="button" class="flip-arrow flip-next" id="pmNext" aria-label="Girar a la derecha">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
       </div>
     </div>
     <div class="p-modal-info">
@@ -1618,7 +1670,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
              genetica:d.genetica || null, aroma:d.aroma || null, formato:d.formato || null,
              uso:d.uso || null, producto:d.producto || null,
              desc:d.desc || '',
-             img:'/assets/productos/' + slug + '-t.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', unit:null };
+             img:'/assets/productos/' + slug + '-t.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', imgThumbBack:'/assets/productos/' + slug + '-rt.webp', unit:null };
   }
   var PRODUCTS = [
     P(1, 'petroleum', 'Petroleum', 'flores', 'indica', { genetica:'Híbrida con dominancia índica', aroma:'Diésel, tierra húmeda, pimienta, toque cítrico', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
@@ -1955,7 +2007,10 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     if(p.cbd){ meta.push('<span>CBD <b>' + esc(p.cbd) + '</b></span>'); }
     return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms">' +
       '<div class="p-media"><span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
-        '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy"></div>' +
+        '<div class="p-flip"><div class="p-flip-inner">' +
+          '<img class="photo p-face p-front" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy">' +
+          '<img class="photo p-face p-back" src="' + esc(p.imgThumbBack) + '" alt="" aria-hidden="true" loading="lazy">' +
+        '</div></div></div>' +
       '<div class="p-body">' +
         '<h3>' + esc(p.name) + '</h3>' +
         '<div class="p-meta">' + meta.join('') + '</div>' +
@@ -2008,17 +2063,62 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     else if(r !== null){ note += 'Podés sumar hasta ' + qtyText(current, r) + ' más.'; }
     $('pmNote').textContent = note.trim();
   }
-  function flipSet(b){
-    $('pmFlip').classList.toggle('flipped', !!b);
-    $('pmShowFront').setAttribute('aria-pressed', b ? 'false' : 'true');
-    $('pmShowBack').setAttribute('aria-pressed', b ? 'true' : 'false');
+  /* ---- giro 3D de la tarjeta: vuelta completa al abrir, luego se arrastra con mouse/dedo ---- */
+  var inner = $('pmInner'), flipEl = $('pmFlip');
+  var ang = 0, dragging = false, sx = 0, base = 0, moved = 0, lastX = 0, lastT = 0, vel = 0;
+  function setAng(a, ms){
+    ang = a;
+    inner.style.transition = ms ? 'transform ' + ms + 'ms cubic-bezier(.45,.05,.25,1)' : 'none';
+    inner.style.transform = 'rotateY(' + a + 'deg)';
   }
+  function settle(a, extraMs){ setAng(Math.round(a / 180) * 180, extraMs || 650); }
+  function introSpin(){
+    setAng(-360, 0); void inner.offsetWidth;          /* arranca una vuelta antes del frente */
+    if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ setAng(0, 0); return; }
+    setAng(0, 1900);
+  }
+  flipEl.addEventListener('pointerdown', function(e){
+    if(e.target.closest('.flip-arrow')) return;
+    dragging = true; moved = 0; sx = e.clientX; lastX = e.clientX; lastT = performance.now(); vel = 0;
+    /* congela el giro en curso en el ángulo actual */
+    var m = new DOMMatrix(getComputedStyle(inner).transform);
+    base = Math.atan2(m.m13, m.m11) * 180 / Math.PI;
+    base = ang - (Math.round((ang - base) / 360) * 360);
+    setAng(base, 0);
+    flipEl.classList.add('dragging');
+    try{ flipEl.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  flipEl.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    var dx = e.clientX - sx; moved = Math.max(moved, Math.abs(dx));
+    var now = performance.now(); vel = (e.clientX - lastX) / Math.max(1, now - lastT); lastX = e.clientX; lastT = now;
+    setAng(base + dx * 0.6, 0);
+  });
+  function endDrag(){
+    if(!dragging) return;
+    dragging = false; flipEl.classList.remove('dragging');
+    if(moved < 5){ settle(base + 180, 700); return; }      /* un toque da vuelta la tarjeta */
+    settle(ang + Math.max(-270, Math.min(270, vel * 220)), 700);                            /* inercia y se acomoda en frente/reverso */
+  }
+  flipEl.addEventListener('pointerup', endDrag);
+  flipEl.addEventListener('pointercancel', endDrag);
+  $('pmPrev').addEventListener('click', function(){ settle(ang - 180, 800); });
+  $('pmNext').addEventListener('click', function(){ settle(ang + 180, 800); });
+
+  /* fotos de la lista: giran 360° al acercar el mouse o apoyar el dedo */
+  function spinCard(card){
+    var fi = card.querySelector('.p-flip-inner');
+    if(!fi || fi.classList.contains('spin')) return;
+    fi.classList.add('spin');
+    fi.addEventListener('animationend', function(){ fi.classList.remove('spin'); }, { once:true });
+  }
+  gridEl.addEventListener('pointerenter', function(e){ var c = e.target.closest && e.target.closest('.p-card'); if(c && e.pointerType === 'mouse'){ spinCard(c); } }, true);
+  gridEl.addEventListener('pointerdown', function(e){ var c = e.target.closest('.p-card'); if(c && e.pointerType !== 'mouse'){ spinCard(c); } });
   function openProduct(id){
     var p = productById(id);
     if(!p) return;
     current = p; modalQty = stepOf(p);
     var c = catOf(p.cat);
-    flipSet(false);
     $('pmFront').src = p.imgBig; $('pmFront').alt = p.name;
     $('pmBack').src = p.imgBack; $('pmBack').alt = 'Reverso de ' + p.name;
     $('pmTag').innerHTML = '<i style="width:6px;height:6px;border-radius:50%;background:' + c.dot + '"></i>' + esc(c.label);
@@ -2034,6 +2134,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     $('pmQtyLabel').textContent = unitOf(p).ask;
     syncStepper();
     modal.showModal();
+    introSpin();
   }
   $('pmMinus').addEventListener('click', function(){ if(modalQty > stepOf(current)){ modalQty -= stepOf(current); syncStepper(); } });
   $('pmPlus').addEventListener('click', function(){
@@ -2045,9 +2146,6 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     modal.close();
     if(n > 0){ added(current, n); }
   });
-  $('pmShowFront').addEventListener('click', function(){ flipSet(false); });
-  $('pmShowBack').addEventListener('click', function(){ flipSet(true); });
-  $('pmFlip').addEventListener('click', function(){ flipSet(!$('pmFlip').classList.contains('flipped')); });
   $('pmClose').addEventListener('click', function(){ modal.close(); });
   $('pmClose2').addEventListener('click', function(){ modal.close(); });
   modal.addEventListener('click', function(e){ if(e.target === modal) modal.close(); });
