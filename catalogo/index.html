@@ -106,6 +106,12 @@
 .light-section.backing{ padding-bottom:3rem; }
 .light-section.catalog-teaser{ padding-top:2rem; }
 
+
+/* burbujas oscuras flotando en las secciones de fondo blanco (las claras del hero, pero en tinta oscura) */
+.bubbles-host{ position:relative; isolation:isolate; }
+.bubbles-host > .container{ position:relative; z-index:1; }
+.bubbles-canvas{ position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
 *{ margin:0; padding:0; box-sizing:border-box; }
 
 html{ scroll-behavior:smooth; }
@@ -1215,6 +1221,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 }
 .cart-total span{ font-size:0.85rem; color:var(--color-text-muted); }
 .cart-total b{ font-family:var(--font-display); font-size:1.15rem; font-weight:700; text-align:right; }
+.cart-rules{ font-size:0.76rem; line-height:1.45; color:var(--color-text); background:var(--color-surface); border-radius:10px; padding:0.7rem 0.85rem; margin-bottom:0.8rem; }
+.cart-rules strong{ font-weight:600; }
 .cart-note{ font-size:0.76rem; color:var(--color-text-muted); margin-bottom:1rem; }
 .cart-send{ width:100%; justify-content:center; gap:0.6rem; }
 .cart-send svg{ width:18px; height:18px; }
@@ -1417,6 +1425,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   <div class="cart-body" id="cartBody"></div>
   <div class="cart-foot">
     <div class="cart-total"><span>Total</span><b id="cartTotal">—</b></div>
+    <p class="cart-rules"><strong>Reglas del pedido:</strong> mínimo 10 g de flores, que se suman de a 5 g (podés elegir 5 g + 5 g de dos genéticas). Cartuchos y extracciones se piden junto con 10 g o más de flores, o con 10 g o más de extracciones.</p>
     <p class="cart-note">Al enviar tu pedido te confirmaremos disponibilidad y coordinaremos la entrega en las próximas 24 horas.</p>
     <button type="button" class="btn btn-primary cart-send" id="cartSend">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.45 9.96-9.95S17.54 2 12.04 2zm5.83 14.24c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.78-.37h.56c.18 0 .42-.02.65.5.25.58.85 2.02.92 2.16.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2 1.11.99 2.05 1.3 2.35 1.45.3.15.47.12.65-.07.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.13.07.75-.18 1.45z"/></svg>
@@ -1437,6 +1446,17 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
         <button type="button" class="btn btn-primary" id="rcHave">Tengo REPROCANN</button>
         <button type="button" class="btn rc-ghost" id="rcWant">Quiero tener REPROCANN</button>
       </div>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="notice light-section" id="ruleModal" aria-labelledby="ruleTitle">
+  <div class="notice-box">
+    <h2 id="ruleTitle">Falta un poco para armar tu pedido</h2>
+    <p id="ruleText"></p>
+    <div class="notice-actions">
+      <button type="button" class="btn btn-primary" id="ruleKeep">Sigo eligiendo</button>
+      <button type="button" class="notice-link" id="ruleBack">Volver al pedido</button>
     </div>
   </div>
 </dialog>
@@ -1571,7 +1591,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
      Todo lo que esté en null / vacío se muestra como "—".
      ===================================================================== */
   var CATEGORIES = [
-    { id:'flores',          label:'Flores',             dot:'#404416', unit:'g' },
+    { id:'flores',          label:'Flores',             dot:'#404416', unit:'g', step:5 },
     { id:'cartuchos',       label:'Cartuchos',          dot:'#155574', unit:'u' },
     { id:'cristales-salsa', label:'Cristales en salsa', dot:'#bbb54e', unit:'g' },
     { id:'cristales-thc',   label:'Cristales de THC',   dot:'#6b7370', unit:'g' }
@@ -1627,6 +1647,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     return null;
   }
   function unitOf(p){ return UNITS[p.unit || catOf(p.cat).unit]; }
+  /* paso de suma: las flores se suman de a 5 g; el resto de a 1 */
+  function stepOf(p){ return p.step || catOf(p.cat).step || 1; }
   function val(v){ return (v === null || v === undefined || v === '') ? '—' : v; }
   function qtyText(p, n){
     var u = unitOf(p);
@@ -1685,6 +1707,33 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     return '';
   }
 
+  /* ---------- reglas del pedido ----------
+     - Flores: mínimo 10 g, se suman de a 5 g (podés repartir 5 + 5 entre dos genéticas).
+     - Cartuchos y extracciones: se piden junto con 10 g (o más) de flores,
+       o bien 10 g (o más) de extracciones (cristales). Un cartucho solo no alcanza. */
+  var MIN_G = 10;
+  function rulesProblem(){
+    var F = 0, E = 0, U = 0;
+    items.forEach(function(it){
+      var p = productById(it.id);
+      if(p.cat === 'flores'){ F += it.qty; }
+      else if(p.cat === 'cartuchos'){ U += it.qty; }
+      else { E += it.qty; }
+    });
+    var extra = (U > 0 && E > 0) ? 'cartuchos y extracciones' : (U > 0 ? 'cartucho' : (E > 0 ? 'extracciones' : ''));
+    var tail = ' Sumá algo más que te guste y avanzamos con el pedido.';
+    if(F > 0 && F < MIN_G){
+      var f = MIN_G - F;
+      return extra
+        ? 'El mínimo para pedir ' + extra + ' es de ' + MIN_G + ' g de flores (llevás ' + F + ' g, te faltan ' + f + ' g).' + tail
+        : 'El mínimo son ' + MIN_G + ' g de flores (llevás ' + F + ' g, te faltan ' + f + ' g).' + tail;
+    }
+    if(F === 0 && extra && E < MIN_G){
+      return 'El mínimo para pedir ' + extra + ' es de ' + MIN_G + ' g' + (U > 0 && E === 0 ? ' de flores' : ' (de flores o de extracciones)') + '.' + tail;
+    }
+    return '';
+  }
+
   /* suma `n` (se recorta al tope). Devuelve lo realmente agregado */
   function addItem(p, n){
     var r = room(p);
@@ -1720,8 +1769,11 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     return lines.join('\n');
   }
   var nameModal = $('nameModal'), nameInput = $('nameInput');
+  var ruleModal = $('ruleModal');
   function sendOrder(){
     if(!items.length) return;
+    var problem = rulesProblem();
+    if(problem){ $('ruleText').textContent = problem; ruleModal.showModal(); return; }
     try{ nameInput.value = localStorage.getItem('wayland-nombre') || nameInput.value; }catch(e){}
     $('rcCheck').checked = false; $('nameSend').disabled = true;
     nameModal.showModal();
@@ -1737,6 +1789,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     nameModal.close();
     window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(buildMessage(name)), '_blank', 'noopener');
   });
+  $('ruleKeep').addEventListener('click', function(){ ruleModal.close(); closeCart(); });
+  $('ruleBack').addEventListener('click', function(){ ruleModal.close(); });
   $('nameCancel').addEventListener('click', function(){ nameModal.close(); });
   $('nameBack').addEventListener('click', function(){ nameModal.close(); closeCart(); });
 
@@ -1817,8 +1871,9 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var row = b.closest('.cart-item');
     var id = row.getAttribute('data-id');
     var q = qtyOf(id), act = b.getAttribute('data-act');
-    if(act === 'plus'){ setQty(id, q + 1); }
-    if(act === 'minus'){ setQty(id, q - 1); }
+    var stp = stepOf(productById(id));
+    if(act === 'plus'){ setQty(id, q + stp); }
+    if(act === 'minus'){ setQty(id, q - stp); }
     if(act === 'remove'){ setQty(id, 0); }
   });
   sendBtn.addEventListener('click', sendOrder);
@@ -1932,8 +1987,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   function syncStepper(){
     var r = room(current);
     $('pmQty').textContent = unitOf(current).short === 'g' ? modalQty + ' g' : String(modalQty);
-    $('pmMinus').disabled = modalQty <= 1;
-    $('pmPlus').disabled = r !== null && modalQty >= r;
+    $('pmMinus').disabled = modalQty <= stepOf(current);
+    $('pmPlus').disabled = r !== null && modalQty + stepOf(current) > r;
     $('pmAdd').disabled = r !== null && r <= 0;
     var have = qtyOf(current.id), note = '';
     if(have){ note = 'Ya tenés ' + qtyText(current, have) + ' de este producto en tu pedido. '; }
@@ -1944,7 +1999,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   function openProduct(id){
     var p = productById(id);
     if(!p) return;
-    current = p; modalQty = 1;
+    current = p; modalQty = stepOf(p);
     var c = catOf(p.cat);
     $('pmMedia').innerHTML = p.img
       ? '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '">'
@@ -1956,14 +2011,14 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
       ['Tipo', p.type ? TYPES[p.type] : null], ['THC', p.thc], ['CBD', p.cbd],
       ['Terpenos', p.terpenos], ['Genética', p.genetica], ['Formato', p.formato]
     ].map(function(r){ return '<div><dt>' + r[0] + '</dt><dd>' + esc(val(r[1])) + '</dd></div>'; }).join('');
-    $('pmQtyLabel').textContent = unitOf(p).ask;
+    $('pmQtyLabel').textContent = unitOf(p).ask + (stepOf(p) > 1 ? ' (se suma de a ' + stepOf(p) + ' g)' : '');
     syncStepper();
     modal.showModal();
   }
-  $('pmMinus').addEventListener('click', function(){ if(modalQty > 1){ modalQty--; syncStepper(); } });
+  $('pmMinus').addEventListener('click', function(){ if(modalQty > stepOf(current)){ modalQty -= stepOf(current); syncStepper(); } });
   $('pmPlus').addEventListener('click', function(){
     var r = room(current);
-    if(r === null || modalQty < r){ modalQty++; syncStepper(); }
+    if(r === null || modalQty + stepOf(current) <= r){ modalQty += stepOf(current); syncStepper(); }
   });
   $('pmAdd').addEventListener('click', function(){
     var n = addItem(current, modalQty);
@@ -1978,7 +2033,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var add = e.target.closest('.p-add');
     if(add){
       var p = productById(add.getAttribute('data-id'));
-      var n = addItem(p, 1);
+      var n = addItem(p, stepOf(p));
       if(n > 0){ added(p, n); } else { bump(); toast(limitMsg(p)); }
       return;
     }
