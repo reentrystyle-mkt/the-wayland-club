@@ -805,21 +805,23 @@ h2{
 .catalog-card .catalog-photo{
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:fill; pointer-events:none; user-select:none;
+  filter:saturate(1.45) contrast(1.08) brightness(1.04);
 }
 .catalog-card .catalog-inner{
   position:absolute;
   left:4%; right:4.3%; top:10.9%; bottom:15.1%;
   border-radius:clamp(18px, 3vw, 56px);
-  background:linear-gradient(rgba(6,16,8,0.52), rgba(6,16,8,0.62));
+  background:radial-gradient(ellipse 55% 60% at 50% 50%, rgba(6,16,8,0.5), rgba(6,16,8,0.08) 100%);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding:clamp(1rem, 4vw, 3rem);
 }
-.catalog-card h2{ max-width:640px; margin:0 auto 1rem; color:#fff; }
+.catalog-card h2{ max-width:640px; margin:0 auto 1rem; color:#fff; text-shadow:0 2px 18px rgba(0,0,0,0.55); }
 .catalog-card p{
   max-width:520px;
   margin:0 auto 2rem;
-  color:rgba(255,255,255,0.88);
+  color:rgba(255,255,255,0.95);
   font-size:1rem;
+  text-shadow:0 1px 12px rgba(0,0,0,0.6);
 }
 @media (max-width:720px){
   .catalog-card{ aspect-ratio:auto; height:560px; overflow:hidden; border-radius:0; }
