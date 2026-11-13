@@ -106,7 +106,9 @@
 .light-section .backing-card img{ border-radius:0; }
 /* menos aire entre "marco legal" y el catálogo */
 .light-section.backing{ padding-bottom:3rem; }
-.light-section.catalog-teaser{ padding-top:2rem; }
+/* la sección ocupa la pantalla completa y centra la tarjeta: al ir a "Catálogo" desde el menú no se ve nada de arriba ni de abajo */
+.light-section.catalog-teaser{ padding-top:calc(64px + 1rem); padding-bottom:1rem; min-height:100vh; min-height:100svh; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; }
+.light-section.catalog-teaser > .container{ width:100%; }
 
 
 /* burbujas oscuras flotando en las secciones de fondo blanco (las claras del hero, pero en tinta oscura) */
