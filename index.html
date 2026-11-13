@@ -63,8 +63,51 @@
   color:var(--color-text);
 }
 .light-section .btn-primary{ color:#ffffff; }
+
+
+
+/* ---------- tema oscuro "vidrio" para las secciones que eran blancas ----------
+   Mismos tokens, pero oscuros: las tarjetas pasan a vidrio esmerilado sobre fondos
+   con luces suaves (teal / magenta / oliva) para que el desenfoque se note. */
+.light-section{
+  --color-bg: #040a0c;
+  --color-surface: rgba(255,255,255,0.05);
+  --color-surface-2: rgba(255,255,255,0.06);
+  --color-text: #ffffff;
+  --color-text-muted: #a9b8b6;
+  --color-border: rgba(255,255,255,0.13);
+  --color-accent: #56bfe3;
+  --glass-bg: linear-gradient(145deg, rgba(255,255,255,0.11), rgba(255,255,255,0.035));
+  --glass-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 24px 50px -22px rgba(0,0,0,0.85);
+  background:var(--color-bg);
+  color:var(--color-text);
+}
+.light-section.about{ background:radial-gradient(ellipse 60% 70% at 85% 20%, rgba(21,85,116,0.42), transparent 70%), radial-gradient(ellipse 50% 60% at 5% 90%, rgba(235,38,159,0.14), transparent 70%), #040a0c; }
+.light-section.benefits{ background:radial-gradient(ellipse 55% 60% at 15% 15%, rgba(235,38,159,0.16), transparent 70%), radial-gradient(ellipse 60% 70% at 90% 85%, rgba(21,85,116,0.4), transparent 70%), #050c0e; }
+.light-section.process{ background:radial-gradient(ellipse 50% 40% at 50% 0%, rgba(21,85,116,0.38), transparent 70%), radial-gradient(ellipse 55% 45% at 50% 100%, rgba(64,68,22,0.5), transparent 70%), #040a0c; }
+.light-section.reprocann{ background:radial-gradient(ellipse 60% 70% at 80% 40%, rgba(235,38,159,0.16), transparent 70%), radial-gradient(ellipse 60% 70% at 10% 70%, rgba(21,85,116,0.4), transparent 70%), #050c0e; }
+.light-section.backing{ background:radial-gradient(ellipse 70% 60% at 50% 40%, rgba(21,85,116,0.3), transparent 72%), radial-gradient(ellipse 40% 50% at 95% 90%, rgba(187,181,78,0.14), transparent 70%), #040a0c; }
+.light-section.catalog-teaser{ background:radial-gradient(ellipse 60% 60% at 50% 50%, rgba(46,110,50,0.3), transparent 72%), #040a0c; }
+.light-section .btn-primary{ color:#ffffff; }
 .light-section .step-card,
-.light-section .benefit-card{ box-shadow:0 1px 2px rgba(13,13,13,0.04); }
+.light-section .benefit-card,
+.light-section .reprocann-card,
+.light-section .reprocann-visual,
+.light-section .backing-card,
+.light-section .chip{
+  background:var(--glass-bg);
+  border:1px solid var(--color-border);
+  box-shadow:var(--glass-shadow);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);
+  backdrop-filter:blur(18px) saturate(1.5);
+}
+.light-section .reprocann-card{ border-left:3px solid var(--color-accent); }
+.light-section .benefit-card:hover,
+.light-section .step-card:hover{ box-shadow:var(--glass-shadow), 0 0 0 1px rgba(86,191,227,0.35); }
+.light-section .benefit-icon{ background:rgba(86,191,227,0.14); border-color:rgba(86,191,227,0.35); }
+/* los logos son JPG con fondo blanco: se muestran sobre una placa clara redondeada */
+.light-section .backing-card img{ background:rgba(255,255,255,0.94); padding:10px 14px; border-radius:12px; box-sizing:content-box; }
+.light-section .reprocann-visual img, .light-section .about-visual img{ border-radius:14px; }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
 
