@@ -19,15 +19,15 @@ necesitan que el Club los derive con su equipo médico para gestionarlo.
 
 ## Product Purpose
 
-Sitio informativo (no transaccional) para The Wayland Club, una ONG habilitada
-por el Ministerio de Salud de Argentina que opera dentro del marco legal
-REPROCANN. El sitio explica qué es el Club, cómo funciona el proceso de
+Sitio informativo (no transaccional) para The Wayland Club, un dispensario
+habilitado de C4NN4BIS medicinal que opera dentro del marco legal
+REPROCANN (no es una ONG: el concepto de ONG se quitó del sitio). El sitio explica qué es el Club, cómo funciona el proceso de
 asociación, qué es REPROCANN, y deriva todo el contacto real a WhatsApp e
 Instagram. No hay checkout ni catálogo transaccional todavía.
 
 ## Positioning
 
-No es una tienda: es una ONG que acompaña a la persona en todo el proceso,
+No es una tienda: es un dispensario que acompaña a la persona en todo el proceso,
 desde la primera consulta hasta la dispensa. La membresía existe pero es sin
 costo — solo se presenta la documentación que pide REPROCANN. El diferencial
 frente a otros dispensarios/gestores es ese acompañamiento real dentro del
