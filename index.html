@@ -92,6 +92,12 @@
 .light-section .benefit-card:hover,
 .light-section .step-card:hover{ box-shadow:var(--glass-shadow), 0 0 0 1px rgba(21,85,116,0.35); }
 .light-section .reprocann-visual img, .light-section .about-visual img, .light-section .backing-card img{ border-radius:12px; }
+/* sellos: el marco toma exactamente el color de fondo de los JPG (#f7f7f6) para que no se note el borde de la imagen */
+.light-section .backing-card{ background:#f7f7f6; -webkit-backdrop-filter:none; backdrop-filter:none; box-shadow:0 0 0 1px rgba(13,40,48,0.06), 0 18px 36px -20px rgba(13,40,48,0.3); }
+.light-section .backing-card img{ border-radius:0; }
+/* menos aire entre "marco legal" y el catálogo */
+.light-section.backing{ padding-bottom:3rem; }
+.light-section.catalog-teaser{ padding-top:2rem; }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
 
@@ -478,6 +484,11 @@ section{ position:relative; }
   display:flex;
   align-items:center;
   gap:1rem;
+}
+.hero-cta-group .btn{ white-space:nowrap; }
+@media (max-width:480px){
+  .hero-cta-group{ gap:0.55rem; }
+  .hero-cta-group .btn{ font-size:0.76rem; padding:0.85rem 0.95rem; letter-spacing:0; }
 }
 
 .btn{
