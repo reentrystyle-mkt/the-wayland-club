@@ -548,7 +548,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 
 /* ---------- reproductor (Spotify) en la barra superior ---------- */
 .mp{
-  position:relative; display:flex; align-items:center; gap:2px; height:44px; padding:0 10px 0 5px;
+  position:relative; display:flex; align-items:center; gap:2px; height:44px; padding:0 12px 0 5px;
   border-radius:999px; overflow:hidden; background:rgba(13,13,13,0.72);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.12);
 }
@@ -1287,7 +1287,6 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
         <button type="button" class="mp-btn" id="mpPrev" aria-label="Canción anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2v14H6zM20 5v14L9.5 12z"/></svg></button>
         <button type="button" class="mp-btn mp-play" id="mpPlay" aria-label="Reproducir o pausar"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
         <button type="button" class="mp-btn" id="mpNext" aria-label="Canción siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5h2v14h-2zM4 5v14l10.5-7z"/></svg></button>
-        <svg class="mp-logo" viewBox="0 0 24 24" role="img" aria-label="Spotify"><circle cx="12" cy="12" r="12" fill="#1ed760"/><path d="M5.6 9.2c4.2-1.2 8.6-.9 12.4 1.1M6.2 12.5c3.5-.9 7-.6 10.1 1M6.8 15.6c2.8-.7 5.5-.4 8 .8" fill="none" stroke="#0d0d0d" stroke-width="1.7" stroke-linecap="round"/></svg>
         <span class="mp-bar" aria-hidden="true"><i id="mpProg"></i></span>
       </div>
       <div class="mp-embed" id="mpEmbedWrap" aria-hidden="true"><div id="mpEmbed"></div></div>
@@ -2045,8 +2044,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 
 <script>
 (function(){
-  /* música de fondo: Mac Miller (IDs de canciones de Spotify; se pueden cambiar o agregar) */
-  var TRACKS = ['5bJ1DrEM4hNCafcDd1oxHx','01z2fBGB8Hl3Jd3zXe4IXR','39NDBdU5Xkm5pCFGa5kZtI','4gT3mNJA8lnlkYFqGZ8IA2','2hwOoMtWPtTSSn6WHV7Vp5','3YnwIp2b99p3e5dsFTXIIx','1oFEAWvPHP5TdSlmIs77sV','6WVdae8LbPfpOXAWuYdMnT','3iEUDvanZwQhLCIqUmCR7N','1OubIZ0ARYCUq5kceYUQiO'];
+  /* música de fondo: Mac Miller — The Divine Feminine (empieza con Dang!). IDs de canciones de Spotify */
+  var TRACKS = ['5iUQMwxUPdJBFeGkePtM66','1OubIZ0ARYCUq5kceYUQiO','4brX8MJs5hxErgq48f9REO','1eDS8ii1utvj0PjfQLrDb4','2lpygKqzPFtItQ4ss3cgfb','7bd0BC9RNR6GxJsM3pRwBw','2puHJmjL4jvO19aEA7kzcb','4k5UZm89ZX0YAHUp55zpt9','66wkCYWlXzSTQAfnsPBptt','6hzbRKhJHo6cfCHSnNaDS8'];
   var mp = document.getElementById('mp'), art = document.getElementById('mpArt'), prog = document.getElementById('mpProg');
   var idx = 0, ctrl = null, starting = false, wantPlay = false, lastAdvance = 0, artCache = {};
 
