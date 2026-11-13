@@ -612,9 +612,9 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .light-section .cat-toolbar{ background:rgba(0,0,0,0.78); -webkit-backdrop-filter:blur(20px) saturate(1.5); backdrop-filter:blur(20px) saturate(1.5); border-color:rgba(255,255,255,0.1); }
 .light-section .p-card{
   background:
-    radial-gradient(ellipse 70% 38% at 0% 100%, rgba(235,38,159,0.34), transparent 70%),
-    radial-gradient(ellipse 60% 34% at 100% 100%, rgba(86,191,227,0.22), transparent 70%),
-    radial-gradient(ellipse 45% 26% at 100% 62%, rgba(235,38,159,0.16), transparent 70%),
+    radial-gradient(ellipse 70% 38% at 0% 100%, rgba(235,38,159,calc(var(--ip, 0.3) * 0.46)), transparent 70%),
+    radial-gradient(ellipse 60% 34% at 100% 100%, rgba(86,191,227,calc(var(--ib, 0.2) * 0.34)), transparent 70%),
+    radial-gradient(ellipse 45% 26% at 100% 60%, rgba(var(--cx, 235,38,159), var(--ix, 0)), transparent 70%),
     #040506;
   border-color:rgba(255,255,255,0.1);
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 50px -22px rgba(0,0,0,0.9);
@@ -636,10 +636,11 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .light-section .cat-search input:focus{ background:rgba(255,255,255,0.12); }
 .p-modal.light-section, .cart.light-section{ background:#000; box-shadow:0 30px 80px rgba(0,0,0,0.7); }
 .p-modal.light-section .p-modal-media{ background:
-    radial-gradient(ellipse 55% 38% at 6% 4%, rgba(235,38,159,0.34), transparent 70%),
-    radial-gradient(ellipse 50% 36% at 96% 22%, rgba(86,191,227,0.26), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 12% 100%, rgba(235,38,159,0.30), transparent 70%),
-    radial-gradient(ellipse 50% 36% at 100% 98%, rgba(86,191,227,0.22), transparent 70%),
+    radial-gradient(ellipse 55% 38% at 6% 4%, rgba(235,38,159,calc(var(--ip, 0.3) * 0.5)), transparent 70%),
+    radial-gradient(ellipse 50% 36% at 96% 22%, rgba(86,191,227,calc(var(--ib, 0.2) * 0.4)), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 12% 100%, rgba(235,38,159,calc(var(--ip, 0.3) * 0.44)), transparent 70%),
+    radial-gradient(ellipse 50% 36% at 100% 98%, rgba(86,191,227,calc(var(--ib, 0.2) * 0.34)), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 100% 55%, rgba(var(--cx, 235,38,159), var(--ix, 0)), transparent 70%),
     #000; }
 .p-modal.light-section .p-modal-info{ background:radial-gradient(ellipse 70% 30% at 100% 100%, rgba(235,38,159,0.14), transparent 70%), #000; }
 .notice.light-section .notice-box{ background:linear-gradient(145deg, rgba(24,38,42,0.92), rgba(6,12,14,0.94)); border:1px solid rgba(255,255,255,0.14); color:#fff; -webkit-backdrop-filter:blur(24px); backdrop-filter:blur(24px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 30px 80px rgba(0,0,0,0.6); }
@@ -730,19 +731,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .rc-card{ position:relative; aspect-ratio:1823/863; }
 .rc-photo{
   position:absolute; inset:0; width:100%; height:100%; object-fit:fill; pointer-events:none; user-select:none;
-  filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 20px 40px rgba(120,0,12,0.65)) drop-shadow(0 0 26px rgba(255,45,55,0.55));
-  animation:rcAlertImg 2.4s ease-in-out infinite;
+  filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 20px 38px rgba(110,0,12,0.35)) drop-shadow(0 0 16px rgba(255,45,55,0.28));
 }
-/* alerta: la sombra del cartel late en rojo */
-@keyframes rcAlertImg{
-  0%,100%{ filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 20px 40px rgba(120,0,12,0.65)) drop-shadow(0 0 22px rgba(255,45,55,0.45)); }
-  50%{ filter:saturate(1.45) contrast(1.08) brightness(1.12) drop-shadow(0 20px 46px rgba(150,0,16,0.8)) drop-shadow(0 0 40px rgba(255,45,55,0.8)); }
-}
-@keyframes rcAlertBox{
-  0%,100%{ box-shadow:0 0 0 1px rgba(255,70,80,0.35), 0 0 26px rgba(255,40,50,0.45), 0 26px 60px rgba(110,0,12,0.6); }
-  50%{ box-shadow:0 0 0 1px rgba(255,70,80,0.6), 0 0 46px rgba(255,40,50,0.8), 0 26px 70px rgba(140,0,16,0.75); }
-}
-@media (prefers-reduced-motion:reduce){ .rc-photo, .rc-card::before{ animation:none !important; } }
 .rc-inner{
   position:absolute; left:4.1%; right:4.1%; top:10.9%; bottom:12.9%;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -768,8 +758,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   .rc-card::before{
     content:''; position:absolute; z-index:2; inset:0; border-radius:calc(var(--cw)*0.055); pointer-events:none;
     background:linear-gradient(rgba(3,10,5,0) 0%, rgba(3,10,5,0.1) 40%, rgba(2,7,3,0.5) 100%);
-    box-shadow:0 0 0 1px rgba(255,70,80,0.4), 0 0 34px rgba(255,40,50,0.6), 0 26px 60px rgba(110,0,12,0.65);
-    animation:rcAlertBox 2.4s ease-in-out infinite;
+    box-shadow:0 0 0 1px rgba(255,70,80,0.22), 0 0 24px rgba(255,40,50,0.28), 0 24px 56px rgba(100,0,12,0.4);
   }
   .rc-photo{
     z-index:1; inset:auto; width:calc(var(--cw)*1.1911); height:auto; max-width:none; aspect-ratio:1122/1120; left:calc(var(--cw)*-0.0849); top:calc(var(--cw)*-0.0902); object-fit:fill; transform:none; -webkit-mask-image:none; mask-image:none;
@@ -1467,7 +1456,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
   <div class="p-modal-grid">
-    <div class="p-modal-media">
+    <div class="p-modal-media" id="pmMedia">
       <div class="flip" id="pmFlip">
         <div class="flip-float"><div class="flip-inner" id="pmInner">
           <img class="flip-face flip-front" id="pmFront" alt="" draggable="false">
@@ -1530,7 +1519,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     <picture><source media="(max-width:720px)" srcset="/assets/catalogo-plantas.webp"><img class="rc-photo" src="/assets/catalogo-marco.webp" alt="" width="1823" height="863"></picture>
     <div class="rc-inner">
       <img class="rc-logo" src="/assets/favicon-512.png" alt="">
-      <h2 id="rcTitle">Cuidado: el acceso es solo para socios con REPROCANN</h2>
+      <h2 id="rcTitle">Acceso solo para socios con REPROCANN</h2>
       <p>Este catálogo está disponible únicamente para personas con REPROCANN vigente.</p>
       <div class="rc-actions">
         <button type="button" class="btn btn-primary" id="rcHave">Tengo REPROCANN</button>
@@ -2030,11 +2019,24 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
       });
     typesEl.innerHTML = html;
   }
+  /* sombras de color por producto: color (rosa / azul / ambas) y fuerza según el THC */
+  var GLOW_MIX = { 1:'both', 2:'blue', 3:'pink', 4:'blue', 5:'pink', 6:'both', 7:'both', 8:'pink', 9:'blue' };
+  function glowStyle(p){
+    var nums = String(p.thc || '').match(/[0-9]+/g) || [];
+    var thc = nums.length ? nums.reduce(function(a, b){ return a + Number(b); }, 0) / nums.length : 20;
+    if(String(p.thc).charAt(0) === '+'){ thc = 92; }                       /* extracciones: +90 % */
+    var k = Math.max(0.25, Math.min(1.25, (thc - 20) / 8));                /* 20 % -> débil, 28 % -> fuerte */
+    var mix = GLOW_MIX[p.id] || 'both';
+    var ip = mix === 'blue' ? 0.06 : k, ib = mix === 'pink' ? 0.06 : k;
+    var cx = mix === 'blue' ? '86,191,227' : '235,38,159';
+    var ix = k > 0.8 ? (k - 0.5) * 0.5 : 0;                                /* un tercer foco solo en los más potentes */
+    return '--ip:' + ip.toFixed(2) + ';--ib:' + ib.toFixed(2) + ';--cx:' + cx + ';--ix:' + ix.toFixed(2);
+  }
   function cardHTML(p, i){
     var meta = [];
     if(p.thc){ meta.push('<span>THC <b>' + esc(p.thc) + '</b></span>'); }
     if(p.cbd){ meta.push('<span>CBD <b>' + esc(p.cbd) + '</b></span>'); }
-    return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms">' +
+    return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms;' + glowStyle(p) + '">' +
       '<div class="p-media"><span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
         '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy"></div>' +
       '<div class="p-body">' +
@@ -2141,6 +2143,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     $('pmBack').src = p.imgBack; $('pmBack').alt = 'Reverso de ' + p.name;
     $('pmTag').innerHTML = '<i style="width:6px;height:6px;border-radius:50%;background:' + c.dot + '"></i>' + esc(c.label);
     $('pmName').textContent = p.name;
+    $('pmMedia').setAttribute('style', glowStyle(p));
     $('pmDesc').textContent = p.desc;
     $('pmSpecs').innerHTML = (p.cat === 'flores' ? [
       ['Tipo', p.type ? TYPES[p.type] : null], ['Genética', p.genetica], ['THC', p.thc],
