@@ -783,15 +783,16 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   .notice-photo{ width:100vw; }
   .rc-card{ --cw:min(78vw, 330px); aspect-ratio:auto; width:var(--cw); height:calc(var(--cw)*0.9735); margin:calc(var(--cw)*0.13) auto calc(var(--cw)*0.17); }
   .rc-card::before{
-    content:''; position:absolute; z-index:2; inset:0; border-radius:calc(var(--cw)*0.055); pointer-events:none;
-    background:linear-gradient(rgba(3,10,5,0) 0%, rgba(3,10,5,0.1) 40%, rgba(2,7,3,0.5) 100%);
+    content:''; position:absolute; z-index:0; inset:0; border-radius:calc(var(--cw)*0.055); pointer-events:none; background:#030805;
     box-shadow:0 0 0 1px rgba(255,70,80,0.22), 0 0 24px rgba(255,40,50,0.28), 0 24px 56px rgba(100,0,12,0.4);
   }
   .rc-photo{
     z-index:1; inset:auto; width:calc(var(--cw)*1.1911); height:auto; max-width:none; aspect-ratio:1122/1120; left:calc(var(--cw)*-0.0849); top:calc(var(--cw)*-0.0902); object-fit:fill; transform:none; -webkit-mask-image:none; mask-image:none;
-    filter:none; animation:none;
+    filter:saturate(1.35) contrast(1.06) brightness(1.2); animation:none;
   }
-  .rc-inner{ z-index:3; inset:0; left:0; right:0; top:0; bottom:0; padding:0.5rem 0.8rem 0.9rem; justify-content:flex-end; }
+  /* el texto va sobre su propio panel de vidrio oscuro: la foto queda limpia, sin velos encima */
+  .rc-inner{ z-index:3; inset:auto 7px 7px 7px; padding:0.75rem 0.8rem 0.8rem; justify-content:flex-end; border-radius:calc(var(--cw)*0.045);
+    background:rgba(3,8,5,0.58); -webkit-backdrop-filter:blur(7px) saturate(1.2); backdrop-filter:blur(7px) saturate(1.2); border:1px solid rgba(255,255,255,0.08); }
   .rc-inner::before{ display:none; }
   .rc-inner h2, .rc-inner p{ text-shadow:0 1px 3px rgba(0,0,0,0.9), 0 2px 14px rgba(0,0,0,0.95), 0 0 28px rgba(0,0,0,0.8); }
   .rc-inner h2{ font-size:0.95rem; margin-bottom:0.3rem; }
@@ -1163,6 +1164,20 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .flip-face{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:var(--radius-md); backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:0 24px 50px -20px rgba(0,0,0,0.8); background:#0a1214; pointer-events:none; }
 .flip-back{ transform:rotateY(180deg); }
 /* flechas sutiles a los costados: solo en computadora; en celular no hay nada */
+/* zoom: capa que muestra la cara visible ampliada; mientras está activo la tarjeta NO gira ni flota */
+.zoom-pane{ position:absolute; inset:0; z-index:4; display:none; border-radius:var(--radius-md); overflow:hidden; background-repeat:no-repeat; background-color:#05090b; touch-action:none; cursor:zoom-in; box-shadow:0 24px 50px -20px rgba(0,0,0,0.8); }
+.flip.zooming .zoom-pane{ display:block; }
+.flip.zooming{ cursor:zoom-in; }
+.flip.zooming .flip-float{ animation:none; transform:none; }
+.flip.zooming .flip-arrow{ display:none; }
+.flip.zooming::after{ display:none; }
+.zoom-btn{ position:absolute; top:10px; right:10px; z-index:6; width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,255,255,0.25); background:rgba(8,14,16,0.62); color:#fff; display:grid; place-items:center; cursor:pointer; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); transition:background 0.25s, transform 0.25s; }
+.zoom-btn svg{ width:20px; height:20px; }
+.zoom-btn .z-out{ display:none; }
+.zoom-btn[aria-pressed="true"]{ background:var(--color-accent-strong); border-color:var(--color-accent-strong); }
+.zoom-btn[aria-pressed="true"] .z-in{ display:none; }
+.zoom-btn[aria-pressed="true"] .z-out{ display:block; }
+.zoom-btn:hover{ transform:scale(1.07); }
 .flip-arrow{ position:absolute; top:50%; width:40px; height:40px; margin-top:-20px; border-radius:50%; border:1px solid rgba(255,255,255,0.22); background:rgba(8,14,16,0.5); color:#fff; display:grid; place-items:center; cursor:pointer; z-index:3; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); opacity:0.7; transition:opacity 0.25s, transform 0.25s, background 0.25s; }
 .flip-arrow svg{ width:18px; height:18px; }
 .flip-arrow:hover{ opacity:1; background:rgba(8,14,16,0.75); transform:scale(1.08); }
@@ -1501,11 +1516,16 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
           <img class="flip-face flip-front" id="pmFront" alt="" draggable="false">
           <img class="flip-face flip-back" id="pmBack" alt="" draggable="false">
         </div></div>
+        <div class="zoom-pane" id="pmZoomPane" aria-hidden="true"></div>
         <button type="button" class="flip-arrow flip-prev" id="pmPrev" aria-label="Girar a la izquierda">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
         </button>
         <button type="button" class="flip-arrow flip-next" id="pmNext" aria-label="Girar a la derecha">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button type="button" class="zoom-btn" id="pmZoomBtn" aria-label="Ampliar para ver los detalles" aria-pressed="false">
+          <svg class="z-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M11 8.5v5M8.5 11h5"/></svg>
+          <svg class="z-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M8.5 11h5"/></svg>
         </button>
       </div>
     </div>
@@ -1727,7 +1747,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
              genetica:d.genetica || null, aroma:d.aroma || null, formato:d.formato || null,
              uso:d.uso || null, producto:d.producto || null,
              desc:d.desc || '',
-             img:'/assets/productos/' + slug + '-t.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', unit:null };
+             img:'/assets/productos/' + slug + '-t.webp', imgM:'/assets/productos/' + slug + '-m.webp', imgZ:'/assets/productos/' + slug + '-z.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', unit:null };
   }
   var PRODUCTS = [
     P(1, 'petroleum', 'Petroleum', 'flores', 'indica', { genetica:'Híbrida con dominancia índica', aroma:'Diésel, tierra húmeda, pimienta, toque cítrico', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
@@ -2077,7 +2097,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     if(p.cbd){ meta.push('<span>CBD <b>' + esc(p.cbd) + '</b></span>'); }
     return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms;' + glowStyle(p) + '">' +
       '<div class="p-media"><span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
-        '<img class="photo" src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy"></div>' +
+        '<img class="photo" src="' + esc(p.img) + '" srcset="' + esc(p.img) + ' 560w, ' + esc(p.imgM) + ' 840w, ' + esc(p.imgBig) + ' 1080w" sizes="(max-width:720px) 48vw, 300px" alt="' + esc(p.name) + '" loading="lazy" decoding="async"></div>' +
       '<div class="p-body">' +
         '<h3>' + esc(p.name) + '</h3>' +
         '<div class="p-meta">' + meta.join('') + '</div>' +
@@ -2140,12 +2160,13 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   }
   function settle(a, extraMs){ setAng(Math.round(a / 180) * 180, extraMs || 650); }
   function introSpin(){
+    zEnable(false); zS = 2.6;
     setAng(-360, 0); void inner.offsetWidth;          /* arranca una vuelta antes del frente */
     if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ setAng(0, 0); return; }
     setAng(0, (window.matchMedia && matchMedia('(max-width:720px), (hover:none)').matches) ? 1900 : 3200);
   }
   flipEl.addEventListener('pointerdown', function(e){
-    if(e.target.closest('.flip-arrow')) return;
+    if(zOn || e.target.closest('.flip-arrow') || e.target.closest('.zoom-btn')) return;
     dragging = true; moved = 0; sx = e.clientX; lastX = e.clientX; lastT = performance.now(); vel = 0;
     /* congela el giro en curso en el ángulo actual */
     var m = new DOMMatrix(getComputedStyle(inner).transform);
@@ -2169,6 +2190,53 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   }
   flipEl.addEventListener('pointerup', endDrag);
   flipEl.addEventListener('pointercancel', endDrag);
+  /* ---- zoom ----
+     Reglas para no mezclar conceptos:
+       · Lista de productos: las miniaturas NO giran (solo un zoom suave al pasar el mouse).
+       · Ficha abierta, zoom APAGADO: la carta flota, da la vuelta de entrada y gira (arrastrar / flechas / toque).
+       · Ficha abierta, zoom ENCENDIDO: la carta NO gira ni flota; se ve la cara actual ampliada.
+         Computadora: la lupa sigue al mouse (rueda para más o menos). Celular: arrastrar con un dedo y pellizcar con dos. */
+  var zPane = $('pmZoomPane'), zBtn = $('pmZoomBtn'), zOn = false, zS = 2.6, zOx = 0, zOy = 0, zPtrs = {}, zPinch = 0, zStart = null;
+  function zDims(){ var r = flipEl.getBoundingClientRect(); return { w:r.width, h:r.height }; }
+  function zClamp(){ var d = zDims(); zOx = Math.min(0, Math.max(d.w - d.w * zS, zOx)); zOy = Math.min(0, Math.max(d.h - d.h * zS, zOy)); }
+  function zRender(){ var d = zDims(); zClamp(); zPane.style.backgroundSize = (d.w * zS) + 'px ' + (d.h * zS) + 'px'; zPane.style.backgroundPosition = zOx + 'px ' + zOy + 'px'; }
+  function zFace(){ var a = ((ang % 360) + 360) % 360; return (a > 90 && a < 270) ? 'back' : 'front'; }
+  function zEnable(on){
+    if(on === zOn) return;
+    zOn = on; zBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    flipEl.classList.toggle('zooming', on);
+    if(on){
+      setAng(Math.round(ang / 180) * 180, 0);                       /* se detiene en frente o reverso */
+      var back = zFace() === 'back', cur = current;
+      zPane.style.backgroundImage = 'url(' + (back ? cur.imgBack : cur.imgBig) + ')';
+      if(!back){ var im = new Image(); im.onload = function(){ if(zOn && zFace() === 'front' && current === cur){ zPane.style.backgroundImage = 'url(' + cur.imgZ + ')'; } }; im.src = cur.imgZ; }
+      var d = zDims(); zOx = -(d.w * (zS - 1)) / 2; zOy = -(d.h * (zS - 1)) / 2; zRender();
+    }
+  }
+  zBtn.addEventListener('click', function(){ zEnable(!zOn); });
+  zBtn.addEventListener('pointerenter', function(){ if(current){ var im = new Image(); im.src = current.imgZ; } });   /* precarga el detalle */
+  zPane.addEventListener('pointermove', function(e){
+    var d = zDims(), r = zPane.getBoundingClientRect();
+    if(e.pointerType === 'mouse'){
+      zOx = -((e.clientX - r.left) / d.w) * (zS - 1) * d.w; zOy = -((e.clientY - r.top) / d.h) * (zS - 1) * d.h; zRender(); return;
+    }
+    if(!zPtrs[e.pointerId]) return;
+    var prev = zPtrs[e.pointerId]; zPtrs[e.pointerId] = { x:e.clientX, y:e.clientY };
+    var ids = Object.keys(zPtrs);
+    if(ids.length >= 2){
+      var a = zPtrs[ids[0]], b = zPtrs[ids[1]], dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if(zPinch){ var ns = Math.max(1.6, Math.min(4.5, zS * dist / zPinch)); var cx = (a.x + b.x) / 2 - r.left, cy = (a.y + b.y) / 2 - r.top;
+        zOx = cx - (cx - zOx) * ns / zS; zOy = cy - (cy - zOy) * ns / zS; zS = ns; }
+      zPinch = dist;
+    } else { zOx += e.clientX - prev.x; zOy += e.clientY - prev.y; }
+    zRender();
+  });
+  zPane.addEventListener('pointerdown', function(e){ if(e.pointerType !== 'mouse'){ zPtrs[e.pointerId] = { x:e.clientX, y:e.clientY }; zPinch = 0; try{ zPane.setPointerCapture(e.pointerId); }catch(err){} } });
+  function zUp(e){ delete zPtrs[e.pointerId]; zPinch = 0; }
+  zPane.addEventListener('pointerup', zUp); zPane.addEventListener('pointercancel', zUp);
+  zPane.addEventListener('wheel', function(e){ e.preventDefault(); var d = zDims(), r = zPane.getBoundingClientRect(); var ns = Math.max(1.6, Math.min(4.5, zS * (e.deltaY < 0 ? 1.12 : 0.89)));
+    var cx = e.clientX - r.left, cy = e.clientY - r.top; zOx = cx - (cx - zOx) * ns / zS; zOy = cy - (cy - zOy) * ns / zS; zS = ns; zRender(); }, { passive:false });
+  window.addEventListener('resize', function(){ if(zOn){ zRender(); } });
   $('pmPrev').addEventListener('click', function(){ settle(ang - 180, 800); });
   $('pmNext').addEventListener('click', function(){ settle(ang + 180, 800); });
 
@@ -2206,6 +2274,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     modal.close();
     if(n > 0){ added(current, n); }
   });
+  modal.addEventListener('close', function(){ zEnable(false); });
   $('pmClose').addEventListener('click', function(){ modal.close(); });
   $('pmClose2').addEventListener('click', function(){ modal.close(); });
   modal.addEventListener('click', function(e){ if(e.target === modal) modal.close(); });
