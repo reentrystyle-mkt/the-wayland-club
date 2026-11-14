@@ -790,10 +790,9 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     z-index:1; inset:auto; width:calc(var(--cw)*1.1911); height:auto; max-width:none; aspect-ratio:1122/1120; left:calc(var(--cw)*-0.0849); top:calc(var(--cw)*-0.0902); object-fit:fill; transform:none; -webkit-mask-image:none; mask-image:none;
     filter:saturate(1.35) contrast(1.06) brightness(1.2); animation:none;
   }
-  /* el texto va sobre su propio panel de vidrio oscuro: la foto queda limpia, sin velos encima */
-  .rc-inner{ z-index:3; inset:auto 7px 7px 7px; padding:0.75rem 0.8rem 0.8rem; justify-content:flex-end; border-radius:calc(var(--cw)*0.045);
-    background:rgba(3,8,5,0.58); -webkit-backdrop-filter:blur(7px) saturate(1.2); backdrop-filter:blur(7px) saturate(1.2); border:1px solid rgba(255,255,255,0.08); }
-  .rc-inner::before{ display:none; }
+  /* formato definitivo del texto: abajo del marco, sin caja; solo un oscurecido suave detrás para que se lea */
+  .rc-inner{ z-index:3; inset:0; left:0; right:0; top:0; bottom:0; padding:0.5rem 0.8rem 0.9rem; justify-content:flex-end; }
+  .rc-inner::before{ display:block; inset:34% -2% -2% -2%; border-radius:calc(var(--cw)*0.055); background:linear-gradient(rgba(3,10,5,0) 0%, rgba(3,10,5,0.28) 40%, rgba(2,7,3,0.62) 100%); }
   .rc-inner h2, .rc-inner p{ text-shadow:0 1px 3px rgba(0,0,0,0.9), 0 2px 14px rgba(0,0,0,0.95), 0 0 28px rgba(0,0,0,0.8); }
   .rc-inner h2{ font-size:0.95rem; margin-bottom:0.3rem; }
   .rc-inner p{ font-size:0.7rem; line-height:1.35; margin-bottom:0.6rem; }
@@ -1731,8 +1730,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   var CATEGORIES = [
     { id:'flores',          label:'Flores',             dot:'#404416', unit:'g', step:5 },
     { id:'cartuchos',       label:'Cartuchos',          dot:'#155574', unit:'u' },
-    { id:'cristales-salsa', label:'Cristales en salsa', dot:'#bbb54e', unit:'g' },
-    { id:'cristales-thc',   label:'Cristales de THC',   dot:'#6b7370', unit:'g' }
+    { id:'cristales-salsa', label:'Cristales en salsa', dot:'#bbb54e', unit:'u' },
+    { id:'cristales-thc',   label:'Cristales de THC',   dot:'#6b7370', unit:'u' }
   ];
   var TYPES = { indica:'Índica', sativa:'Sativa', hibrida:'Híbrida' };
   var UNITS = {
@@ -1849,27 +1848,25 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 
   /* ---------- reglas del pedido ----------
      - Flores: mínimo 10 g, se suman de a 5 g (podés repartir 5 + 5 entre dos genéticas).
-     - Cartuchos y extracciones: se piden junto con 10 g (o más) de flores,
-       o bien 10 g (o más) de extracciones (cristales). Un cartucho solo no alcanza. */
+     - Cartuchos y cristales: se venden por unidad y se piden junto con 10 g (o más) de flores. */
   var MIN_G = 10;
   function rulesProblem(){
-    var F = 0, E = 0, U = 0;
+    var F = 0, C = 0, X = 0;                     /* F: g de flores · C: cartuchos (u) · X: cristales (u) */
     items.forEach(function(it){
       var p = productById(it.id);
       if(p.cat === 'flores'){ F += it.qty; }
-      else if(p.cat === 'cartuchos'){ U += it.qty; }
-      else { E += it.qty; }
+      else if(p.cat === 'cartuchos'){ C += it.qty; }
+      else { X += it.qty; }
     });
-    var extra = (U > 0 && E > 0) ? 'cartuchos y extracciones' : (U > 0 ? 'cartucho' : (E > 0 ? 'extracciones' : ''));
+    var extra = (C > 0 && X > 0) ? 'cartuchos y cristales' : (C > 0 ? 'cartucho' : (X > 0 ? 'cristales' : ''));
     var tail = ' Sumá algo más que te guste y avanzamos con el pedido.';
-    if(F > 0 && F < MIN_G){
+    /* cartuchos y cristales se venden por unidad y se piden siempre junto con 10 g (o más) de flores */
+    if(F < MIN_G && (F > 0 || extra)){
       var f = MIN_G - F;
-      return extra
-        ? 'El mínimo para pedir ' + extra + ' es de ' + MIN_G + ' g de flores (llevás ' + F + ' g, te faltan ' + f + ' g).' + tail
-        : 'El mínimo son ' + MIN_G + ' g de flores (llevás ' + F + ' g, te faltan ' + f + ' g).' + tail;
-    }
-    if(F === 0 && extra && E < MIN_G){
-      return 'El mínimo para pedir ' + extra + ' es de ' + MIN_G + ' g' + (U > 0 && E === 0 ? ' de flores' : ' (de flores o de extracciones)') + '.' + tail;
+      if(extra){
+        return 'El mínimo para pedir ' + extra + ' es de ' + MIN_G + ' g de flores' + (F > 0 ? ' (llevás ' + F + ' g, te faltan ' + f + ' g).' : '.') + tail;
+      }
+      return 'El mínimo son ' + MIN_G + ' g de flores (llevás ' + F + ' g, te faltan ' + f + ' g).' + tail;
     }
     return '';
   }
@@ -2160,7 +2157,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   }
   function settle(a, extraMs){ setAng(Math.round(a / 180) * 180, extraMs || 650); }
   function introSpin(){
-    zEnable(false); zS = 2.6;
+    zEnable(false); zS = 2.1;
     setAng(-360, 0); void inner.offsetWidth;          /* arranca una vuelta antes del frente */
     if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ setAng(0, 0); return; }
     setAng(0, (window.matchMedia && matchMedia('(max-width:720px), (hover:none)').matches) ? 1900 : 3200);
@@ -2196,7 +2193,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
        · Ficha abierta, zoom APAGADO: la carta flota, da la vuelta de entrada y gira (arrastrar / flechas / toque).
        · Ficha abierta, zoom ENCENDIDO: la carta NO gira ni flota; se ve la cara actual ampliada.
          Computadora: la lupa sigue al mouse (rueda para más o menos). Celular: arrastrar con un dedo y pellizcar con dos. */
-  var zPane = $('pmZoomPane'), zBtn = $('pmZoomBtn'), zOn = false, zS = 2.6, zOx = 0, zOy = 0, zPtrs = {}, zPinch = 0, zStart = null;
+  var zPane = $('pmZoomPane'), zBtn = $('pmZoomBtn'), zOn = false, zS = 2.1, zOx = 0, zOy = 0, zPtrs = {}, zPinch = 0, zStart = null;
   function zDims(){ var r = flipEl.getBoundingClientRect(); return { w:r.width, h:r.height }; }
   function zClamp(){ var d = zDims(); zOx = Math.min(0, Math.max(d.w - d.w * zS, zOx)); zOy = Math.min(0, Math.max(d.h - d.h * zS, zOy)); }
   function zRender(){ var d = zDims(); zClamp(); zPane.style.backgroundSize = (d.w * zS) + 'px ' + (d.h * zS) + 'px'; zPane.style.backgroundPosition = zOx + 'px ' + zOy + 'px'; }
@@ -2225,7 +2222,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var ids = Object.keys(zPtrs);
     if(ids.length >= 2){
       var a = zPtrs[ids[0]], b = zPtrs[ids[1]], dist = Math.hypot(a.x - b.x, a.y - b.y);
-      if(zPinch){ var ns = Math.max(1.6, Math.min(4.5, zS * dist / zPinch)); var cx = (a.x + b.x) / 2 - r.left, cy = (a.y + b.y) / 2 - r.top;
+      if(zPinch){ var ns = Math.max(1.5, Math.min(3.6, zS * dist / zPinch)); var cx = (a.x + b.x) / 2 - r.left, cy = (a.y + b.y) / 2 - r.top;
         zOx = cx - (cx - zOx) * ns / zS; zOy = cy - (cy - zOy) * ns / zS; zS = ns; }
       zPinch = dist;
     } else { zOx += e.clientX - prev.x; zOy += e.clientY - prev.y; }
@@ -2234,7 +2231,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   zPane.addEventListener('pointerdown', function(e){ if(e.pointerType !== 'mouse'){ zPtrs[e.pointerId] = { x:e.clientX, y:e.clientY }; zPinch = 0; try{ zPane.setPointerCapture(e.pointerId); }catch(err){} } });
   function zUp(e){ delete zPtrs[e.pointerId]; zPinch = 0; }
   zPane.addEventListener('pointerup', zUp); zPane.addEventListener('pointercancel', zUp);
-  zPane.addEventListener('wheel', function(e){ e.preventDefault(); var d = zDims(), r = zPane.getBoundingClientRect(); var ns = Math.max(1.6, Math.min(4.5, zS * (e.deltaY < 0 ? 1.12 : 0.89)));
+  zPane.addEventListener('wheel', function(e){ e.preventDefault(); var d = zDims(), r = zPane.getBoundingClientRect(); var ns = Math.max(1.5, Math.min(3.6, zS * (e.deltaY < 0 ? 1.12 : 0.89)));
     var cx = e.clientX - r.left, cy = e.clientY - r.top; zOx = cx - (cx - zOx) * ns / zS; zOy = cy - (cy - zOy) * ns / zS; zS = ns; zRender(); }, { passive:false });
   window.addEventListener('resize', function(){ if(zOn){ zRender(); } });
   $('pmPrev').addEventListener('click', function(){ settle(ang - 180, 800); });
