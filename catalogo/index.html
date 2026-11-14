@@ -1179,6 +1179,15 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .flip-arrow svg{ width:18px; height:18px; }
 .flip-arrow:hover{ opacity:1; background:rgba(8,14,16,0.75); transform:scale(1.08); }
 .flip-prev{ left:-14px; } .flip-next{ right:-14px; }
+/* computadora ancha: flechas y lupa FUERA de la carta, para que se vea completa */
+@media (min-width:1100px){
+  .flip-prev{ left:-54px; } .flip-next{ right:-54px; }
+  .zoom-btn{ left:auto; right:-56px; bottom:0; margin-left:0; width:42px; height:42px; }
+}
+/* celular: la lupa va en el margen derecho inferior de la imagen (cerca del texto y balanceando la X de cerrar) */
+@media (max-width:720px){
+  .zoom-btn{ left:auto; right:10px; bottom:10px; margin-left:0; width:44px; height:44px; }
+}
 @media (hover:none), (max-width:720px){ .flip-arrow{ display:none; } }
 .p-modal-info{ padding:1.6rem 1.6rem 1.4rem; overflow-y:auto; }
 .p-modal-info h2{ font-size:clamp(1.25rem, 2.2vw, 1.6rem); margin:0.8rem 0 0.5rem; }
