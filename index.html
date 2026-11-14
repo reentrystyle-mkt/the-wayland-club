@@ -373,38 +373,42 @@ section{ position:relative; }
   height:100%;
   z-index:1;
 }
-.hero-cogollo{
-  position:absolute;
-  top:50%;
-  right:clamp(1rem, 5vw, 5rem);
-  width:clamp(180px, 19vw, 300px);
-  z-index:1;
-  pointer-events:none;
-  filter:drop-shadow(0 40px 70px rgba(0,0,0,0.55));
-  transform:translateY(calc(-50% + var(--cg-lift, 0px))) rotate(var(--cg-rotate, 0deg));
-  will-change:transform;
+.hero-buds{ position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.hero-bud{
+  position:absolute; height:auto; display:block; pointer-events:none; will-change:transform;
+  filter:drop-shadow(0 26px 34px rgba(0,0,0,0.55));
+  animation:budFloat var(--dur, 10s) ease-in-out var(--delay, 0s) infinite alternate;
 }
-.hero-cogollo-bob{
-  animation:cogolloBob 7s ease-in-out infinite;
+@keyframes budFloat{
+  from{ transform:translate3d(0,0,0) rotate(var(--r0, 0deg)); }
+  to{ transform:translate3d(var(--dx, 0px), var(--dy, -18px), 0) rotate(var(--r1, 4deg)); }
 }
-@keyframes cogolloBob{
-  0%, 100%{ transform:translateY(0) rotate(-1.5deg); }
-  50%{ transform:translateY(-16px) rotate(1.5deg); }
+/* computadora: texto centrado y cogollos flotando por detrás y por los costados; dos pasan por arriba de algunas palabras */
+@media (min-width:1025px){
+  .hero{ align-items:center; }
+  .hero-content{ text-align:center; }
+  .hero h1{ max-width:20ch; margin-left:auto; margin-right:auto; }
+  .hero-sub{ max-width:540px; margin-left:auto; margin-right:auto; }
+  .hero .hero-bottom{ justify-content:center; }
+  .hero .hero-cta-group{ justify-content:center; }
+  .b1{ width:clamp(150px, 15vw, 250px); left:4%;  top:12%; z-index:1; --r0:-16deg; --r1:-6deg; --dx:14px;  --dy:-22px; --dur:11s; }
+  .b2{ width:clamp(120px, 12vw, 210px); right:5%; top:9%;  z-index:1; --r0:18deg;  --r1:8deg;  --dx:-12px; --dy:20px;  --dur:13s; --delay:-3s; }
+  .b3{ width:clamp(105px, 10vw, 175px); left:11%; bottom:7%; z-index:1; --r0:26deg;  --r1:14deg; --dx:16px;  --dy:-16px; --dur:12s; --delay:-5s; }
+  .b4{ width:clamp(95px, 9vw, 160px);   right:9%; bottom:10%; z-index:1; --r0:-22deg; --r1:-10deg;--dx:-14px; --dy:-20px; --dur:14s; --delay:-2s; }
+  /* pasan por arriba del texto, a tamaño moderado */
+  .b5{ width:clamp(80px, 7.5vw, 130px); left:30%; top:30%; z-index:3; opacity:0.92; --r0:12deg; --r1:-18deg; --dx:min(36vw, 520px); --dy:34px; --dur:26s; --delay:-8s; }
+  .b6{ display:block; width:clamp(70px, 6.5vw, 115px); right:28%; top:58%; z-index:3; opacity:0.9; --r0:-20deg; --r1:16deg; --dx:max(-34vw, -480px); --dy:-30px; --dur:30s; --delay:-14s; }
 }
-.hero-cogollo img{ width:100%; height:auto; display:block; }
+/* celular: 3 cogollos más grandes y tenues, de fondo */
 @media (max-width:1024px){
-  .hero-cogollo{
-    top:48%;
-    left:50%;
-    right:auto;
-    width:64vw;
-    max-width:300px;
-    opacity:0.24;
-    filter:drop-shadow(0 30px 50px rgba(0,0,0,0.5));
-    transform:translate(-50%, calc(-50% + var(--cg-lift, 0px))) rotate(var(--cg-rotate, 0deg));
-  }
-  .hero-cogollo-bob{ animation:none; }
+  .hero-bud{ opacity:0.26; filter:drop-shadow(0 22px 30px rgba(0,0,0,0.5)); }
+  .b1{ width:58vw; max-width:300px; right:-14vw; top:7%;  --r0:14deg;  --r1:22deg;  --dx:-10px; --dy:16px;  --dur:14s; }
+  .b2{ display:none; }
+  .b3{ width:50vw; max-width:260px; left:-12vw; top:44%; --r0:-24deg; --r1:-14deg; --dx:12px;  --dy:-14px; --dur:16s; --delay:-4s; }
+  .b4{ width:42vw; max-width:220px; right:-6vw; bottom:6%; --r0:20deg;  --r1:10deg;  --dx:-10px; --dy:-12px; --dur:15s; --delay:-7s; }
+  .b5, .b6{ display:none; }
 }
+@media (prefers-reduced-motion:reduce){ .hero-bud{ animation:none; } }
 .hero-content{
   position:relative;
   z-index:2;
@@ -1142,10 +1146,13 @@ footer{
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
   <canvas id="particles"></canvas>
-  <div class="hero-cogollo" id="heroCogollo">
-    <div class="hero-cogollo-bob">
-      <img src="assets/cogollo-hero.png" alt="" aria-hidden="true">
-    </div>
+  <div class="hero-buds" aria-hidden="true">
+    <img class="hero-bud b1" src="assets/hero/petroleum.webp" alt="" width="543" height="720">
+    <img class="hero-bud b2" src="assets/hero/moby.webp" alt="" width="369" height="720">
+    <img class="hero-bud b3" src="assets/hero/runtz.webp" alt="" width="425" height="720">
+    <img class="hero-bud b4" src="assets/hero/black-cherry.webp" alt="" width="400" height="720">
+    <img class="hero-bud b5" src="assets/hero/cake-crasher.webp" alt="" width="423" height="720">
+    <img class="hero-bud b6" src="assets/hero/moby.webp" alt="" width="369" height="720">
   </div>
   <div class="container hero-content">
     <span class="eyebrow">DISPENSARIO · MINISTERIO DE SALUD · REPROCANN</span>
