@@ -1868,7 +1868,7 @@ footer{
     ];
     var S = wraps.map(function(el, i){
       var o = ORB[i % ORB.length];
-      return { el:el, o:o, x:0, y:0, vx:0, vy:0, r:0, vr:0, drag:false, lx:0, ly:0, t:0, ox:0, oy:0, or:0, sx:0, sy:0 };
+      return { el:el, o:o, x:0, y:0, vx:0, vy:0, r:0, vr:0, drag:false, free:false, lx:0, ly:0, t:0, ox:0, oy:0, or:0, sx:0, sy:0 };
     });
     var excitedUntil = 0, visible = true, start = performance.now();
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1884,7 +1884,7 @@ footer{
       raf = requestAnimationFrame(frame);
       if(!visible) return;
       var sec = (now - start) / 1000, excited = now < excitedUntil;
-      var G = S.map(geo);
+      var G = S.map(geo), heroR = hero.getBoundingClientRect();
       S.forEach(function(s, i){
         var o = s.o;
         if(!reduce){
@@ -1892,11 +1892,20 @@ footer{
           s.oy = o.ay * K * Math.cos(2 * Math.PI * sec / (o.py * T) + o.f * 0.7);
           s.or = o.ar * K * Math.sin(2 * Math.PI * sec / (o.py * T * 1.3) + o.f);
         }
-        /* resorte suave hacia su lugar + fricción (solo actúa tras tocarlos) */
+        /* tras tocarlos NO vuelven a su lugar ni rebotan: siguen flotando por la pantalla, suave y lento */
         if(!s.drag){
-          s.vx += -s.x * 0.012; s.vy += -s.y * 0.012; s.vr += -s.r * 0.02;
-          s.vx *= 0.94; s.vy *= 0.94; s.vr *= 0.92;
-          s.x += s.vx; s.y += s.vy; s.r += s.vr;
+          var g = G[i], hr = heroR, mx = hr.width * (mobile ? -0.08 : 0.04), my = hr.height * 0.04;
+          if(s.free){
+            if(g.cx < hr.left + mx){ s.vx += (hr.left + mx - g.cx) * 0.0006; }
+            if(g.cx > hr.right - mx){ s.vx -= (g.cx - (hr.right - mx)) * 0.0006; }
+            if(g.cy < hr.top + my){ s.vy += (hr.top + my - g.cy) * 0.0006; }
+            if(g.cy > hr.bottom - my){ s.vy -= (g.cy - (hr.bottom - my)) * 0.0006; }
+            var sp = Math.hypot(s.vx, s.vy), floor = mobile ? 0.12 : 0.2;
+            if(sp > 0.5){ s.vx *= 0.985; s.vy *= 0.985; }
+            else if(sp < floor){ if(sp < 0.0005){ var h = Math.random() * 6.283; s.vx = Math.cos(h) * floor; s.vy = Math.sin(h) * floor; } else { s.vx *= floor / sp; s.vy *= floor / sp; } }
+            s.x += s.vx; s.y += s.vy;
+          }
+          s.vr += -s.r * 0.01; s.vr *= 0.94; s.r += s.vr;
         }
       });
       /* separación entre cogollos */
@@ -1910,8 +1919,8 @@ footer{
             if(d < want){ var push = (want - d) * 0.5; tx[a] -= nx * push; ty[a] -= ny * push; tx[b] += nx * push; ty[b] += ny * push; }
           } else if(d < sum * 0.55){                                 /* tocados: se acercan y chocan */
             var rvx = S[b].vx - S[a].vx, rvy = S[b].vy - S[a].vy, vn = rvx * nx + rvy * ny;
-            if(vn < 0){ var j = -(1.7) * vn / 2; S[a].vx -= nx * j; S[a].vy -= ny * j; S[b].vx += nx * j; S[b].vy += ny * j; S[a].vr -= 3; S[b].vr += 3; }
-            var ov = (sum * 0.55 - d) * 0.15; S[a].x -= nx * ov; S[a].y -= ny * ov; S[b].x += nx * ov; S[b].y += ny * ov;
+            if(vn < 0){ var j = -(0.6) * vn / 2; S[a].vx -= nx * j; S[a].vy -= ny * j; S[b].vx += nx * j; S[b].vy += ny * j; S[a].free = S[b].free = true; }
+            var ov = (sum * 0.55 - d) * 0.05; S[a].x -= nx * ov; S[a].y -= ny * ov; S[b].x += nx * ov; S[b].y += ny * ov;
           }
         }
       }
@@ -1932,14 +1941,14 @@ footer{
       el.addEventListener('pointermove', function(e){
         if(!s.drag) return;
         var dx = e.clientX - s.lx, dy = e.clientY - s.ly, now = performance.now(), dt = Math.max(1, now - s.t);
-        s.x += dx; s.y += dy; s.r = Math.max(-35, Math.min(35, s.r + dx * 0.25));
+        s.x += dx; s.y += dy; s.r = Math.max(-25, Math.min(25, s.r + dx * 0.12));
         s.vx = dx / dt * 14; s.vy = dy / dt * 14; s.lx = e.clientX; s.ly = e.clientY; s.t = now;
         moved = Math.max(moved, Math.hypot(e.clientX - sx0, e.clientY - sy0)); excite(12000);
       });
       function release(){
-        if(!s.drag) return; s.drag = false; el.classList.remove('grabbing');
-        if(moved < 6){ s.vy = -7; s.vx = (Math.random() - 0.5) * 5; s.vr = (Math.random() < 0.5 ? -1 : 1) * 7; }   /* un toque: salta y gira */
-        else { s.vx = Math.max(-22, Math.min(22, s.vx)); s.vy = Math.max(-22, Math.min(22, s.vy)); }
+        if(!s.drag) return; s.drag = false; el.classList.remove('grabbing'); s.free = true;
+        if(moved < 6){ var h = Math.random() * 6.283; s.vx = Math.cos(h) * 0.9; s.vy = Math.sin(h) * 0.9; s.vr = (Math.random() - 0.5) * 1.2; }   /* un toque: una brisa suave que lo hace flotar */
+        else { s.vx = Math.max(-5, Math.min(5, s.vx * 0.35)); s.vy = Math.max(-5, Math.min(5, s.vy * 0.35)); }
         excite(12000);
       }
       el.addEventListener('pointerup', release); el.addEventListener('pointercancel', release);
@@ -1950,7 +1959,7 @@ footer{
       S.forEach(function(s){
         if(s.drag) return;
         var g = geo(s), dx = g.cx - e.clientX, dy = g.cy - e.clientY, d = Math.hypot(dx, dy), reach = g.rad + 30;
-        if(d < reach && d > 1){ var f = (1 - d / reach) * 0.9; s.vx += dx / d * f; s.vy += dy / d * f; s.vr += (dx > 0 ? 1 : -1) * f * 0.25; excite(6000); }
+        if(d < reach && d > 1){ var f = (1 - d / reach) * 0.35; s.vx += dx / d * f; s.vy += dy / d * f; s.free = true; excite(6000); }
       });
     });
   })();
