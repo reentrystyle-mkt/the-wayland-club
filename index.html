@@ -377,19 +377,15 @@ section{ position:relative; }
 .hero-bud-wrap{ position:absolute; pointer-events:auto; cursor:grab; touch-action:pan-y; user-select:none; -webkit-user-select:none;
   transform:translate3d(var(--ix, 0px), var(--iy, 0px), 0) rotate(var(--ir, 0deg)); will-change:transform; -webkit-tap-highlight-color:transparent; }
 .hero-bud-wrap.grabbing{ cursor:grabbing; }
-.hero-bud-wrap.grabbing .hero-bud{ animation-play-state:paused; filter:drop-shadow(0 34px 44px rgba(0,0,0,0.6)) brightness(1.08); }
+.hero-bud-wrap.grabbing .hero-bud{ filter:drop-shadow(0 34px 44px rgba(0,0,0,0.6)) brightness(1.08); }
 /* el texto no bloquea los cogollos; solo los enlaces y botones reciben toques */
 .hero-content{ pointer-events:none; }
 .hero-content a, .hero-content button{ pointer-events:auto; }
 .hero-bud{
   position:static; width:100%; height:auto; display:block; pointer-events:none; will-change:transform;
   filter:drop-shadow(0 26px 34px rgba(0,0,0,0.55));
-  animation:budFloat var(--dur, 10s) ease-in-out var(--delay, 0s) infinite alternate;
 }
-@keyframes budFloat{
-  from{ transform:translate3d(0,0,0) rotate(var(--r0, 0deg)); }
-  to{ transform:translate3d(var(--dx, 0px), var(--dy, -18px), 0) rotate(var(--r1, 4deg)); }
-}
+
 /* computadora: texto centrado y cogollos flotando por detrás y por los costados; dos pasan por arriba de algunas palabras */
 @media (min-width:1025px){
   .hero{ align-items:center; }
@@ -415,7 +411,6 @@ section{ position:relative; }
   .b4{ width:42vw; max-width:220px; right:-6vw; bottom:6%; --r0:20deg;  --r1:10deg;  --dx:-10px; --dy:-12px; --dur:15s; --delay:-7s; }
   .b5, .b6{ display:none; }
 }
-@media (prefers-reduced-motion:reduce){ .hero-bud{ animation:none; } }
 .hero-content{
   position:relative;
   z-index:2;
@@ -1852,60 +1847,111 @@ footer{
     });
   }
 
-  /* ---------- cogollos del inicio: se tocan con el dedo o el mouse ---------- */
+  /* ---------- cogollos del inicio ----------
+     Natural: flotan "sin rumbo" en órbitas lentas y suaves, y se separan solos para no tocarse (distribución pareja).
+     Al tocarlos (dedo o mouse) esa regla se relaja unos segundos: pueden acercarse y chocar entre sí. */
   (function(){
     var wraps = [].slice.call(document.querySelectorAll('.hero-bud-wrap'));
-    if(!wraps.length) return;
-    var S = wraps.map(function(el){ return { el:el, x:0, y:0, vx:0, vy:0, r:0, vr:0, drag:false, lx:0, ly:0, t:0 }; });
-    var running = false;
-    function paint(s){ s.el.style.setProperty('--ix', s.x.toFixed(1) + 'px'); s.el.style.setProperty('--iy', s.y.toFixed(1) + 'px'); s.el.style.setProperty('--ir', s.r.toFixed(1) + 'deg'); }
-    function step(){
-      var active = false;
-      S.forEach(function(s){
-        if(s.drag) { active = true; return; }
-        /* resorte suave hacia su lugar + fricción: vuelven flotando solos */
-        s.vx += -s.x * 0.012; s.vy += -s.y * 0.012; s.vr += -s.r * 0.02;
-        s.vx *= 0.94; s.vy *= 0.94; s.vr *= 0.92;
-        s.x += s.vx; s.y += s.vy; s.r += s.vr;
-        if(Math.abs(s.x) + Math.abs(s.y) + Math.abs(s.r) + Math.abs(s.vx) + Math.abs(s.vy) + Math.abs(s.vr) > 0.15){ active = true; paint(s); }
-        else if(s.x || s.y || s.r){ s.x = s.y = s.r = s.vx = s.vy = s.vr = 0; paint(s); }
-      });
-      if(active){ requestAnimationFrame(step); } else { running = false; }
+    var hero = document.querySelector('.hero');
+    if(!wraps.length || !hero) return;
+    var mobile = window.matchMedia('(max-width:1024px)').matches;
+    var K = mobile ? 0.42 : 1;                 /* celular: movimientos más sutiles */
+    var T = mobile ? 1.35 : 1;                 /* y más lentos */
+    /* órbitas: amplitud x/y (px), período x/y (s), fase, rotación (grados) */
+    var ORB = [
+      { ax:26, ay:18, px:46, py:58, f:0.0, ar:3 },
+      { ax:22, ay:20, px:52, py:63, f:1.7, ar:3 },
+      { ax:24, ay:16, px:49, py:67, f:3.1, ar:4 },
+      { ax:20, ay:18, px:57, py:71, f:4.4, ar:3 },
+      { ax:150, ay:28, px:104, py:67, f:0.8, ar:5 },
+      { ax:-145, ay:26, px:118, py:79, f:2.6, ar:5 }
+    ];
+    var S = wraps.map(function(el, i){
+      var o = ORB[i % ORB.length];
+      return { el:el, o:o, x:0, y:0, vx:0, vy:0, r:0, vr:0, drag:false, lx:0, ly:0, t:0, ox:0, oy:0, or:0, sx:0, sy:0 };
+    });
+    var excitedUntil = 0, visible = true, start = performance.now();
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function excite(ms){ excitedUntil = performance.now() + (ms || 9000); }
+    function paint(s){
+      s.el.style.setProperty('--ix', (s.x + s.ox + s.sx).toFixed(1) + 'px');
+      s.el.style.setProperty('--iy', (s.y + s.oy + s.sy).toFixed(1) + 'px');
+      s.el.style.setProperty('--ir', (s.r + s.or).toFixed(1) + 'deg');
     }
-    function kick(){ if(!running){ running = true; requestAnimationFrame(step); } }
+    function geo(s){ var r = s.el.getBoundingClientRect(); return { cx:r.left + r.width / 2, cy:r.top + r.height / 2, rad:(r.width + r.height) / 4 * 0.86 }; }
+    var raf = 0;
+    function frame(now){
+      raf = requestAnimationFrame(frame);
+      if(!visible) return;
+      var sec = (now - start) / 1000, excited = now < excitedUntil;
+      var G = S.map(geo);
+      S.forEach(function(s, i){
+        var o = s.o;
+        if(!reduce){
+          s.ox = o.ax * K * Math.sin(2 * Math.PI * sec / (o.px * T) + o.f);
+          s.oy = o.ay * K * Math.cos(2 * Math.PI * sec / (o.py * T) + o.f * 0.7);
+          s.or = o.ar * K * Math.sin(2 * Math.PI * sec / (o.py * T * 1.3) + o.f);
+        }
+        /* resorte suave hacia su lugar + fricción (solo actúa tras tocarlos) */
+        if(!s.drag){
+          s.vx += -s.x * 0.012; s.vy += -s.y * 0.012; s.vr += -s.r * 0.02;
+          s.vx *= 0.94; s.vy *= 0.94; s.vr *= 0.92;
+          s.x += s.vx; s.y += s.vy; s.r += s.vr;
+        }
+      });
+      /* separación entre cogollos */
+      var tx = S.map(function(){ return 0; }), ty = tx.slice();
+      for(var a = 0; a < S.length; a++){
+        for(var b = a + 1; b < S.length; b++){
+          var A = G[a], B = G[b], dx = B.cx - A.cx, dy = B.cy - A.cy, d = Math.hypot(dx, dy) || 1, sum = A.rad + B.rad;
+          var nx = dx / d, ny = dy / d;
+          if(!excited){
+            var want = sum * 0.98;                                   /* natural: nunca se tocan */
+            if(d < want){ var push = (want - d) * 0.5; tx[a] -= nx * push; ty[a] -= ny * push; tx[b] += nx * push; ty[b] += ny * push; }
+          } else if(d < sum * 0.55){                                 /* tocados: se acercan y chocan */
+            var rvx = S[b].vx - S[a].vx, rvy = S[b].vy - S[a].vy, vn = rvx * nx + rvy * ny;
+            if(vn < 0){ var j = -(1.7) * vn / 2; S[a].vx -= nx * j; S[a].vy -= ny * j; S[b].vx += nx * j; S[b].vy += ny * j; S[a].vr -= 3; S[b].vr += 3; }
+            var ov = (sum * 0.55 - d) * 0.15; S[a].x -= nx * ov; S[a].y -= ny * ov; S[b].x += nx * ov; S[b].y += ny * ov;
+          }
+        }
+      }
+      S.forEach(function(s, i){ s.sx += (tx[i] - s.sx) * 0.06; s.sy += (ty[i] - s.sy) * 0.06; paint(s); });
+    }
+    function run(){ if(!raf){ raf = requestAnimationFrame(frame); } }
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){ visible = es[0].isIntersecting; }).observe(hero);
+    }
+    run();
     S.forEach(function(s){
-      var el = s.el, moved = 0, sx = 0, sy = 0;
+      var el = s.el, moved = 0, sx0 = 0, sy0 = 0;
       el.addEventListener('pointerdown', function(e){
-        s.drag = true; moved = 0; sx = e.clientX; sy = e.clientY; s.lx = e.clientX; s.ly = e.clientY; s.t = performance.now(); s.vx = s.vy = s.vr = 0;
+        s.drag = true; moved = 0; sx0 = e.clientX; sy0 = e.clientY; s.lx = e.clientX; s.ly = e.clientY; s.t = performance.now(); s.vx = s.vy = s.vr = 0;
         el.classList.add('grabbing'); try{ el.setPointerCapture(e.pointerId); }catch(err){}
-        kick();
+        excite(12000);
       });
       el.addEventListener('pointermove', function(e){
         if(!s.drag) return;
         var dx = e.clientX - s.lx, dy = e.clientY - s.ly, now = performance.now(), dt = Math.max(1, now - s.t);
         s.x += dx; s.y += dy; s.r = Math.max(-35, Math.min(35, s.r + dx * 0.25));
         s.vx = dx / dt * 14; s.vy = dy / dt * 14; s.lx = e.clientX; s.ly = e.clientY; s.t = now;
-        moved = Math.max(moved, Math.hypot(e.clientX - sx, e.clientY - sy)); paint(s);
+        moved = Math.max(moved, Math.hypot(e.clientX - sx0, e.clientY - sy0)); excite(12000);
       });
       function release(){
         if(!s.drag) return; s.drag = false; el.classList.remove('grabbing');
-        if(moved < 6){ s.vy = -9; s.vx = (Math.random() - 0.5) * 6; s.vr = (Math.random() < 0.5 ? -1 : 1) * 9; }   /* un toque: salta y gira */
-        else { s.vx = Math.max(-26, Math.min(26, s.vx)); s.vy = Math.max(-26, Math.min(26, s.vy)); }
-        kick();
+        if(moved < 6){ s.vy = -7; s.vx = (Math.random() - 0.5) * 5; s.vr = (Math.random() < 0.5 ? -1 : 1) * 7; }   /* un toque: salta y gira */
+        else { s.vx = Math.max(-22, Math.min(22, s.vx)); s.vy = Math.max(-22, Math.min(22, s.vy)); }
+        excite(12000);
       }
       el.addEventListener('pointerup', release); el.addEventListener('pointercancel', release);
     });
-    /* el mouse los empuja suavemente al pasar cerca */
+    /* el mouse los empuja apenas al pasar cerca */
     document.addEventListener('pointermove', function(e){
-      if(e.pointerType !== 'mouse') return;
-      var near = false;
+      if(e.pointerType !== 'mouse' || !visible) return;
       S.forEach(function(s){
         if(s.drag) return;
-        var r = s.el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, dx = cx - e.clientX, dy = cy - e.clientY, d = Math.hypot(dx, dy);
-        var reach = Math.max(r.width, r.height) * 0.45 + 40;
-        if(d < reach && d > 1){ var f = (1 - d / reach) * 1.6; s.vx += dx / d * f; s.vy += dy / d * f; s.vr += (dx > 0 ? 1 : -1) * f * 0.35; near = true; }
+        var g = geo(s), dx = g.cx - e.clientX, dy = g.cy - e.clientY, d = Math.hypot(dx, dy), reach = g.rad + 30;
+        if(d < reach && d > 1){ var f = (1 - d / reach) * 0.9; s.vx += dx / d * f; s.vy += dy / d * f; s.vr += (dx > 0 ? 1 : -1) * f * 0.25; excite(6000); }
       });
-      if(near){ kick(); }
     });
   })();
 
