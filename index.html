@@ -18,10 +18,10 @@
 
 /* transición fluida entre la página principal y el catálogo (fundido suave) */
 @view-transition{ navigation:auto; }
-::view-transition-old(root){ animation:vtOut 0.3s ease both; }
-::view-transition-new(root){ animation:vtIn 0.5s ease 0.05s both; }
-@keyframes vtOut{ to{ opacity:0; filter:blur(4px); } }
-@keyframes vtIn{ from{ opacity:0; filter:blur(4px); } }
+::view-transition-old(root){ animation:vtOut 0.2s ease-in both; }
+::view-transition-new(root){ animation:vtIn 0.32s ease-out both; }
+@keyframes vtOut{ to{ opacity:0; } }
+@keyframes vtIn{ from{ opacity:0; } }
 @media (prefers-reduced-motion:reduce){ ::view-transition-old(root), ::view-transition-new(root){ animation:none; } }
 
 :root{

@@ -16,10 +16,10 @@
 
 /* transición fluida entre la página principal y el catálogo (fundido suave) */
 @view-transition{ navigation:auto; }
-::view-transition-old(root){ animation:vtOut 0.3s ease both; }
-::view-transition-new(root){ animation:vtIn 0.5s ease 0.05s both; }
-@keyframes vtOut{ to{ opacity:0; filter:blur(4px); } }
-@keyframes vtIn{ from{ opacity:0; filter:blur(4px); } }
+::view-transition-old(root){ animation:vtOut 0.2s ease-in both; }
+::view-transition-new(root){ animation:vtIn 0.32s ease-out both; }
+@keyframes vtOut{ to{ opacity:0; } }
+@keyframes vtIn{ from{ opacity:0; } }
 @media (prefers-reduced-motion:reduce){ ::view-transition-old(root), ::view-transition-new(root){ animation:none; } }
 
 :root{
@@ -762,14 +762,13 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 
 /* aviso REPROCANN con la foto: las plantas salen del recuadro */
 .notice-photo{ width:min(94vw, 920px); max-height:none; overflow:visible; }
-.notice-photo::backdrop{ background:rgba(4,8,4,0.86); backdrop-filter:blur(10px); animation:rcBackdropIn 0.7s ease both; }
-/* aparece como una notificación: baja desde arriba con un pequeño rebote suave, ya con la página lista */
-.notice-photo[open]{ animation:noticePush 0.9s cubic-bezier(.22,1.08,.32,1) both; }
+.notice-photo::backdrop{ background:rgba(4,8,4,0.86); backdrop-filter:blur(10px); animation:rcBackdropIn 0.45s ease-out both; }
+/* aparece como una notificación nativa: baja un poco desde arriba con un resorte corto, sin exagerar */
+.notice-photo[open]{ animation:noticePush 0.6s cubic-bezier(.2,.9,.25,1) both; }
 @keyframes noticePush{
-  0%{ opacity:0; transform:translateY(-46vh) scale(0.92); filter:blur(8px); }
-  55%{ opacity:1; filter:blur(0); }
-  78%{ transform:translateY(10px) scale(1.008); }
-  100%{ opacity:1; transform:none; filter:none; }
+  0%{ opacity:0; transform:translateY(-30px) scale(0.97); }
+  55%{ opacity:1; transform:translateY(3px) scale(1.003); }
+  100%{ opacity:1; transform:none; }
 }
 @keyframes rcBackdropIn{ from{ opacity:0; } to{ opacity:1; } }
 @media (prefers-reduced-motion:reduce){ .notice-photo[open]{ animation:noticeIn 0.3s ease both; } .notice-photo::backdrop{ animation:none; } }
@@ -1959,7 +1958,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   /* freno REPROCANN: aparece en cada carga, entres desde donde entres */
   var rcModal = $('reprocannModal');
   rcModal.addEventListener('cancel', function(e){ e.preventDefault(); });
-  setTimeout(function(){ rcModal.showModal(); }, 380);   /* primero entra la página; después aparece el aviso */
+  setTimeout(function(){ rcModal.showModal(); }, 260);   /* primero entra la página; después aparece el aviso */
   $('rcHave').addEventListener('click', function(){
     if(reduceMotion){ rcModal.close(); return; }
     var card = rcModal.querySelector('.rc-card');
