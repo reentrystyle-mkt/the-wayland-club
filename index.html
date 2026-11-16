@@ -16,6 +16,14 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Arapey:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap');
 
+/* transición fluida entre la página principal y el catálogo (fundido suave) */
+@view-transition{ navigation:auto; }
+::view-transition-old(root){ animation:vtOut 0.3s ease both; }
+::view-transition-new(root){ animation:vtIn 0.5s ease 0.05s both; }
+@keyframes vtOut{ to{ opacity:0; filter:blur(4px); } }
+@keyframes vtIn{ from{ opacity:0; filter:blur(4px); } }
+@media (prefers-reduced-motion:reduce){ ::view-transition-old(root), ::view-transition-new(root){ animation:none; } }
+
 :root{
   /* Official brand palette: black/white base, teal as the structural/trust
      accent, magenta reserved for action moments, olive+mustard as small
