@@ -1360,7 +1360,16 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 .p-add[aria-disabled="true"]{ opacity:0.35; cursor:not-allowed; }
 .p-price-line{ margin:-0.2rem 0 0.6rem; font-size:0.82rem; color:var(--color-text-muted); }
 .p-price-line b{ color:var(--color-text); font-family:var(--font-display); font-size:1.1rem; }
-.pm-soldout{ color:#ff8fb8; font-weight:600; }
+.pm-variants{ display:flex; flex-wrap:wrap; align-items:center; gap:0.4rem; margin:0 0 0.9rem; }
+.pmv-label{ font-size:0.66rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--color-text-muted); margin-right:0.2rem; }
+.pm-variants[hidden]{ display:none; }
+.pmv-chip{ padding:0.42rem 0.9rem; border-radius:999px; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.07); color:#fff; font:inherit; font-size:0.78rem; font-weight:600; cursor:pointer; transition:background 0.2s, border-color 0.2s; }
+.pmv-chip[aria-pressed="true"]{ background:var(--color-accent-strong); border-color:var(--color-accent-strong); }
+.var-options{ display:flex; flex-direction:column; gap:0.6rem; margin:0.4rem 0 0.9rem; }
+.var-opt{ display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:0.9rem 1.1rem; border-radius:14px; border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.07); color:#fff; font:inherit; font-size:0.95rem; cursor:pointer; transition:background 0.2s, border-color 0.2s, transform 0.2s; }
+.var-opt b{ font-family:var(--font-display); }
+.var-opt:hover, .var-opt:focus-visible{ background:rgba(235,38,159,0.18); border-color:var(--color-accent-strong); transform:translateY(-1px); }
+.p-from{ font-family:var(--font-body); font-weight:400; font-size:0.7rem; color:var(--color-text-muted); }
 .cart-total b{ font-family:var(--font-display); font-size:1.15rem; font-weight:700; text-align:right; }
 .cart-rules{ font-size:0.78rem; line-height:1.45; color:var(--color-text); background:rgba(235,38,159,0.08); border:1px solid rgba(235,38,159,0.25); border-radius:10px; padding:0.7rem 0.85rem; margin-bottom:0.8rem; }
 .cart-rules[hidden]{ display:none; }
@@ -1567,6 +1576,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
       <span class="p-tag" id="pmTag" style="position:static;display:inline-flex"></span>
       <h2 id="pmName"></h2>
       <p class="p-price-line" id="pmPrice" hidden></p>
+      <div class="pm-variants" id="pmVariants" hidden></div>
       <p class="p-desc" id="pmDesc"></p>
       <dl class="p-specs" id="pmSpecs"></dl>
       <div class="qty-row">
@@ -1621,6 +1631,15 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
         <button type="button" class="btn rc-ghost" id="rcWant">Quiero tener REPROCANN</button>
       </div>
     </div>
+  </div>
+</dialog>
+
+<dialog class="notice light-section" id="varModal" aria-labelledby="varTitle">
+  <div class="notice-box">
+    <h2 id="varTitle"></h2>
+    <p>¿Cuál querés sumar?</p>
+    <div class="var-options" id="varOptions"></div>
+    <div class="notice-actions"><button type="button" class="notice-link" id="varCancel">Cancelar</button></div>
   </div>
 </dialog>
 
@@ -1785,12 +1804,12 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
              thc:d.thc || null, cbd:d.cbd || null, potencia:d.potencia || null,
              genetica:d.genetica || null, aroma:d.aroma || null, formato:d.formato || null,
              uso:d.uso || null, producto:d.producto || null,
-             price:d.price || null, tier:d.tier || null, soldOut:!!d.soldOut, priceNote:d.priceNote || null, priceUnit:d.priceUnit || null,
+             price:d.price || null, tier:d.tier || null, soldOut:false, priceNote:d.priceNote || null, priceUnit:d.priceUnit || null, variants:d.variants || null,
              desc:d.desc || '',
              img:'/assets/productos/' + slug + '-t.webp', imgM:'/assets/productos/' + slug + '-m.webp', imgZ:'/assets/productos/' + slug + '-z.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', unit:null };
   }
   var PRODUCTS = [
-    P(1, 'petroleum', 'Petroleum', 'flores', 'indica', { price:13000, tier:'Premium Indoor', soldOut:true, genetica:'Híbrida con dominancia índica', aroma:'Diésel, tierra húmeda, pimienta, toque cítrico', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
+    P(1, 'petroleum', 'Petroleum', 'flores', 'indica', { price:13000, tier:'Premium Indoor', genetica:'Híbrida con dominancia índica', aroma:'Diésel, tierra húmeda, pimienta, toque cítrico', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
       desc:'Relajación corporal profunda, euforia inicial y potente sensación de bienestar. Ideal para aliviar el estrés, el dolor y favorecer el descanso nocturno.' }),
     P(2, 'moby', 'Moby', 'flores', 'sativa', { price:7500, tier:'Línea base', genetica:'Híbrida balanceada con tendencia sativa', aroma:'Frutos del bosque, arándanos, cítricos, fondo Haze', thc:'22–28%', potencia:'Alta', formato:'Flor',
       desc:'Estimula la creatividad, mejora el estado de ánimo y aporta energía mental, finalizando con una relajación suave.' }),
@@ -1802,20 +1821,16 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
       desc:'Relajación física y mental con una agradable sensación de tranquilidad. Excelente para finalizar el día.' }),
     P(6, 'cake-crasher', 'Cake Crasher', 'flores', 'hibrida', { price:13000, tier:'Premium Indoor', genetica:'Híbrida equilibrada sativa / índica', aroma:'Torta de vainilla, crema, frutas dulces, fondo gaseoso', thc:'25–30%', potencia:'Muy alta', formato:'Flor',
       desc:'Comienza con una fuerte euforia cerebral y evoluciona hacia una relajación corporal profunda y duradera. Una de las variedades más potentes y exclusivas del catálogo.' }),
-    P(7, 'cartuchos-thc', 'Cartuchos de THC', 'cartuchos', null, { producto:'Cartucho de THC con salsa de terpenos', uso:'Dispositivo compatible', thc:'+90%', potencia:'Muy alta', formato:'Cartucho',
+    P(7, 'cartuchos-thc', 'Cartuchos de THC', 'cartuchos', null, { variants:[{ key:'05', label:'0,5 ml', price:35000, note:'por cartucho' }, { key:'1', label:'1 ml', price:45000, note:'por cartucho' }], producto:'Cartucho de THC con salsa de terpenos', uso:'Dispositivo compatible', thc:'+90%', potencia:'Muy alta', formato:'Cartucho',
       desc:'Cartucho de THC con salsa de terpenos.' }),
     P(8, 'cristales-salsa', 'Cristales en salsa', 'cristales-salsa', null, { producto:'Cristales de THC sumergidos en salsa de terpenos', uso:'Vaporizar', thc:'+90%', potencia:'Muy alta', formato:'Cristales',
       desc:'Cristales de THC sumergidos en salsa de terpenos.' }),
-    P(9, 'cristales-thc', 'Cristales de THC', 'cristales-thc', null, { producto:'Cristales de THC', uso:'Vaporizar, mezclar con flor', thc:'+90%', potencia:'Muy alta', formato:'Cristales',
+    P(9, 'cristales-thc', 'Cristales de THC', 'cristales-thc', null, { price:45000, priceUnit:'/1 g', priceNote:'por 1 g', producto:'Cristales de THC', uso:'Vaporizar, mezclar con flor', thc:'+90%', potencia:'Muy alta', formato:'Cristales',
       desc:'Cristales de THC.' }),
     /* productos nuevos: foto próximamente */
     P(10, 'proximamente', 'BHO para vaporizar', 'bho', null, { price:30000, priceUnit:'/1 g', priceNote:'por 1 g', producto:'BHO para vaporizar', uso:'Vaporizar', formato:'1 g', desc:'BHO para vaporizar. Presentación de 1 gramo.' }),
-    P(11, 'proximamente', 'Cristales para vaporizar', 'cristales-thc', null, { price:45000, priceUnit:'/1 g', priceNote:'por 1 g', producto:'Cristales para vaporizar', uso:'Vaporizar', formato:'1 g', desc:'Cristales para vaporizar. Presentación de 1 gramo.' }),
     P(12, 'proximamente', 'Hash', 'hash', null, { price:18000, priceUnit:'/1 g', priceNote:'por 1 g', producto:'Hash', formato:'1 g', desc:'Hash. Presentación de 1 gramo.' }),
-    P(13, 'proximamente', 'Cartucho 0,5 ml', 'cartuchos', null, { price:35000, soldOut:true, priceUnit:'/cartucho', priceNote:'por cartucho', producto:'Cartucho para vapear', uso:'Dispositivo compatible', formato:'0,5 ml', desc:'Cartucho para vapear de 0,5 ml.' }),
-    P(14, 'proximamente', 'Cartucho 1 ml', 'cartuchos', null, { price:45000, priceUnit:'/cartucho', priceNote:'por cartucho', producto:'Cartucho para vapear', uso:'Dispositivo compatible', formato:'1 ml', desc:'Cartucho para vapear de 1 ml.' }),
-    P(15, 'proximamente', 'Aceite de CBD 20 mg/ml', 'aceites', null, { price:30000, priceUnit:'/frasco', priceNote:'por frasco', producto:'Aceite de CBD', potencia:'20 mg por ml', formato:'Aceite', desc:'Aceite de CBD con una concentración de 20 mg por ml.' }),
-    P(16, 'proximamente', 'Aceite de CBD 50 mg/ml', 'aceites', null, { price:35000, priceUnit:'/frasco', priceNote:'por frasco', producto:'Aceite de CBD', potencia:'50 mg por ml', formato:'Aceite', desc:'Aceite de CBD con una concentración de 50 mg por ml.' })
+    P(15, 'proximamente', 'Aceite de CBD', 'aceites', null, { variants:[{ key:'20', label:'20 mg/ml', price:30000, note:'por frasco' }, { key:'50', label:'50 mg/ml', price:35000, note:'por frasco' }], producto:'Aceite de CBD', potencia:'20 o 50 mg por ml', formato:'Aceite', desc:'Aceite de CBD. Disponible en dos concentraciones: 20 mg por ml y 50 mg por ml.' })
   ];
 
   /* ---------- helpers ---------- */
@@ -1840,9 +1855,13 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   /* precios: flores = $ por gramo · resto = $ por unidad/presentación (los que no tienen precio cargado se muestran sin precio) */
   var MIN_ORDER = 75000;     /* compra mínima de la web */
   function money(n){ return '$' + Math.round(n).toLocaleString('es-AR'); }
+  function vOf(p, v){ if(!p.variants) return null; for(var i = 0; i < p.variants.length; i++){ if(p.variants[i].key === v) return p.variants[i]; } return p.variants[0]; }
+  function priceFor(p, v){ var x = vOf(p, v); return x ? x.price : (p.price || null); }
+  function nameOf(p, v){ var x = vOf(p, v); return p.name + (x ? ' · ' + x.label : ''); }
+  function minPrice(p){ if(!p.variants) return p.price; var m = Infinity; p.variants.forEach(function(x){ m = Math.min(m, x.price); }); return m; }
   function orderMoney(){
     var sum = 0, unknown = false;
-    items.forEach(function(it){ var p = productById(it.id); if(p.price){ sum += p.price * it.qty; } else { unknown = true; } });
+    items.forEach(function(it){ var p = productById(it.id), pr = priceFor(p, it.v); if(pr){ sum += pr * it.qty; } else { unknown = true; } });
     return { sum:sum, unknown:unknown };
   }
   function val(v){ return (v === null || v === undefined || v === '') ? '—' : v; }
@@ -1859,15 +1878,16 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   try{
     var saved = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     if(Array.isArray(saved)){
-      items = saved.filter(function(it){ var p = productById(it.id); return p && !p.soldOut && it.qty > 0; });
+      items = saved.filter(function(it){ var p = productById(it.id); return p && it.qty > 0 && (!p.variants || p.variants.some(function(x){ return x.key === it.v; })); });
     }
   }catch(e){ items = []; }
   function persist(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(items)); }catch(e){} }
 
-  function qtyOf(id){
-    for(var i = 0; i < items.length; i++){ if(String(items[i].id) === String(id)) return items[i].qty; }
+  function qtyOf(id, v){
+    for(var i = 0; i < items.length; i++){ if(String(items[i].id) === String(id) && (items[i].v || '') === (v || '')) return items[i].qty; }
     return 0;
   }
+  function qtyTotal(id){ var s = 0; items.forEach(function(it){ if(String(it.id) === String(id)){ s += it.qty; } }); return s; }
   function totals(){
     var t = { g:0, u:0, n:0 };
     items.forEach(function(it){
@@ -1885,8 +1905,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   }
 
   /* cuánto más se puede sumar de este producto (null = sin tope) */
-  function room(p){
-    var r = Infinity, have = qtyOf(p.id);
+  function room(p, v){
+    var r = Infinity, have = qtyOf(p.id, v);
     if(LIMITS.maxPerItem !== null){ r = Math.min(r, LIMITS.maxPerItem - have); }
     if(LIMITS.maxTotalGrams !== null && unitOf(p).short === 'g'){
       r = Math.min(r, LIMITS.maxTotalGrams - totals().g);
@@ -1939,27 +1959,27 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   }
 
   /* suma `n` (se recorta al tope). Devuelve lo realmente agregado */
-  function addItem(p, n){
-    if(p.soldOut) return 0;
-    var r = room(p);
+  function addItem(p, n, v){
+    if(p.variants){ v = (vOf(p, v) || {}).key; }
+    var r = room(p, v);
     var add = r === null ? n : Math.min(n, r);
     if(add <= 0) return 0;
     var found = false;
-    items.forEach(function(it){ if(String(it.id) === String(p.id)){ it.qty += add; found = true; } });
-    if(!found){ items.push({ id:p.id, qty:add }); }
+    items.forEach(function(it){ if(String(it.id) === String(p.id) && (it.v || '') === (v || '')){ it.qty += add; found = true; } });
+    if(!found){ items.push({ id:p.id, qty:add, v:v || '' }); }
     persist(); renderCart();
     return add;
   }
-  function setQty(id, qty){
-    var p = productById(id);
+  function setQty(id, qty, v){
+    var p = productById(id); v = v || '';
     var max = LIMITS.maxPerItem;
     if(max !== null){ qty = Math.min(qty, max); }
     if(LIMITS.maxTotalGrams !== null && unitOf(p).short === 'g'){
-      var others = totals().g - qtyOf(id);
+      var others = totals().g - qtyOf(id, v);
       qty = Math.min(qty, LIMITS.maxTotalGrams - others);
     }
-    if(qty <= 0){ items = items.filter(function(it){ return String(it.id) !== String(id); }); }
-    else { items.forEach(function(it){ if(String(it.id) === String(id)) it.qty = qty; }); }
+    if(qty <= 0){ items = items.filter(function(it){ return !(String(it.id) === String(id) && (it.v || '') === v); }); }
+    else { items.forEach(function(it){ if(String(it.id) === String(id) && (it.v || '') === v) it.qty = qty; }); }
     persist(); renderCart();
   }
 
@@ -1968,7 +1988,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var lines = ['Hola Mati, soy ' + name + ', ' + WHATSAPP_GREETING, ''];
     items.forEach(function(it){
       var p = productById(it.id);
-      lines.push('• ' + p.name + ' — ' + qtyText(p, it.qty) + (p.price ? ' · ' + money(p.price * it.qty) : ''));
+      var pr = priceFor(p, it.v);
+      lines.push('• ' + nameOf(p, it.v) + ' — ' + qtyText(p, it.qty) + (pr ? ' · ' + money(pr * it.qty) : ''));
     });
     var mm = orderMoney();
     lines.push('', 'Total: ' + totalText());
@@ -2030,7 +2051,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var nodes = document.querySelectorAll('.p-qty[data-qty-for]');
     for(var i = 0; i < nodes.length; i++){
       var el = nodes[i], p = productById(el.getAttribute('data-qty-for'));
-      var q = p ? qtyOf(p.id) : 0;
+      var q = p ? qtyTotal(p.id) : 0;
       var txt = q ? q + (unitOf(p).short === 'g' ? 'G' : 'U') : '';
       if(el.textContent !== txt){
         el.textContent = txt; el.hidden = !q;
@@ -2063,11 +2084,11 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     }
     bodyEl.innerHTML = items.map(function(it, i){
       var p = productById(it.id), c = catOf(p.cat), u = unitOf(p);
-      var canPlus = room(p) === null || room(p) > 0;
-      return '<div class="cart-item" style="animation-delay:' + (i * 40) + 'ms" data-id="' + p.id + '">' +
-        '<div><h3>' + esc(p.name) + '</h3><span class="ci-cat" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span>' + (p.price ? '<span class="ci-price">' + money(p.price * it.qty) + '</span>' : '') + '</div>' +
+      var canPlus = room(p, it.v) === null || room(p, it.v) > 0, pr = priceFor(p, it.v);
+      return '<div class="cart-item" style="animation-delay:' + (i * 40) + 'ms" data-id="' + p.id + '" data-v="' + esc(it.v || '') + '">' +
+        '<div><h3>' + esc(nameOf(p, it.v)) + '</h3><span class="ci-cat" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span>' + (pr ? '<span class="ci-price">' + money(pr * it.qty) + '</span>' : '') + '</div>' +
         '<div class="ci-actions">' +
-          '<div class="stepper sm" role="group" aria-label="Cantidad de ' + esc(p.name) + '">' +
+          '<div class="stepper sm" role="group" aria-label="Cantidad de ' + esc(nameOf(p, it.v)) + '">' +
             '<button type="button" data-act="minus" aria-label="Menos">−</button>' +
             '<output>' + esc(u.short === 'g' ? it.qty + ' g' : it.qty + ' u') + '</output>' +
             '<button type="button" data-act="plus" aria-label="Más"' + (canPlus ? '' : ' disabled') + '>+</button>' +
@@ -2083,12 +2104,12 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var b = e.target.closest('[data-act]');
     if(!b) return;
     var row = b.closest('.cart-item');
-    var id = row.getAttribute('data-id');
-    var q = qtyOf(id), act = b.getAttribute('data-act');
+    var id = row.getAttribute('data-id'), cv = row.getAttribute('data-v') || '';
+    var q = qtyOf(id, cv), act = b.getAttribute('data-act');
     var stp = stepOf(productById(id));
-    if(act === 'plus'){ setQty(id, q + stp); }
-    if(act === 'minus'){ setQty(id, q - stp); }
-    if(act === 'remove'){ setQty(id, 0); }
+    if(act === 'plus'){ setQty(id, q + stp, cv); }
+    if(act === 'minus'){ setQty(id, q - stp, cv); }
+    if(act === 'remove'){ setQty(id, 0, cv); }
   });
   sendBtn.addEventListener('click', sendOrder);
   clearBtn.addEventListener('click', function(){ items = []; persist(); renderCart(); });
@@ -2125,9 +2146,9 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     void cartBtn.offsetWidth;
     cartBtn.classList.add('bump');
   }
-  function added(p, n){
+  function added(p, n, v){
     bump();
-    toast(esc0(p.name) + ' · ' + qtyText(p, n) + ' agregado al pedido');
+    toast(esc0(nameOf(p, v)) + ' · ' + qtyText(p, n) + ' agregado al pedido');
   }
   function esc0(s){ return String(s); }
 
@@ -2166,16 +2187,16 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var meta = [];
     if(p.thc){ meta.push('<span>THC <b>' + esc(p.thc) + '</b></span>'); }
     if(p.cbd){ meta.push('<span>CBD <b>' + esc(p.cbd) + '</b></span>'); }
-    return '<article class="p-card' + (p.soldOut ? ' is-soldout' : '') + '" style="animation-delay:' + Math.min(i * 40, 360) + 'ms;' + glowStyle(p) + '">' +
-      '<div class="p-media">' + (p.soldOut ? '<span class="p-soldout">Sin stock</span>' : '') + '<span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
+    return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms;' + glowStyle(p) + '">' +
+      '<div class="p-media"><span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
         '<img class="photo" src="' + esc(p.img) + '" srcset="' + esc(p.img) + ' 560w, ' + esc(p.imgM) + ' 840w, ' + esc(p.imgBig) + ' 1080w" sizes="(max-width:720px) 48vw, 300px" alt="' + esc(p.name) + '" loading="lazy" decoding="async"></div>' +
       '<div class="p-body">' +
         '<h3>' + esc(p.name) + '</h3>' +
         '<div class="p-meta">' + meta.join('') + '</div>' +
-        (p.price ? '<div class="p-price">' + money(p.price) + '<small>' + esc(p.priceUnit || '/g') + '</small></div>' : '') +
+        (minPrice(p) ? '<div class="p-price">' + (p.variants ? '<small class="p-from">desde</small> ' : '') + money(minPrice(p)) + (p.variants ? '' : '<small>' + esc(p.priceUnit || '/g') + '</small>') + '</div>' : '') +
       '</div>' +
       '<button type="button" class="p-open" data-id="' + p.id + '" aria-label="Ver ficha de ' + esc(p.name) + '"></button>' +
-      '<button type="button" class="p-add" data-id="' + p.id + '"' + (p.soldOut ? ' aria-disabled="true"' : '') + ' aria-label="Agregar ' + esc(p.name) + ' al pedido">' +
+      '<button type="button" class="p-add" data-id="' + p.id + '" aria-label=""Agregar ' + esc(p.name) + ' al pedido">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
       '</button>' +
     '</article>';
@@ -2209,15 +2230,14 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   render();
 
   /* ---------- ficha de producto ---------- */
-  var modal = $('pModal'), current = null, modalQty = 1;
+  var modal = $('pModal'), current = null, modalQty = 1, modalVar = '';
   function syncStepper(){
-    var r = room(current);
+    var r = room(current, modalVar);
     $('pmQty').textContent = unitOf(current).short === 'g' ? modalQty + ' g' : String(modalQty);
     $('pmMinus').disabled = modalQty <= stepOf(current);
     $('pmPlus').disabled = r !== null && modalQty + stepOf(current) > r;
-    $('pmAdd').disabled = (r !== null && r <= 0) || !!current.soldOut;
-    $('pmAdd').textContent = current.soldOut ? 'Sin stock' : 'Agregar al pedido';
-    var have = qtyOf(current.id), note = '';
+    $('pmAdd').disabled = r !== null && r <= 0;
+    var have = qtyOf(current.id, modalVar), note = '';
     if(have){ note = 'Ya tenés ' + qtyText(current, have) + ' de este producto en tu pedido. '; }
     if(r !== null && r <= 0){ note += limitMsg(current); }
     else if(r !== null){ note += 'Podés sumar hasta ' + qtyText(current, r) + ' más.'; }
@@ -2313,13 +2333,13 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   function openProduct(id){
     var p = productById(id);
     if(!p) return;
-    current = p; modalQty = stepOf(p);
+    current = p; modalQty = stepOf(p); modalVar = p.variants ? p.variants[0].key : '';
     var c = catOf(p.cat);
     $('pmFront').src = p.imgBig; $('pmFront').alt = p.name;
     $('pmBack').src = p.imgBack; $('pmBack').alt = 'Reverso de ' + p.name;
     $('pmTag').innerHTML = '<i style="width:6px;height:6px;border-radius:50%;background:' + c.dot + '"></i>' + esc(c.label);
     $('pmName').textContent = p.name;
-    var pr = $('pmPrice'); pr.hidden = !p.price; pr.innerHTML = p.price ? '<b>' + money(p.price) + '</b> ' + esc(p.priceNote || 'por gramo') + (p.soldOut ? ' · <span class="pm-soldout">sin stock por ahora</span>' : '') : '';
+    renderVariants(); renderPrice();
     $('pmMedia').setAttribute('style', glowStyle(p));
     $('pmDesc').textContent = p.desc;
     $('pmSpecs').innerHTML = (p.cat === 'flores' ? [
@@ -2334,16 +2354,52 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     modal.showModal();
     introSpin();
   }
+  /* presentaciones (opciones) de un producto: chips en la ficha y precio que se actualiza */
+  function renderPrice(){
+    var pr = $('pmPrice'), x = vOf(current, modalVar), val0 = x ? x.price : current.price;
+    pr.hidden = !val0;
+    pr.innerHTML = val0 ? '<b>' + money(val0) + '</b> ' + esc((x && x.note) || current.priceNote || 'por gramo') : '';
+  }
+  function renderVariants(){
+    var box = $('pmVariants');
+    if(!current.variants){ box.hidden = true; box.innerHTML = ''; return; }
+    box.hidden = false;
+    box.innerHTML = '<span class="pmv-label">Presentación</span>' + current.variants.map(function(x){
+      return '<button type="button" class="pmv-chip" data-v="' + esc(x.key) + '" aria-pressed="' + (x.key === modalVar ? 'true' : 'false') + '">' + esc(x.label) + '</button>';
+    }).join('');
+  }
+  $('pmVariants').addEventListener('click', function(e){
+    var b = e.target.closest('.pmv-chip'); if(!b) return;
+    modalVar = b.getAttribute('data-v'); renderVariants(); renderPrice(); syncStepper();
+  });
   $('pmMinus').addEventListener('click', function(){ if(modalQty > stepOf(current)){ modalQty -= stepOf(current); syncStepper(); } });
   $('pmPlus').addEventListener('click', function(){
-    var r = room(current);
+    var r = room(current, modalVar);
     if(r === null || modalQty + stepOf(current) <= r){ modalQty += stepOf(current); syncStepper(); }
   });
   $('pmAdd').addEventListener('click', function(){
-    var n = addItem(current, modalQty);
+    var n = addItem(current, modalQty, modalVar);
     modal.close();
-    if(n > 0){ added(current, n); }
+    if(n > 0){ added(current, n, modalVar); }
   });
+  var varModal = $('varModal'), varFor = null;
+  function openVariantPicker(p){
+    varFor = p;
+    $('varTitle').textContent = p.name;
+    $('varOptions').innerHTML = p.variants.map(function(x){
+      return '<button type="button" class="var-opt" data-v="' + esc(x.key) + '"><span>' + esc(x.label) + '</span><b>' + money(x.price) + '</b></button>';
+    }).join('');
+    varModal.showModal();
+  }
+  $('varOptions').addEventListener('click', function(e){
+    var b = e.target.closest('.var-opt'); if(!b || !varFor) return;
+    var v = b.getAttribute('data-v'), p = varFor;
+    varModal.close();
+    var n = addItem(p, stepOf(p), v);
+    if(n > 0){ added(p, n, v); } else { bump(); toast(limitMsg(p)); }
+  });
+  $('varCancel').addEventListener('click', function(){ varModal.close(); });
+  varModal.addEventListener('click', function(e){ if(e.target === varModal) varModal.close(); });
   modal.addEventListener('close', function(){ zEnable(false); });
   $('pmClose').addEventListener('click', function(){ modal.close(); });
   $('pmClose2').addEventListener('click', function(){ modal.close(); });
@@ -2353,7 +2409,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var add = e.target.closest('.p-add');
     if(add){
       var p = productById(add.getAttribute('data-id'));
-      if(p.soldOut){ bump(); toast(p.name + ' está sin stock por ahora.'); return; }
+      if(p.variants){ openVariantPicker(p); return; }
       var n = addItem(p, stepOf(p));
       if(n > 0){ added(p, n); } else { bump(); toast(limitMsg(p)); }
       return;
