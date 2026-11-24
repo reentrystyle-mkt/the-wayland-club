@@ -120,13 +120,13 @@
 .light-section .backing-card{ background:#f7f7f6; -webkit-backdrop-filter:none; backdrop-filter:none; box-shadow:0 0 0 1px rgba(255,255,255,0.12), 0 18px 36px -20px rgba(0,0,0,0.9); }
 .light-section .backing-card img{ border-radius:0; }
 /* "Por qué…" y "El proceso": tarjetas claras (blanco/gris) sobre fondo oscuro para que no sea negro sobre negro */
-.light-section.benefits{ background:radial-gradient(ellipse 60% 38% at 85% 0%, rgba(21,85,116,0.34), transparent 72%), radial-gradient(ellipse 55% 40% at 8% 100%, rgba(235,38,159,0.12), transparent 70%), #080d10; }
-.light-section.process{ background:radial-gradient(ellipse 55% 30% at 50% 0%, rgba(21,85,116,0.3), transparent 72%), radial-gradient(ellipse 60% 35% at 50% 100%, rgba(64,68,22,0.4), transparent 72%), #080d10; }
-.light-section.about{ background:radial-gradient(ellipse 80% 42% at 50% 24%, rgba(21,85,116,0.26), transparent 80%), #05090b; }
+.light-section.benefits{ background:#05090b; }
+.light-section.process{ background:#05090b; }
+.light-section.about{ background:#05090b; }
 .light-section .benefit-card, .light-section .step-card{
   background:linear-gradient(145deg, rgba(255,255,255,0.95), rgba(231,237,238,0.9));
   border:1px solid rgba(255,255,255,0.7);
-  box-shadow:inset 0 1px 0 #ffffff, 0 26px 50px -24px rgba(0,0,0,0.85);
+  box-shadow:none;
   -webkit-backdrop-filter:none; backdrop-filter:none;
   color:#0d0d0d;
 }
@@ -134,7 +134,7 @@
 .light-section .benefit-card h3{ color:#0d0d0d; }
 .light-section .step-card h3{ color:var(--color-accent-strong); }
 .light-section .benefit-card p, .light-section .step-card p{ color:#55605f; }
-.light-section .benefit-icon{ background:#ffffff; border:1px solid rgba(13,40,48,0.14); color:#155574; box-shadow:0 6px 14px -8px rgba(0,0,0,0.5); }
+.light-section .benefit-icon{ background:#ffffff; border:1px solid rgba(13,40,48,0.14); color:#155574; box-shadow:none; }
 /* transición suave entre el inicio y "Un club, no una tienda": la luz del fondo no se corta */
 .hero::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:30%; z-index:1; pointer-events:none; background:linear-gradient(transparent, rgba(5,9,11,0.7) 55%, #05090b); }
 .hero-buds{ -webkit-mask-image:linear-gradient(#000 80%, transparent 100%); mask-image:linear-gradient(#000 80%, transparent 100%); }
@@ -395,8 +395,8 @@ section{ position:relative; }
   position:absolute;
   inset:0;
   background:
-    radial-gradient(ellipse 60% 45% at 18% 12%, rgba(21,85,116,0.4), transparent 60%),
-    radial-gradient(ellipse 55% 40% at 85% 20%, rgba(187,181,78,0.12), transparent 60%),
+    
+    
     radial-gradient(ellipse 70% 60% at 50% 100%, rgba(5,10,12,0.9), transparent 70%);
   z-index:0;
 }
@@ -412,13 +412,13 @@ section{ position:relative; }
 .hero-bud-wrap{ position:absolute; pointer-events:auto; cursor:grab; touch-action:pan-y; user-select:none; -webkit-user-select:none;
   transform:translate3d(var(--ix, 0px), var(--iy, 0px), 0) rotate(var(--ir, 0deg)); will-change:transform; -webkit-tap-highlight-color:transparent; }
 .hero-bud-wrap.grabbing{ cursor:grabbing; }
-.hero-bud-wrap.grabbing .hero-bud{ filter:drop-shadow(0 34px 44px rgba(0,0,0,0.6)) brightness(1.08); }
+.hero-bud-wrap.grabbing .hero-bud{ filter:none; }
 /* el texto no bloquea los cogollos; solo los enlaces y botones reciben toques */
 .hero-content{ pointer-events:none; }
 .hero-content a, .hero-content button{ pointer-events:auto; }
 .hero-bud{
   position:static; width:100%; height:auto; display:block; pointer-events:none; will-change:transform;
-  filter:drop-shadow(0 26px 34px rgba(0,0,0,0.55));
+  filter:none;
 }
 
 /* computadora: texto centrado y cogollos flotando por detrás y por los costados; dos pasan por arriba de algunas palabras */
@@ -436,7 +436,7 @@ section{ position:relative; }
 }
 /* celular: 3 cogollos sólidos de fondo, circulan por detrás del texto */
 @media (max-width:1024px){
-  .hero-bud{ filter:drop-shadow(0 18px 24px rgba(0,0,0,0.55)); }
+  .hero-bud{ filter:none; }
   .b1{ width:40vw; max-width:210px; right:-4vw; top:6%; }
   .b2{ width:32vw; max-width:170px; left:-5vw; top:44%; }
   .b3{ width:27vw; max-width:145px; right:6vw; top:68%; }
