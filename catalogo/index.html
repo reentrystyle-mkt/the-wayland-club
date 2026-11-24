@@ -1350,6 +1350,17 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   margin-bottom:0.7rem;
 }
 .cart-total span{ font-size:0.85rem; color:var(--color-text-muted); }
+.cart-money[hidden]{ display:none; }
+.cart-money b{ font-size:1rem; }
+.ci-price{ display:block; margin-top:0.2rem; font-size:0.82rem; font-weight:600; color:var(--color-text); }
+.p-price{ margin-top:0.35rem; font-family:var(--font-display); font-weight:700; font-size:0.98rem; letter-spacing:-0.01em; }
+.p-price small{ font-family:var(--font-body); font-weight:400; font-size:0.72rem; color:var(--color-text-muted); margin-left:1px; }
+.p-soldout{ position:absolute; top:0.8rem; left:0.8rem; z-index:2; padding:0.28rem 0.7rem; border-radius:999px; background:rgba(0,0,0,0.72); color:#fff; border:1px solid rgba(255,255,255,0.3); font-size:0.7rem; font-weight:600; letter-spacing:0.02em; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+.p-card.is-soldout .p-media img.photo{ filter:grayscale(0.7) brightness(0.7); }
+.p-add[aria-disabled="true"]{ opacity:0.35; cursor:not-allowed; }
+.p-price-line{ margin:-0.2rem 0 0.6rem; font-size:0.82rem; color:var(--color-text-muted); }
+.p-price-line b{ color:var(--color-text); font-family:var(--font-display); font-size:1.1rem; }
+.pm-soldout{ color:#ff8fb8; font-weight:600; }
 .cart-total b{ font-family:var(--font-display); font-size:1.15rem; font-weight:700; text-align:right; }
 .cart-rules{ font-size:0.78rem; line-height:1.45; color:var(--color-text); background:rgba(235,38,159,0.08); border:1px solid rgba(235,38,159,0.25); border-radius:10px; padding:0.7rem 0.85rem; margin-bottom:0.8rem; }
 .cart-rules[hidden]{ display:none; }
@@ -1555,6 +1566,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     <div class="p-modal-info">
       <span class="p-tag" id="pmTag" style="position:static;display:inline-flex"></span>
       <h2 id="pmName"></h2>
+      <p class="p-price-line" id="pmPrice" hidden></p>
       <p class="p-desc" id="pmDesc"></p>
       <dl class="p-specs" id="pmSpecs"></dl>
       <div class="qty-row">
@@ -1586,6 +1598,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   <div class="cart-body" id="cartBody"></div>
   <div class="cart-foot">
     <div class="cart-total"><span>Total</span><b id="cartTotal">—</b></div>
+    <div class="cart-total cart-money" id="cartMoneyRow" hidden><span>Valor estimado</span><b id="cartMoney">—</b></div>
     <p class="cart-rules" id="cartRules" hidden></p>
     <p class="cart-note">Al enviar tu pedido te confirmaremos disponibilidad y coordinaremos la entrega en las próximas 24 horas.</p>
     <button type="button" class="btn btn-primary cart-send" id="cartSend">
@@ -1755,7 +1768,10 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     { id:'flores',          label:'Flores',             dot:'#404416', unit:'g', step:5 },
     { id:'cartuchos',       label:'Cartuchos',          dot:'#155574', unit:'u' },
     { id:'cristales-salsa', label:'Cristales en salsa', dot:'#bbb54e', unit:'u' },
-    { id:'cristales-thc',   label:'Cristales de THC',   dot:'#6b7370', unit:'u' }
+    { id:'cristales-thc',   label:'Cristales de THC',   dot:'#6b7370', unit:'u' },
+    { id:'bho',             label:'BHO',                dot:'#c28a2c', unit:'u' },
+    { id:'hash',            label:'Hash',               dot:'#7a5c3a', unit:'u' },
+    { id:'aceites',         label:'Aceites de CBD',     dot:'#3f8f6a', unit:'u' }
   ];
   var TYPES = { indica:'Índica', sativa:'Sativa', hibrida:'Híbrida' };
   var UNITS = {
@@ -1769,28 +1785,37 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
              thc:d.thc || null, cbd:d.cbd || null, potencia:d.potencia || null,
              genetica:d.genetica || null, aroma:d.aroma || null, formato:d.formato || null,
              uso:d.uso || null, producto:d.producto || null,
+             price:d.price || null, tier:d.tier || null, soldOut:!!d.soldOut, priceNote:d.priceNote || null, priceUnit:d.priceUnit || null,
              desc:d.desc || '',
              img:'/assets/productos/' + slug + '-t.webp', imgM:'/assets/productos/' + slug + '-m.webp', imgZ:'/assets/productos/' + slug + '-z.webp', imgBig:'/assets/productos/' + slug + '.webp', imgBack:'/assets/productos/' + slug + '-r.webp', unit:null };
   }
   var PRODUCTS = [
-    P(1, 'petroleum', 'Petroleum', 'flores', 'indica', { genetica:'Híbrida con dominancia índica', aroma:'Diésel, tierra húmeda, pimienta, toque cítrico', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
+    P(1, 'petroleum', 'Petroleum', 'flores', 'indica', { price:13000, tier:'Premium Indoor', soldOut:true, genetica:'Híbrida con dominancia índica', aroma:'Diésel, tierra húmeda, pimienta, toque cítrico', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
       desc:'Relajación corporal profunda, euforia inicial y potente sensación de bienestar. Ideal para aliviar el estrés, el dolor y favorecer el descanso nocturno.' }),
-    P(2, 'moby', 'Moby', 'flores', 'sativa', { genetica:'Híbrida balanceada con tendencia sativa', aroma:'Frutos del bosque, arándanos, cítricos, fondo Haze', thc:'22–28%', potencia:'Alta', formato:'Flor',
+    P(2, 'moby', 'Moby', 'flores', 'sativa', { price:7500, tier:'Línea base', genetica:'Híbrida balanceada con tendencia sativa', aroma:'Frutos del bosque, arándanos, cítricos, fondo Haze', thc:'22–28%', potencia:'Alta', formato:'Flor',
       desc:'Estimula la creatividad, mejora el estado de ánimo y aporta energía mental, finalizando con una relajación suave.' }),
-    P(3, 'runtz', 'Runtz', 'flores', 'hibrida', { genetica:'Híbrida equilibrada sativa / índica', aroma:'Caramelos, frutas tropicales, vainilla, crema', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
+    P(3, 'runtz', 'Runtz', 'flores', 'hibrida', { price:10000, tier:'Línea intermedia', genetica:'Híbrida equilibrada sativa / índica', aroma:'Caramelos, frutas tropicales, vainilla, crema', thc:'24–30%', potencia:'Muy alta', formato:'Flor',
       desc:'Produce una intensa euforia acompañada de relajación progresiva. Muy resinosa y con un perfil de terpenos excepcional.' }),
-    P(4, 'spritz', 'Spritz', 'flores', 'sativa', { genetica:'Híbrida con ligera dominancia sativa', aroma:'Limón, naranja, mandarina, pomelo, notas gaseosas, fondo dulce', thc:'22–27%', potencia:'Alta', formato:'Flor',
+    P(4, 'spritz', 'Spritz', 'flores', 'sativa', { price:13000, tier:'Premium Indoor', genetica:'Híbrida con ligera dominancia sativa', aroma:'Limón, naranja, mandarina, pomelo, notas gaseosas, fondo dulce', thc:'22–27%', potencia:'Alta', formato:'Flor',
       desc:'Energizante, sociable y creativa. Ideal para actividades diurnas o encuentros sociales.' }),
-    P(5, 'black-cherry', 'Black Cherry', 'flores', 'indica', { genetica:'Híbrida con dominancia índica', aroma:'Cereza negra, frutos rojos, uva, madera, especias', thc:'20–27%', potencia:'Alta', formato:'Flor',
+    P(5, 'black-cherry', 'Black Cherry', 'flores', 'indica', { price:13000, tier:'Premium Indoor', genetica:'Híbrida con dominancia índica', aroma:'Cereza negra, frutos rojos, uva, madera, especias', thc:'20–27%', potencia:'Alta', formato:'Flor',
       desc:'Relajación física y mental con una agradable sensación de tranquilidad. Excelente para finalizar el día.' }),
-    P(6, 'cake-crasher', 'Cake Crasher', 'flores', 'hibrida', { genetica:'Híbrida equilibrada sativa / índica', aroma:'Torta de vainilla, crema, frutas dulces, fondo gaseoso', thc:'25–30%', potencia:'Muy alta', formato:'Flor',
+    P(6, 'cake-crasher', 'Cake Crasher', 'flores', 'hibrida', { price:13000, tier:'Premium Indoor', genetica:'Híbrida equilibrada sativa / índica', aroma:'Torta de vainilla, crema, frutas dulces, fondo gaseoso', thc:'25–30%', potencia:'Muy alta', formato:'Flor',
       desc:'Comienza con una fuerte euforia cerebral y evoluciona hacia una relajación corporal profunda y duradera. Una de las variedades más potentes y exclusivas del catálogo.' }),
     P(7, 'cartuchos-thc', 'Cartuchos de THC', 'cartuchos', null, { producto:'Cartucho de THC con salsa de terpenos', uso:'Dispositivo compatible', thc:'+90%', potencia:'Muy alta', formato:'Cartucho',
       desc:'Cartucho de THC con salsa de terpenos.' }),
     P(8, 'cristales-salsa', 'Cristales en salsa', 'cristales-salsa', null, { producto:'Cristales de THC sumergidos en salsa de terpenos', uso:'Vaporizar', thc:'+90%', potencia:'Muy alta', formato:'Cristales',
       desc:'Cristales de THC sumergidos en salsa de terpenos.' }),
     P(9, 'cristales-thc', 'Cristales de THC', 'cristales-thc', null, { producto:'Cristales de THC', uso:'Vaporizar, mezclar con flor', thc:'+90%', potencia:'Muy alta', formato:'Cristales',
-      desc:'Cristales de THC.' })
+      desc:'Cristales de THC.' }),
+    /* productos nuevos: foto próximamente */
+    P(10, 'proximamente', 'BHO para vaporizar', 'bho', null, { price:30000, priceUnit:'/1 g', priceNote:'por 1 g', producto:'BHO para vaporizar', uso:'Vaporizar', formato:'1 g', desc:'BHO para vaporizar. Presentación de 1 gramo.' }),
+    P(11, 'proximamente', 'Cristales para vaporizar', 'cristales-thc', null, { price:45000, priceUnit:'/1 g', priceNote:'por 1 g', producto:'Cristales para vaporizar', uso:'Vaporizar', formato:'1 g', desc:'Cristales para vaporizar. Presentación de 1 gramo.' }),
+    P(12, 'proximamente', 'Hash', 'hash', null, { price:18000, priceUnit:'/1 g', priceNote:'por 1 g', producto:'Hash', formato:'1 g', desc:'Hash. Presentación de 1 gramo.' }),
+    P(13, 'proximamente', 'Cartucho 0,5 ml', 'cartuchos', null, { price:35000, soldOut:true, priceUnit:'/cartucho', priceNote:'por cartucho', producto:'Cartucho para vapear', uso:'Dispositivo compatible', formato:'0,5 ml', desc:'Cartucho para vapear de 0,5 ml.' }),
+    P(14, 'proximamente', 'Cartucho 1 ml', 'cartuchos', null, { price:45000, priceUnit:'/cartucho', priceNote:'por cartucho', producto:'Cartucho para vapear', uso:'Dispositivo compatible', formato:'1 ml', desc:'Cartucho para vapear de 1 ml.' }),
+    P(15, 'proximamente', 'Aceite de CBD 20 mg/ml', 'aceites', null, { price:30000, priceUnit:'/frasco', priceNote:'por frasco', producto:'Aceite de CBD', potencia:'20 mg por ml', formato:'Aceite', desc:'Aceite de CBD con una concentración de 20 mg por ml.' }),
+    P(16, 'proximamente', 'Aceite de CBD 50 mg/ml', 'aceites', null, { price:35000, priceUnit:'/frasco', priceNote:'por frasco', producto:'Aceite de CBD', potencia:'50 mg por ml', formato:'Aceite', desc:'Aceite de CBD con una concentración de 50 mg por ml.' })
   ];
 
   /* ---------- helpers ---------- */
@@ -1812,6 +1837,14 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   function unitOf(p){ return UNITS[p.unit || catOf(p.cat).unit]; }
   /* paso de suma: las flores se suman de a 5 g; el resto de a 1 */
   function stepOf(p){ return p.step || catOf(p.cat).step || 1; }
+  /* precios: flores = $ por gramo · resto = $ por unidad/presentación (los que no tienen precio cargado se muestran sin precio) */
+  var MIN_ORDER = 75000;     /* compra mínima de la web */
+  function money(n){ return '$' + Math.round(n).toLocaleString('es-AR'); }
+  function orderMoney(){
+    var sum = 0, unknown = false;
+    items.forEach(function(it){ var p = productById(it.id); if(p.price){ sum += p.price * it.qty; } else { unknown = true; } });
+    return { sum:sum, unknown:unknown };
+  }
   function val(v){ return (v === null || v === undefined || v === '') ? '—' : v; }
   function qtyText(p, n){
     var u = unitOf(p);
@@ -1826,7 +1859,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
   try{
     var saved = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     if(Array.isArray(saved)){
-      items = saved.filter(function(it){ return productById(it.id) && it.qty > 0; });
+      items = saved.filter(function(it){ var p = productById(it.id); return p && !p.soldOut && it.qty > 0; });
     }
   }catch(e){ items = []; }
   function persist(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(items)); }catch(e){} }
@@ -1872,31 +1905,42 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
 
   /* ---------- reglas del pedido ----------
      - Flores: mínimo 10 g, se suman de a 5 g (podés repartir 5 + 5 entre dos genéticas).
-     - Cartuchos y cristales: se venden por unidad y se piden junto con 10 g (o más) de flores. */
+     - Compra mínima de la web: $75.000 (vale para flores, cartuchos, cristales, BHO, hash y aceites).
+     - Productos sin precio cargado: se piden junto con 10 g (o más) de flores. */
   var MIN_G = 10;
+  var EXTRA_NAMES = { 'cartuchos':'cartucho', 'cristales-salsa':'cristales', 'cristales-thc':'cristales', 'bho':'BHO', 'hash':'hash', 'aceites':'aceite de CBD' };
   function rulesProblem(){
-    var F = 0, C = 0, X = 0;                     /* F: g de flores · C: cartuchos (u) · X: cristales (u) */
+    var F = 0, seen = [];                        /* F: g de flores · seen: tipos de productos que no son flores */
     items.forEach(function(it){
       var p = productById(it.id);
       if(p.cat === 'flores'){ F += it.qty; }
-      else if(p.cat === 'cartuchos'){ C += it.qty; }
-      else { X += it.qty; }
+      else { var nm = EXTRA_NAMES[p.cat] || 'extracciones'; if(seen.indexOf(nm) < 0){ seen.push(nm); } }
     });
-    var extra = (C > 0 && X > 0) ? 'cartuchos y cristales' : (C > 0 ? 'cartucho' : (X > 0 ? 'cristales' : ''));
+    var m = orderMoney();
+    var extra = seen.length > 1 ? seen.slice(0, -1).join(', ') + ' y ' + seen[seen.length - 1] : (seen[0] || '');
     var tail = ' Sumá algo más que te guste y avanzamos con el pedido.';
-    /* cartuchos y cristales se venden por unidad y se piden siempre junto con 10 g (o más) de flores */
-    if(F < MIN_G && (F > 0 || extra)){
+    /* flores: mínimo de dispensa 10 g (de a 5 g) */
+    if(F > 0 && F < MIN_G){
       var f = MIN_G - F;
-      if(extra){
-        return 'El mínimo para pedir ' + extra + ' es de ' + MIN_G + ' g de flores' + (F > 0 ? ' (llevás ' + F + ' g, te faltan ' + f + ' g).' : '.') + tail;
+      if(extra && m.unknown){
+        return 'El mínimo para pedir ' + extra + ' es de ' + MIN_G + ' g de flores (llevás ' + F + ' g, te faltan ' + f + ' g).' + tail;
       }
       return 'El mínimo son ' + MIN_G + ' g de flores (llevás ' + F + ' g, te faltan ' + f + ' g).' + tail;
+    }
+    /* productos todavía sin precio cargado: se piden con 10 g (o más) de flores */
+    if(extra && m.unknown && F < MIN_G){
+      return 'El mínimo para pedir ' + extra + ' es de ' + MIN_G + ' g de flores.' + tail;
+    }
+    /* compra mínima de la web: vale para cualquier producto (flores, cartuchos, cristales, BHO, hash, aceites…) */
+    if(!m.unknown && m.sum < MIN_ORDER){
+      return 'La compra mínima es de ' + money(MIN_ORDER) + ' (llevás ' + money(m.sum) + ', te faltan ' + money(MIN_ORDER - m.sum) + ').' + tail;
     }
     return '';
   }
 
   /* suma `n` (se recorta al tope). Devuelve lo realmente agregado */
   function addItem(p, n){
+    if(p.soldOut) return 0;
     var r = room(p);
     var add = r === null ? n : Math.min(n, r);
     if(add <= 0) return 0;
@@ -1924,9 +1968,12 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var lines = ['Hola Mati, soy ' + name + ', ' + WHATSAPP_GREETING, ''];
     items.forEach(function(it){
       var p = productById(it.id);
-      lines.push('• ' + p.name + ' — ' + qtyText(p, it.qty));
+      lines.push('• ' + p.name + ' — ' + qtyText(p, it.qty) + (p.price ? ' · ' + money(p.price * it.qty) : ''));
     });
-    lines.push('', 'Total: ' + totalText(), '', WHATSAPP_CLOSING);
+    var mm = orderMoney();
+    lines.push('', 'Total: ' + totalText());
+    if(mm.sum){ lines.push('Valor estimado: ' + money(mm.sum) + (mm.unknown ? ' + productos a confirmar' : '')); }
+    lines.push('', WHATSAPP_CLOSING);
     return lines.join('\n');
   }
   var nameModal = $('nameModal'), nameInput = $('nameInput');
@@ -2000,6 +2047,9 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     badgeEl.hidden = t.n === 0;
     badgeEl.textContent = String(t.n);
     $('cartTotal').textContent = totalText();
+    var mm = orderMoney(), mRow = $('cartMoneyRow');
+    mRow.hidden = !items.length || (mm.sum === 0);
+    $('cartMoney').textContent = money(mm.sum) + (mm.unknown ? ' + a confirmar' : '');
     sendBtn.disabled = t.n === 0;
     clearBtn.hidden = t.n === 0;
 
@@ -2015,7 +2065,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
       var p = productById(it.id), c = catOf(p.cat), u = unitOf(p);
       var canPlus = room(p) === null || room(p) > 0;
       return '<div class="cart-item" style="animation-delay:' + (i * 40) + 'ms" data-id="' + p.id + '">' +
-        '<div><h3>' + esc(p.name) + '</h3><span class="ci-cat" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span></div>' +
+        '<div><h3>' + esc(p.name) + '</h3><span class="ci-cat" style="--dot:' + c.dot + '"><i></i>' + esc(c.label) + '</span>' + (p.price ? '<span class="ci-price">' + money(p.price * it.qty) + '</span>' : '') + '</div>' +
         '<div class="ci-actions">' +
           '<div class="stepper sm" role="group" aria-label="Cantidad de ' + esc(p.name) + '">' +
             '<button type="button" data-act="minus" aria-label="Menos">−</button>' +
@@ -2116,15 +2166,16 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var meta = [];
     if(p.thc){ meta.push('<span>THC <b>' + esc(p.thc) + '</b></span>'); }
     if(p.cbd){ meta.push('<span>CBD <b>' + esc(p.cbd) + '</b></span>'); }
-    return '<article class="p-card" style="animation-delay:' + Math.min(i * 40, 360) + 'ms;' + glowStyle(p) + '">' +
-      '<div class="p-media"><span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
+    return '<article class="p-card' + (p.soldOut ? ' is-soldout' : '') + '" style="animation-delay:' + Math.min(i * 40, 360) + 'ms;' + glowStyle(p) + '">' +
+      '<div class="p-media">' + (p.soldOut ? '<span class="p-soldout">Sin stock</span>' : '') + '<span class="p-qty" data-qty-for="' + p.id + '" hidden></span>' +
         '<img class="photo" src="' + esc(p.img) + '" srcset="' + esc(p.img) + ' 560w, ' + esc(p.imgM) + ' 840w, ' + esc(p.imgBig) + ' 1080w" sizes="(max-width:720px) 48vw, 300px" alt="' + esc(p.name) + '" loading="lazy" decoding="async"></div>' +
       '<div class="p-body">' +
         '<h3>' + esc(p.name) + '</h3>' +
         '<div class="p-meta">' + meta.join('') + '</div>' +
+        (p.price ? '<div class="p-price">' + money(p.price) + '<small>' + esc(p.priceUnit || '/g') + '</small></div>' : '') +
       '</div>' +
       '<button type="button" class="p-open" data-id="' + p.id + '" aria-label="Ver ficha de ' + esc(p.name) + '"></button>' +
-      '<button type="button" class="p-add" data-id="' + p.id + '" aria-label="Agregar ' + esc(p.name) + ' al pedido">' +
+      '<button type="button" class="p-add" data-id="' + p.id + '"' + (p.soldOut ? ' aria-disabled="true"' : '') + ' aria-label="Agregar ' + esc(p.name) + ' al pedido">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
       '</button>' +
     '</article>';
@@ -2164,7 +2215,8 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     $('pmQty').textContent = unitOf(current).short === 'g' ? modalQty + ' g' : String(modalQty);
     $('pmMinus').disabled = modalQty <= stepOf(current);
     $('pmPlus').disabled = r !== null && modalQty + stepOf(current) > r;
-    $('pmAdd').disabled = r !== null && r <= 0;
+    $('pmAdd').disabled = (r !== null && r <= 0) || !!current.soldOut;
+    $('pmAdd').textContent = current.soldOut ? 'Sin stock' : 'Agregar al pedido';
     var have = qtyOf(current.id), note = '';
     if(have){ note = 'Ya tenés ' + qtyText(current, have) + ' de este producto en tu pedido. '; }
     if(r !== null && r <= 0){ note += limitMsg(current); }
@@ -2267,11 +2319,12 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     $('pmBack').src = p.imgBack; $('pmBack').alt = 'Reverso de ' + p.name;
     $('pmTag').innerHTML = '<i style="width:6px;height:6px;border-radius:50%;background:' + c.dot + '"></i>' + esc(c.label);
     $('pmName').textContent = p.name;
+    var pr = $('pmPrice'); pr.hidden = !p.price; pr.innerHTML = p.price ? '<b>' + money(p.price) + '</b> ' + esc(p.priceNote || 'por gramo') + (p.soldOut ? ' · <span class="pm-soldout">sin stock por ahora</span>' : '') : '';
     $('pmMedia').setAttribute('style', glowStyle(p));
     $('pmDesc').textContent = p.desc;
     $('pmSpecs').innerHTML = (p.cat === 'flores' ? [
       ['Tipo', p.type ? TYPES[p.type] : null], ['Genética', p.genetica], ['THC', p.thc],
-      ['Potencia', p.potencia], ['Aroma y sabor', p.aroma], ['Formato', p.formato]
+      ['Potencia', p.potencia], ['Aroma y sabor', p.aroma], ['Línea', p.tier]
     ] : [
       ['Producto', p.producto], ['Modo de uso', p.uso], ['THC', p.thc],
       ['Potencia', p.potencia], ['Formato', p.formato]
@@ -2300,6 +2353,7 @@ html.entered:not(.no-gate) .cat-intro > :nth-child(5){ animation-delay:0.95s; }
     var add = e.target.closest('.p-add');
     if(add){
       var p = productById(add.getAttribute('data-id'));
+      if(p.soldOut){ bump(); toast(p.name + ' está sin stock por ahora.'); return; }
       var n = addItem(p, stepOf(p));
       if(n > 0){ added(p, n); } else { bump(); toast(limitMsg(p)); }
       return;
